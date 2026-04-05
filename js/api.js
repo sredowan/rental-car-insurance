@@ -15,8 +15,11 @@ async function apiCall(endpoint, method = 'GET', body = null, isFormData = false
   const config = { method, headers };
   if (body) config.body = isFormData ? body : JSON.stringify(body);
 
+  // Ensure endpoint has trailing slash to prevent LiteSpeed 301 redirect (POST→GET)
+  const normalizedEndpoint = endpoint.endsWith('/') || endpoint.includes('?') ? endpoint : endpoint + '/';
+
   try {
-    const res = await fetch(`${API_BASE}/${endpoint}`, config);
+    const res = await fetch(`${API_BASE}/${normalizedEndpoint}`, config);
     const data = await res.json();
     if (!res.ok) throw { status: res.status, message: data.message || 'Request failed', errors: data.errors };
     return data;
