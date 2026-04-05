@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard | Rental Sheild</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+.policy-hero-card{background:linear-gradient(135deg,var(--bg-navy),#1E3A5F);border-radius:var(--r-xl);padding:28px;color:#fff;margin-bottom:24px}
+.policy-hero-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.policy-number-mono{font-family:'JetBrains Mono',monospace;font-size:16px;color:rgba(255,255,255,0.7)}
+.policy-detail-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}
+.policy-det{display:flex;flex-direction:column;gap:3px}
+.policy-det-label{font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.5);font-weight:600}
+.policy-det-value{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#fff}
+.quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.quick-action-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;text-align:center;cursor:pointer;transition:var(--transition);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:10px}
+.quick-action-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--primary)}
+.qa-icon{font-size:28px}
+.qa-label{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:var(--text-dark)}
+.empty-policy-state{text-align:center;padding:48px 24px;background:var(--bg-soft);border:2px dashed var(--border);border-radius:var(--r-xl);margin-bottom:24px}
+.empty-policy-state h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--text-dark);margin-bottom:8px}
+.empty-policy-state p{color:var(--text-muted);margin-bottom:20px}
+.skeleton{background:linear-gradient(90deg,rgba(255,255,255,0.1) 25%,rgba(255,255,255,0.2) 50%,rgba(255,255,255,0.1) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;height:20px;width:80px;display:inline-block}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@media(max-width:800px){.policy-detail-row{grid-template-columns:repeat(2,1fr)}.quick-actions{grid-template-columns:repeat(2,1fr)}}
+</style>
+
+  <!-- Facebook Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'FB_PIXEL_ID_PLACEHOLDER');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=FB_PIXEL_ID_PLACEHOLDER&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Facebook Pixel Code -->
+
+  <!-- AOS Animations -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+<style>
+.upload-zone{border:2px dashed var(--border);border-radius:var(--r-md);padding:24px;text-align:center;cursor:pointer;transition:var(--transition);background:var(--bg-soft);position:relative;overflow:hidden}
+.upload-zone:hover{border-color:var(--primary);background:var(--primary-lt)}
+.upload-zone.has-file{border-color:var(--emerald);background:var(--emerald-lt)}
+.upload-icon{font-size:28px;margin-bottom:8px}
+.upload-label{font-size:14px;color:var(--text-muted)}
+.upload-label strong{color:var(--primary)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-filename{font-size:12px;color:var(--emerald);font-weight:600;margin-top:6px}
+.damage-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.damage-chip{padding:8px 16px;border:1.5px solid var(--border);border-radius:var(--r-full);font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition);color:var(--text-body);user-select:none}
+.damage-chip.selected{background:var(--primary-lt);border-color:var(--primary);color:var(--primary)}
+.damage-chip:hover{border-color:var(--primary)}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin-right:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+
+<body>
+<div class="dashboard-layout" id="dashboardPage">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Rental Sheild
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Dashboard</a>
+      <a href="index.html#quote" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 10 20 15 15 20"/><path d="M4 4v7a4 4 0 0 0 4 4h12"/></svg> Get a Quote</a>
+      <a href="my-policies.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> My Policies</a>
+      <a href="my-claims.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> My Claims</a>
+      <div class="sidebar-divider"></div>
+      <a href="my-profile.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> My Profile</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="#" class="sidebar-item" data-signout style="color:rgba(239,68,68,0.8);text-decoration:none;padding:8px 0"><span class="sidebar-item-icon">→</span> Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="dashboard-main">
+    <div class="dashboard-topbar">
+      <div class="topbar-title">Dashboard</div>
+      <div class="topbar-right">
+        <a href="index.html#quote" class="btn btn-primary btn-sm">+ New Quote</a>
+        <div class="topbar-avatar" title="User"></div>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+    <div style="margin-bottom:24px;font-size:13px;color:var(--text-muted)">
+      <a href="dashboard.html" style="color:var(--primary)">← Back to Dashboard</a> &nbsp;/ New Claim
+    </div>
+    <div style="max-width: 660px; margin: 0 auto; margin-bottom: 24px;">
+    <div class="section-header center"><span class="section-label">Submit</span><h2 class="section-title">Submit Your Claim</h2></div>
+
+    <form class="card" style="max-width:660px;margin:0 auto" id="claimForm" enctype="multipart/form-data">
+      <!-- STEP 1 — Policy -->
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--primary);margin-bottom:16px">Step 1 — Your Policy</div>
+      <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:28px">
+        <div class="form-group">
+          <label class="form-label">Policy</label>
+          <select id="claimPolicyId" class="form-input form-select" required>
+            <option value="">Select your policy</option>
+          </select>
+          <p style="font-size:11px;color:var(--text-muted);margin-top:4px" id="policyLoadMsg">Loading your policies...</p>
+        </div>
+        <div class="form-group"><label class="form-label">Rental Company</label><input type="text" id="claimRentalCompany" class="form-input" placeholder="e.g. Hertz, Avis, Budget" required></div>
+      </div>
+
+      <!-- STEP 2 — Incident -->
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--primary);margin-bottom:16px">Step 2 — What Happened</div>
+      <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:28px">
+        <div class="form-group"><label class="form-label">Incident Date</label><input type="date" id="claimIncidentDate" class="form-input" required></div>
+        <div class="form-group">
+          <label class="form-label">Damage Type (select all that apply)</label>
+          <div class="damage-chips" id="damageChips">
+            <span class="damage-chip" data-type="Collision">Collision</span>
+            <span class="damage-chip" data-type="Theft">Theft</span>
+            <span class="damage-chip" data-type="Windscreen">Windscreen</span>
+            <span class="damage-chip" data-type="Tyre">Tyre</span>
+            <span class="damage-chip" data-type="Undercarriage">Undercarriage</span>
+            <span class="damage-chip" data-type="Key Lost">Key Lost</span>
+            <span class="damage-chip" data-type="Other">Other</span>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Description of What Happened</label><textarea class="form-input form-textarea" id="claimDescription" rows="4" placeholder="Describe what happened in as much detail as possible..." style="resize:vertical;height:auto" required></textarea></div>
+        <div class="form-group"><label class="form-label">Amount Charged by Rental Company (AUD)</label><input type="number" id="claimAmount" class="form-input" placeholder="0.00" step="0.01" min="0" required></div>
+      </div>
+
+      <!-- STEP 3 — Documents -->
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--primary);margin-bottom:16px">Step 3 — Upload Documents</div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px">
+        <div>
+          <label class="form-label" style="margin-bottom:8px">Rental Agreement <span style="color:var(--primary)">*</span></label>
+          <div class="upload-zone" id="zone-rental">
+            <div class="upload-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <p class="upload-label"><strong>Click to upload</strong> or drag & drop<br><span style="font-size:12px">PDF, JPG, PNG up to 10MB</span></p>
+            <input type="file" name="rental_agreement" id="fileRentalAgreement" accept=".pdf,.jpg,.jpeg,.png" required>
+            <div class="upload-filename" id="fname-rental"></div>
+          </div>
+        </div>
+        <div>
+          <label class="form-label" style="margin-bottom:8px">Invoice / Receipt <span style="color:var(--primary)">*</span></label>
+          <div class="upload-zone" id="zone-invoice">
+            <div class="upload-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <p class="upload-label"><strong>Click to upload</strong> or drag & drop</p>
+            <input type="file" name="invoice" id="fileInvoice" accept=".pdf,.jpg,.jpeg,.png" required>
+            <div class="upload-filename" id="fname-invoice"></div>
+          </div>
+        </div>
+        <div>
+          <label class="form-label" style="margin-bottom:8px">Driver Licence <span style="color:var(--primary)">*</span></label>
+          <div class="upload-zone" id="zone-licence">
+            <div class="upload-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            <p class="upload-label"><strong>Click to upload</strong> or drag & drop</p>
+            <input type="file" name="driver_licence" id="fileDriverLicence" accept=".pdf,.jpg,.jpeg,.png" required>
+            <div class="upload-filename" id="fname-licence"></div>
+          </div>
+        </div>
+        <div>
+          <label class="form-label" style="margin-bottom:8px">Damage Photos <span style="color:var(--primary)">*</span></label>
+          <div class="upload-zone" id="zone-photos">
+            <div class="upload-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+            <p class="upload-label"><strong>Click to upload</strong> up to 10 photos</p>
+            <input type="file" name="damage_photos" id="fileDamagePhotos" accept=".jpg,.jpeg,.png" multiple required>
+            <div class="upload-filename" id="fname-photos"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dynamic Final Warning -->
+      <div id="claimWarningBlock" style="background:#FFFBEB;border:1px solid #FDE68A;border-left:4px solid #F59E0B;border-radius:8px;padding:16px;margin:30px 0 20px;display:none;animation: fadeIn 0.4s ease-out">
+        <h4 style="color:#92400E;margin-bottom:8px;font-weight:700;display:flex;align-items:center;gap:8px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Important: Final Review Required
+        </h4>
+        <p style="color:#78350F;font-size:14px;margin-bottom:8px">
+          Before submitting your claim, please review all details carefully. <strong>You will not be able to edit this claim submission once it is sent.</strong> Make sure you have checked everything.
+        </p>
+        <p style="color:#78350F;font-size:14px;margin:0">
+          For further assistance, please contact: <a href="mailto:support@rentalshield.com.au" style="color:#92400E;text-decoration:underline;font-weight:600">support@rentalshield.com.au</a>
+        </p>
+      </div>
+
+      <!-- Submit -->
+      <label class="form-check" style="margin-bottom:20px">
+        <input type="checkbox" id="claimConfirm" required>
+        <span class="form-check-label">I confirm all information provided is accurate and true to the best of my knowledge.</span>
+      </label>
+      <button type="submit" class="btn-quote" id="claimSubmitBtn">
+        SUBMIT CLAIM
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:10px">We'll acknowledge your claim within 24 hours</p>
+    </form>
+    </div>
+  </div>
+</div>
+<script src="js/app.js"></script>
+<script src="js/api.js"></script>
+<script src="js/claims.js"></script>
+
+  <!-- Initialize AOS -->
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    if(typeof AOS !== 'undefined') {
+        AOS.init({ once: true, duration: 600, easing: 'ease-out-cubic' });
+    }
+    // Track quote form submit
+    const globalQuoteForm = document.getElementById('quoteForm');
+    if (globalQuoteForm) {
+       globalQuoteForm.addEventListener('submit', function() {
+           if(typeof fbq !== 'undefined') {
+               fbq('track', 'InitiateCheckout');
+           }
+       });
+    }
+  </script>
+
+<!-- Mobile App Bottom Nav -->
+<div class="app-bottom-nav">
+  <a href="dashboard.html" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Home</span>
+  </a>
+  <a href="my-policies.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    <span>Policies</span>
+  </a>
+  <a href="my-claims.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span>Claims</span>
+  </a>
+  <a href="profile.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>Profile</span>
+  </a>
+</div>
+
+</body>
+
+</html>

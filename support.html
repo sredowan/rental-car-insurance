@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support Center | Rental Shield</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+.support-layout { display:flex; flex-direction:column; height: calc(100vh - 120px); background:#fff; border-radius:var(--r-xl); border:1px solid var(--border); overflow:hidden; }
+.support-header { padding:24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:#f8fafc; }
+.support-header-title { font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:18px; color:var(--text-dark); display:flex; align-items:center; gap:8px;}
+.support-messages { flex:1; padding:24px; overflow-y:auto; display:flex; flex-direction:column; gap:16px; background:#f0f4f8; }
+.support-reply-box { padding:20px; border-top:1px solid var(--border); background:#fff; }
+
+.chat-bubble { max-width:80%; padding:14px 18px; border-radius:16px; font-size:14px; line-height:1.5; white-space:pre-wrap; }
+.chat-inbound { background:var(--primary); color:#ffffff; align-self:flex-end; border-bottom-right-radius:4px; }
+.chat-outbound { background:#ffffff; color:var(--text-dark); align-self:flex-start; border:1px solid var(--border); border-bottom-left-radius:4px; box-shadow:var(--shadow-sm); }
+</style>
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+</head>
+<body>
+<div class="dashboard-layout" id="dashboardPage">
+  <aside class="sidebar">
+    <div class="sidebar-logo">Rental Shield</div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="sidebar-item" style="color:#ffffff;text-decoration:none">Dashboard</a>
+      <a href="index.html#quote" class="sidebar-item" style="color:#ffffff;text-decoration:none">Get a Quote</a>
+      <a href="my-policies.html" class="sidebar-item" style="color:#ffffff;text-decoration:none">My Policies</a>
+      <a href="my-claims.html" class="sidebar-item" style="color:#ffffff;text-decoration:none">My Claims</a>
+      <div class="sidebar-divider"></div>
+      <a href="my-profile.html" class="sidebar-item" style="color:#ffffff;text-decoration:none">My Profile</a>
+      <a href="support.html" class="sidebar-item active" style="color:#ffffff;text-decoration:none">Support Center</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="#" class="sidebar-item" data-signout style="color:rgba(239,68,68,0.8);text-decoration:none;padding:8px 0">Sign Out</a>
+    </div>
+  </aside>
+
+  <div class="dashboard-main">
+    <div class="dashboard-topbar">
+      <div class="topbar-title">Support Center</div>
+      <div class="topbar-right"><div class="topbar-avatar" title="User"></div></div>
+    </div>
+
+    <div class="dashboard-content">
+      <div class="support-layout">
+        <div class="support-header">
+          <div class="support-header-title">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            Message Support
+          </div>
+          <span style="font-size:13px;color:var(--text-muted);font-weight:600">Typically replies within 24 hours</span>
+        </div>
+        
+        <div class="support-messages" id="supportMessages">
+          <div style="margin:auto;color:var(--text-muted)">Loading your messages...</div>
+        </div>
+
+        <div class="support-reply-box">
+          <textarea id="replyText" class="form-input" style="height:80px;resize:none;margin-bottom:12px;width:100%" placeholder="Type your message to support..."></textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:12px;color:var(--text-muted)">You will receive an email notification when an agent replies.</span>
+            <button class="btn btn-primary" id="btnSendMessage">Send Message</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/api.js"></script>
+<script>
+(function() {
+  const user = Auth.user();
+  if(!user) { window.location.href = 'login.html'; return; }
+  
+  const initial = (user.full_name||'U')[0];
+  document.querySelector('.topbar-avatar').textContent = initial;
+
+  const msgContainer = document.getElementById('supportMessages');
+  const txtReply = document.getElementById('replyText');
+  const btnSend = document.getElementById('btnSendMessage');
+
+  async function loadThread() {
+    try {
+      const res = await apiCall('support');
+      const msgs = res.data || [];
+      
+      if(msgs.length === 0) {
+        msgContainer.innerHTML = `
+          <div style="margin:auto;text-align:center;max-width:300px">
+            <div style="font-size:48px;margin-bottom:16px">👋</div>
+            <h3 style="margin-bottom:8px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--text-dark)">How can we help?</h3>
+            <p style="color:var(--text-muted);font-size:14px">Send us a message and our support team will get back to you here and via email.</p>
+          </div>`;
+        return;
+      }
+
+      msgContainer.innerHTML = msgs.map(m => {
+        const isIn = m.direction === 'inbound';
+        const d = new Date(m.created_at);
+        const timeStr = d.toLocaleDateString([], {month:'short', day:'numeric'}) + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        return \`
+          <div style="display:flex; flex-direction:column; gap:4px">
+            <span style="font-size:11px;color:var(--text-muted);align-self:\${isIn ? 'flex-end' : 'flex-start'}">\${isIn ? 'You' : 'Support Team'} • \${timeStr}</span>
+            <div class="chat-bubble \${isIn ? 'chat-inbound' : 'chat-outbound'}">
+              \${m.message}
+            </div>
+          </div>
+        \`;
+      }).join('');
+      
+      msgContainer.scrollTop = msgContainer.scrollHeight;
+    } catch(e) {
+      msgContainer.innerHTML = '<div style="margin:auto;color:var(--red)">Failed to load messages.</div>';
+    }
+  }
+
+  btnSend.addEventListener('click', async () => {
+    const msg = txtReply.value.trim();
+    if(!msg) return;
+
+    btnSend.disabled = true;
+    btnSend.textContent = 'Sending...';
+
+    try {
+      await apiCall('support', 'POST', { message: msg });
+      txtReply.value = '';
+      await loadThread();
+    } catch(err) {
+      alert(err.message || 'Failed to send message');
+    } finally {
+      btnSend.disabled = false;
+      btnSend.textContent = 'Send Message';
+    }
+  });
+
+  loadThread();
+})();
+</script>
+</body>
+</html>

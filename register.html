@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account | Rental Sheild</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+.strength-bar-track{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+.strength-bar-fill{height:100%;width:0;border-radius:2px;transition:width .3s ease, background .3s ease}
+.step-indicator{display:flex;gap:0;margin-bottom:24px}
+.step-ind{flex:1;height:3px;background:var(--border);border-radius:2px;transition:var(--transition)}
+.step-ind.done{background:var(--primary)}
+</style>
+
+  <!-- Facebook Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'FB_PIXEL_ID_PLACEHOLDER');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=FB_PIXEL_ID_PLACEHOLDER&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Facebook Pixel Code -->
+
+  <!-- AOS Animations -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+</head>
+
+<body>
+<nav class="navbar scrolled">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon"><img src="assets/images/logo.png" alt="Rental Sheild Logo" width="200" height="60" style="object-fit: contain;"></div>
+    </a>
+  </div>
+</nav>
+
+<div class="auth-page">
+  <div class="container">
+    <div class="auth-split">
+      <div class="auth-left">
+        <h2>Join Rental Sheild</h2>
+        <p style="margin-bottom:32px">Create your account and start protecting your rentals in minutes.</p>
+        <div class="auth-feature" style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <svg style="width:20px;height:20px;color:rgba(255,255,255,0.7)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <span class="auth-feature-text">Get your first quote in under 2 minutes</span>
+        </div>
+        <div class="auth-feature" style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <svg style="width:20px;height:20px;color:rgba(255,255,255,0.7)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="auth-feature-text">Instant digital policy to your inbox</span>
+        </div>
+        <div class="auth-feature" style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <svg style="width:20px;height:20px;color:rgba(255,255,255,0.7)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 10 20 15 15 20"/><path d="M4 4v7a4 4 0 0 0 4 4h12"/></svg>
+          <span class="auth-feature-text">Cancel anytime before pickup — full refund</span>
+        </div>
+        <div class="auth-feature" style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <svg style="width:20px;height:20px;color:rgba(255,255,255,0.7)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          <span class="auth-feature-text">Save up to 50% vs rental desk CDW</span>
+        </div>
+      </div>
+      <div class="auth-right">
+        <span class="badge badge-primary" style="margin-bottom:16px">Customer Account</span>
+        <h2>Create Account</h2>
+        <p style="margin-bottom:20px">Join thousands of smart travellers.</p>
+
+        <div class="step-indicator">
+          <div class="step-ind done" id="si1"></div>
+          <div style="width:4px"></div>
+          <div class="step-ind" id="si2"></div>
+          <div style="width:4px"></div>
+          <div class="step-ind" id="si3"></div>
+        </div>
+
+        <!-- Step 1 -->
+        <form class="auth-form" id="registerForm">
+          <div class="form-group"><label class="form-label">Full Name</label><input type="text" id="regName" class="form-input" placeholder="James Miller" required></div>
+          <div class="form-group"><label class="form-label">Email Address</label><input type="email" id="regEmail" class="form-input" placeholder="james@example.com" required></div>
+          <div class="form-group"><label class="form-label">Phone Number</label>
+            <div class="input-icon-wrap"><span class="input-icon" style="font-size:13px;font-weight:600;left:12px">+61</span>
+              <input type="tel" id="regPhone" class="form-input" style="padding-left:52px" placeholder="4XX XXX XXX" required>
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label">State</label>
+            <select id="regState" class="form-input form-select" required>
+              <option value="">Select state</option>
+              <option>NSW</option><option>VIC</option><option>QLD</option><option>WA</option>
+              <option>SA</option><option>TAS</option><option>ACT</option><option>NT</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <div style="position:relative">
+              <input type="password" id="password" class="form-input" placeholder="Min. 8 characters" style="padding-right:44px">
+              <button type="button" data-toggle-pass style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:600;color:var(--text-muted);background:none;border:none;cursor:pointer">SHOW</button>
+            </div>
+            <div class="strength-bar-track"><div class="strength-bar-fill" id="strengthBar"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-top:2px;color:var(--text-muted)">
+              <span>Password strength</span><span id="strengthText"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" class="form-input" placeholder="Re-enter password">
+          </div>
+          <label class="form-check">
+            <input type="checkbox"><span class="form-check-label">I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></span>
+          </label>
+          <button type="submit" class="btn btn-primary btn-full">Create Account →</button>
+          <div class="auth-link">Already have an account? <a href="login.html">Sign in →</a></div>
+        </form>
+      </div></div></div>
+<script src="js/app.js"></script>
+<script src="js/api.js"></script>
+
+  <!-- Initialize AOS -->
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    if(typeof AOS !== 'undefined') {
+        AOS.init({ once: true, duration: 600, easing: 'ease-out-cubic' });
+    }
+    // Track quote form submit
+    const globalQuoteForm = document.getElementById('quoteForm');
+    if (globalQuoteForm) {
+       globalQuoteForm.addEventListener('submit', function() {
+           if(typeof fbq !== 'undefined') {
+               fbq('track', 'InitiateCheckout');
+           }
+       });
+    }
+  </script>
+</body>
+
+</html>

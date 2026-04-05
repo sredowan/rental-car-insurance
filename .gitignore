@@ -1,0 +1,42 @@
+# Environment secrets
+.env
+
+# Dependencies
+vendor/
+composer.phar
+composer-setup.php
+
+# Temporary/dev scripts
+tmp_*.php
+test*.php
+fix_*.js
+inject*.js
+resize_logo.js
+add_favicon.js
+refactor_*.js
+replace_emojis.js
+update_branding.js
+update_nav.js
+convert_*.js
+create_dash_quote.js
+add_quote_modal.js
+tmp_fix_sidebar.js
+
+# Database dumps (sensitive)
+*.sql
+
+# Dev artifacts
+implementation_plan.md
+app_audit.md
+
+# Uploads (user content)
+uploads/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/

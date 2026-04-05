@@ -1,0 +1,14 @@
+RewriteEngine On
+RewriteBase /api/
+
+# Block access to PHP config files directly
+RewriteRule ^config/ - [F,L]
+
+# Block access to middleware/helpers directly
+RewriteRule ^middleware/ - [F,L]
+RewriteRule ^helpers/ - [F,L]
+
+# Route everything to index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]

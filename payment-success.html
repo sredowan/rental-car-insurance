@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard | Rental Sheild</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+.policy-hero-card{background:linear-gradient(135deg,var(--bg-navy),#1E3A5F);border-radius:var(--r-xl);padding:28px;color:#fff;margin-bottom:24px}
+.policy-hero-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.policy-number-mono{font-family:'JetBrains Mono',monospace;font-size:16px;color:rgba(255,255,255,0.7)}
+.policy-detail-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}
+.policy-det{display:flex;flex-direction:column;gap:3px}
+.policy-det-label{font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.5);font-weight:600}
+.policy-det-value{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#fff}
+.quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.quick-action-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;text-align:center;cursor:pointer;transition:var(--transition);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:10px}
+.quick-action-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--primary)}
+.qa-icon{font-size:28px}
+.qa-label{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:var(--text-dark)}
+.empty-policy-state{text-align:center;padding:48px 24px;background:var(--bg-soft);border:2px dashed var(--border);border-radius:var(--r-xl);margin-bottom:24px}
+.empty-policy-state h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--text-dark);margin-bottom:8px}
+.empty-policy-state p{color:var(--text-muted);margin-bottom:20px}
+.skeleton{background:linear-gradient(90deg,rgba(255,255,255,0.1) 25%,rgba(255,255,255,0.2) 50%,rgba(255,255,255,0.1) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;height:20px;width:80px;display:inline-block}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@media(max-width:800px){.policy-detail-row{grid-template-columns:repeat(2,1fr)}.quick-actions{grid-template-columns:repeat(2,1fr)}}
+</style>
+
+  <!-- Facebook Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'FB_PIXEL_ID_PLACEHOLDER');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=FB_PIXEL_ID_PLACEHOLDER&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Facebook Pixel Code -->
+
+  <!-- AOS Animations -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+</head>
+
+<body>
+<div class="dashboard-layout" id="dashboardPage">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Rental Sheild
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Dashboard</a>
+      <a href="index.html#quote" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 10 20 15 15 20"/><path d="M4 4v7a4 4 0 0 0 4 4h12"/></svg> Get a Quote</a>
+      <a href="my-policies.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> My Policies</a>
+      <a href="my-claims.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> My Claims</a>
+      <div class="sidebar-divider"></div>
+      <a href="my-profile.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> My Profile</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="#" class="sidebar-item" data-signout style="color:rgba(239,68,68,0.8);text-decoration:none;padding:8px 0"><span class="sidebar-item-icon">→</span> Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="dashboard-main">
+    <div class="dashboard-topbar">
+      <div class="topbar-title">Dashboard</div>
+      <div class="topbar-right">
+        <a href="index.html#quote" class="btn btn-primary btn-sm">+ New Quote</a>
+        <div class="topbar-avatar" title="User"></div>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+<div style="max-width: 640px; margin: 0 auto; margin-top: 24px;">
+<div class="success-card animate-slide">
+      <!-- Top -->
+      <div class="success-card-top">
+        <div class="success-check animate-fade" style="display:flex;align-items:center;justify-content:center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+        <h2 style="color:#fff;margin-bottom:8px">You're Protected!</h2>
+        <p style="color:rgba(255,255,255,0.7);font-size:15px">Your policy is active. Check your inbox — it's already there.</p>
+      </div>
+
+      <!-- Body -->
+      <div class="success-card-body">
+        <!-- Policy Ref -->
+        <div class="policy-ref">
+          <div>
+            <div class="policy-ref-label">Policy Number</div>
+            <div class="policy-ref-number" id="ps-policyNumber">—</div>
+          </div>
+          <span class="badge badge-emerald">● Active</span>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="policy-details-grid">
+          <div class="policy-detail-item"><span class="policy-detail-label">State</span><span class="policy-detail-value" id="ps-state">—</span></div>
+          <div class="policy-detail-item"><span class="policy-detail-label">Coverage</span><span class="policy-detail-value" id="ps-coverage">—</span></div>
+          <div class="policy-detail-item"><span class="policy-detail-label">Start</span><span class="policy-detail-value" id="ps-start">—</span></div>
+          <div class="policy-detail-item"><span class="policy-detail-label">End</span><span class="policy-detail-value" id="ps-end">—</span></div>
+          <div class="policy-detail-item"><span class="policy-detail-label">Duration</span><span class="policy-detail-value" id="ps-days">—</span></div>
+          <div class="policy-detail-item"><span class="policy-detail-label">Excess</span><span class="policy-detail-value" id="ps-excess" style="color:var(--emerald)">$0</span></div>
+          <div class="policy-detail-item"><span class="policy-detail-label">Per Day</span><span class="policy-detail-value" id="ps-rate">—</span></div>
+          <div class="policy-detail-item"><span class="policy-detail-label">Total Paid</span><span class="policy-detail-value" id="ps-total" style="color:var(--primary)">—</span></div>
+        </div>
+
+        <!-- Email confirmation -->
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:4px">Policy document sent to:</p>
+        <p style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;color:var(--text-dark);margin-bottom:4px" id="ps-email">—</p>
+        <p style="font-size:12px;color:var(--text-muted)">(Check spam if you don't see it within a minute)</p>
+
+        <!-- Counter Tip -->
+        <div class="counter-tip" style="margin-top:20px">
+          <strong><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2.5" style="margin-right:6px;vertical-align:middle"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> At the rental counter:</strong>
+          <p>When staff offer CDW or LDW — politely decline. You're already covered by Rental Sheild. Saying yes would mean double-paying for the same protection.</p>
+        </div>
+
+        <!-- Actions -->
+        <div class="success-actions mt-24">
+          <a href="#" class="btn btn-outline btn-full"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:text-bottom"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Download Policy PDF</a>
+          <a href="my-policies.html" class="btn btn-outline btn-full"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:text-bottom"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg> View My Policies</a>
+          <a href="index.html" class="btn btn-primary btn-full">← Back to Home</a>
+        </div>
+
+        <!-- What's Next -->
+        <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">
+          <p style="font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:8px;font-family:'Plus Jakarta Sans',sans-serif">What to do now:</p>
+          <ol style="display:flex;flex-direction:column;gap:6px;padding-left:20px">
+            <li style="font-size:13px;color:var(--text-muted)">Check your email for the policy PDF</li>
+            <li style="font-size:13px;color:var(--text-muted)">Save the policy to your phone (screenshot works)</li>
+            <li style="font-size:13px;color:var(--text-muted)">At the rental counter — decline CDW and drive away</li>
+            <li style="font-size:13px;color:var(--text-muted)">If anything goes wrong — log in and make a claim</li>
+          </ol>
+        </div>
+      </div>
+    
+</div>
+</div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="js/app.js"></script>
+<script src="js/api.js"></script>
+<script src="js/pdf.js"></script>
+<script>
+(function() {
+  const p = JSON.parse(sessionStorage.getItem('dsc_new_policy') || '{}');
+  const fmt = d => d ? new Date(d).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  
+  set('ps-policyNumber', p.policy_number || '—');
+  set('ps-state', p.state || '—');
+  set('ps-coverage', p.coverage_amount ? `$${parseInt(p.coverage_amount).toLocaleString()}` : '—');
+  set('ps-start', fmt(p.start_date));
+  set('ps-end', fmt(p.end_date));
+  set('ps-days', p.duration_days ? `${p.duration_days} days` : '—');
+  set('ps-rate', p.price_per_day ? `$${parseFloat(p.price_per_day).toFixed(2)}` : '—');
+  set('ps-total', p.total_price ? `$${parseFloat(p.total_price).toFixed(2)}` : '—');
+  
+  const user = Auth.user();
+  set('ps-email', user?.email || '—');
+
+  document.querySelector('.success-actions a:first-child').addEventListener('click', (e) => {
+      e.preventDefault();
+      const oldText = e.target.innerHTML;
+      e.target.innerText = "Generating PDF...";
+      window.generatePolicyPDF(p, user).then(() => {
+          e.target.innerHTML = oldText;
+      });
+  });
+
+})();
+</script>
+
+  <!-- Initialize AOS -->
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    if(typeof AOS !== 'undefined') {
+        AOS.init({ once: true, duration: 600, easing: 'ease-out-cubic' });
+    }
+    // Track quote form submit
+    const globalQuoteForm = document.getElementById('quoteForm');
+    if (globalQuoteForm) {
+       globalQuoteForm.addEventListener('submit', function() {
+           if(typeof fbq !== 'undefined') {
+               fbq('track', 'InitiateCheckout');
+           }
+       });
+    }
+  </script>
+
+<!-- Mobile App Bottom Nav -->
+<div class="app-bottom-nav">
+  <a href="dashboard.html" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Home</span>
+  </a>
+  <a href="my-policies.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    <span>Policies</span>
+  </a>
+  <a href="my-claims.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span>Claims</span>
+  </a>
+  <a href="profile.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>Profile</span>
+  </a>
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rental Sheild — Rental Car Insurance | Save Up to 50%</title>
+  <meta name="description"
+    content="Skip the rental desk rip-off. Get the same rental car excess insurance for up to 50% less. $0 excess, instant policy, cancel anytime. Australia-wide coverage.">
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    /* ── Page-specific overrides ── */
+    .hero {
+      min-height: 100vh;
+      padding-top: 68px
+    }
+
+    .hero-overlay {
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.88) 40%, rgba(255, 255, 255, 0.55) 65%, rgba(255, 255, 255, 0.20) 100%)
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      gap: 48px;
+      align-items: center;
+      padding: 60px 0 80px
+    }
+
+    .hero-text {
+      position: relative;
+      z-index: 2
+    }
+
+    .hero-text h1 {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      line-height: 1.05;
+      margin-bottom: 20px
+    }
+
+    .hero-text h1 .line2 {
+      color: var(--primary)
+    }
+
+    .hero-text .hero-sub {
+      font-size: 1.1rem;
+      color: var(--text-body);
+      max-width: 480px;
+      margin-bottom: 28px
+    }
+
+    .hero-text .hero-pills {
+      margin-bottom: 12px
+    }
+
+    @media(max-width:960px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 32px
+      }
+
+      .hero-inner .hero-card-col {
+        order: 2
+      }
+
+      .hero-inner .hero-card-col .quote-card {
+        max-width: 100%
+      }
+    }
+
+    .advantages-num {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 36px;
+      color: var(--amber);
+      margin-bottom: 4px
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px
+    }
+
+    .feature-card {
+      background: #fff;
+      border-radius: var(--r-lg);
+      padding: 28px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+      transition: var(--transition)
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(232, 0, 58, 0.15)
+    }
+
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px
+    }
+
+    .fi-red {
+      background: var(--primary-lt)
+    }
+
+    .fi-blue {
+      background: var(--blue-lt)
+    }
+
+    .fi-green {
+      background: var(--emerald-lt)
+    }
+
+    .fi-amber {
+      background: var(--amber-lt)
+    }
+
+    .fi-navy {
+      background: rgba(11, 30, 61, 0.06)
+    }
+
+    .fi-purple {
+      background: #F5F3FF
+    }
+
+    .feature-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--text-dark);
+      margin-bottom: 8px
+    }
+
+    .feature-body {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6
+    }
+
+    @media(max-width:900px) {
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    @media(max-width:580px) {
+      .features-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px
+    }
+
+    .testimonial-card {
+      background: #fff;
+      border-radius: var(--r-lg);
+      padding: 24px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm)
+    }
+
+    .stars {
+      color: var(--amber);
+      font-size: 14px;
+      margin-bottom: 12px
+    }
+
+    .testimonial-text {
+      font-size: 14px;
+      color: var(--text-body);
+      line-height: 1.6;
+      margin-bottom: 16px;
+      font-style: italic
+    }
+
+    .testimonial-author {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--text-dark)
+    }
+
+    .testimonial-loc {
+      font-size: 12px;
+      color: var(--text-muted)
+    }
+
+    @media(max-width:800px) {
+      .testimonial-grid {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+
+  <!-- Facebook Pixel Code -->
+  <script>
+    !function (f, b, e, v, n, t, s) {
+      if (f.fbq) return; n = f.fbq = function () {
+        n.callMethod ?
+        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+      };
+      if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+      n.queue = []; t = b.createElement(e); t.async = !0;
+      t.src = v; s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s)
+    }(window, document, 'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'FB_PIXEL_ID_PLACEHOLDER');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=FB_PIXEL_ID_PLACEHOLDER&ev=PageView&noscript=1" /></noscript>
+  <!-- End Facebook Pixel Code -->
+
+  <!-- AOS Animations -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-icon"><img src="assets/images/logo.png" alt="Rental Sheild Logo" width="200" height="60"
+            style="object-fit: contain;"></div>
+      </a>
+      <div class="nav-links">
+        <a href="how-it-works.html" class="nav-link">How It Works</a>
+        <a href="coverage.html" class="nav-link">Coverage</a>
+
+        <a href="faq.html" class="nav-link">FAQ</a>
+        <a href="about.html" class="nav-link">About</a>
+      </div>
+      <div class="nav-right">
+        <a href="login.html" class="btn btn-outline btn-sm">Sign In</a>
+        <a href="#quote" class="btn btn-primary btn-sm">Get a Quote</a>
+      </div>
+      <button class="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu">
+    <a href="how-it-works.html" class="nav-link">How It Works</a>
+    <a href="coverage.html" class="nav-link">Coverage</a>
+
+    <a href="faq.html" class="nav-link">FAQ</a>
+    <a href="about.html" class="nav-link">About</a>
+    <a href="login.html" class="btn btn-outline">Sign In</a>
+    <a href="#quote" class="btn btn-primary">Get a Quote</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <img src="assets/images/hero-car.jpg" alt="Rental car on an open Australian road" loading="eager">
+      <div class="hero-overlay"></div>
+    </div>
+    <div class="container">
+      <div class="hero-inner">
+        <!-- Left/Main Content -->
+        <div class="hero-text">
+
+          <h1 data-aos="fade-up" data-aos-delay="100">
+            Cheaper Rental Car <span class="line2 text-primary" style="color:var(--primary);">Insurance.</span>
+          </h1>
+          <p class="hero-sub" data-aos="fade-up" data-aos-delay="200">
+            Excess cover in the event <br>your hire car is damaged or stolen.
+          </p>
+          <p class="hero-fear mt-16" data-aos="fade-up" data-aos-delay="300">
+            Prices from <span class="hero-price" style="color:var(--primary); font-weight:800;">$9.96/day</span>
+          </p>
+
+        </div>
+
+        <!-- Quote Card (right col) -->
+        <div class="hero-card-col animate-slide delay-2" id="quote">
+          <div class="quote-card">
+            <div class="quote-card-title">Get a Quote</div>
+            <div class="quote-card-rule"></div>
+            <form class="quote-form" id="quoteForm" novalidate>
+              <div class="form-group">
+                <label class="form-label" for="quoteState">Where are you hiring your car from?</label>
+                <div class="input-icon-wrap">
+                  <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  <select id="quoteState" name="state" class="form-input form-select" style="padding-left:44px"
+                    required>
+                    <option value="">Select a state</option>
+                    <option value="NSW">NSW — New South Wales</option>
+                    <option value="VIC">VIC — Victoria</option>
+                    <option value="QLD">QLD — Queensland</option>
+                    <option value="WA">WA — Western Australia</option>
+                    <option value="SA">SA — South Australia</option>
+                    <option value="TAS">TAS — Tasmania</option>
+                    <option value="ACT">ACT — Australian Capital Territory</option>
+                    <option value="NT">NT — Northern Territory</option>
+                    <option value="Overseas">Overseas</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="quoteStartDate">Start Date</label>
+                  <input type="date" id="quoteStartDate" name="start_date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="quoteStartTime">Time</label>
+                  <select id="quoteStartTime" name="start_time" class="form-input form-select">
+                    <option value="06:00">6:00 AM</option>
+                    <option value="07:00">7:00 AM</option>
+                    <option value="08:00">8:00 AM</option>
+                    <option value="09:00" selected>9:00 AM</option>
+                    <option value="10:00">10:00 AM</option>
+                    <option value="11:00">11:00 AM</option>
+                    <option value="12:00">12:00 PM</option>
+                    <option value="13:00">1:00 PM</option>
+                    <option value="14:00">2:00 PM</option>
+                    <option value="15:00">3:00 PM</option>
+                    <option value="16:00">4:00 PM</option>
+                    <option value="17:00">5:00 PM</option>
+                    <option value="18:00">6:00 PM</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="quoteEndDate">End Date</label>
+                  <input type="date" id="quoteEndDate" name="end_date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="quoteEndTime">Time</label>
+                  <select id="quoteEndTime" name="end_time" class="form-input form-select">
+                    <option value="06:00">6:00 AM</option>
+                    <option value="07:00">7:00 AM</option>
+                    <option value="08:00">8:00 AM</option>
+                    <option value="09:00" selected>9:00 AM</option>
+                    <option value="10:00">10:00 AM</option>
+                    <option value="11:00">11:00 AM</option>
+                    <option value="12:00">12:00 PM</option>
+                    <option value="13:00">1:00 PM</option>
+                    <option value="14:00">2:00 PM</option>
+                    <option value="15:00">3:00 PM</option>
+                    <option value="16:00">4:00 PM</option>
+                    <option value="17:00">5:00 PM</option>
+                    <option value="18:00">6:00 PM</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="quoteDuration" class="duration-chip"></div>
+
+              <button type="submit" class="btn-quote" id="quoteSubmit">
+                GET A QUOTE
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </button>
+            </form>
+            <p class="trust-micro">Secure SSL &nbsp;·&nbsp; Instant Policy &nbsp;·&nbsp; Cancel Anytime</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADVANTAGE BAR -->
+  <div class="advantage-bar">
+    <div class="container">
+      <div class="advantage-grid">
+        <div class="advantage-item" data-aos="fade-up" data-aos-delay="100">
+          <svg style="color:var(--primary); margin-bottom:12px;" width="32" height="32" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20" />
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>
+          <div class="advantage-title">Up to 50% Cheaper</div>
+          <div class="advantage-sub">than rental desk CDW pricing</div>
+        </div>
+        <div class="advantage-item" data-aos="fade-up" data-aos-delay="200">
+          <svg style="color:var(--primary); margin-bottom:12px;" width="32" height="32" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            <path d="m9 12 2 2 4-4" />
+          </svg>
+          <div class="advantage-title">$0 Excess Always</div>
+          <div class="advantage-sub">you pay nothing when you claim</div>
+        </div>
+        <div class="advantage-item" data-aos="fade-up" data-aos-delay="300">
+          <svg style="color:var(--primary); margin-bottom:12px;" width="32" height="32" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m22 2-7 20-4-9-9-4Z" />
+            <path d="M22 2 11 13" />
+          </svg>
+          <div class="advantage-title">Instant Digital Policy</div>
+          <div class="advantage-sub">emailed to you in seconds</div>
+        </div>
+        <div class="advantage-item" data-aos="fade-up" data-aos-delay="400">
+          <svg style="color:var(--primary); margin-bottom:12px;" width="32" height="32" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+            <line x1="3" x2="21" y1="9" y2="9" />
+            <line x1="9" x2="9" y1="21" y2="9" />
+          </svg>
+          <div class="advantage-title">All Major Brands</div>
+          <div class="advantage-sub">Hertz, Avis, Budget, Europcar & more</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+
+  <!-- WHY PAY MORE -->
+  <section class="section" style="background:var(--bg-soft)">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+        <div data-aos="fade-up">
+          <span class="section-label">The Problem</span>
+          <h2>Rental desks have been overcharging you for years.</h2>
+          <p style="margin:20px 0 28px">When you pick up a rental car, counter staff are trained to sell CDW or LDW for
+            $25–$35 per day. That's up to <strong>$245 for a single week</strong> — for the exact same protection you
+            can get right now for $9.96/day.</p>
+          <div class="price-compare" style="justify-content:flex-start;gap:16px;flex-wrap:wrap;margin:0 0 28px">
+            <div class="price-box" style="padding:20px 28px">
+              <div class="price-box-label">Rental Desk</div>
+              <div class="price-box-amount strike">$35</div>
+              <div class="price-box-unit">/day</div>
+            </div>
+            <div class="price-vs">VS</div>
+            <div class="price-box" style="padding:20px 28px;border-color:var(--primary)">
+              <div class="price-box-label" style="color:var(--primary)">Rental Sheild</div>
+              <div class="price-box-amount highlight">$9.96</div>
+              <div class="price-box-unit">/day</div>
+            </div>
+          </div>
+          <span class="price-saving">That's up to 72% cheaper — same protection</span>
+        </div>
+        <div data-aos="fade-up" class="card" style="border-color:rgba(232,0,58,0.12)">
+          <h4 style="margin-bottom:16px">Here's what you get:</h4>
+          <ul style="display:flex;flex-direction:column;gap:12px">
+            <li style="display:flex;gap:12px;font-size:15px;align-items:center"><span class="css-check"></span>
+              Collision damage protection</li>
+            <li style="display:flex;gap:12px;font-size:15px;align-items:center"><span class="css-check"></span> Theft
+              protection</li>
+            <li style="display:flex;gap:12px;font-size:15px;align-items:center"><span class="css-check"></span>
+              Windscreen, tyres & undercarriage</li>
+            <li style="display:flex;gap:12px;font-size:15px;align-items:center"><span class="css-check"></span> All
+              authorized drivers included</li>
+            <li style="display:flex;gap:12px;font-size:15px;align-items:center"><span class="css-check"></span> Admin &
+              processing fees covered</li>
+            <li style="display:flex;gap:12px;font-size:15px;align-items:center"><span class="css-check"></span> Towing
+              costs after an accident</li>
+            <li style="display:flex;gap:12px;font-size:15px;align-items:center"><span class="css-check"></span> Key
+              replacement & lockout</li>
+            <li style="display:flex;gap:12px;font-size:15px;align-items:center"><span class="css-check"></span> $0
+              excess — you pay nothing on a claim</li>
+          </ul>
+          <a href="coverage.html"
+            style="display:inline-block;margin-top:20px;color:var(--primary);font-weight:600;font-size:14px">See full
+            coverage details →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-label">Simple Process</span>
+        <h2 class="section-title">Protected in 3 easy steps</h2>
+        <p class="section-sub">No phone calls. No paperwork. No counter pressure.</p>
+      </div>
+      <div class="steps-grid" data-aos="fade-up">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <div class="step-title">Get Your Quote</div>
+          <p class="step-body">Enter your rental state and dates. Takes under 2 minutes online. No commitment required.
+          </p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <div class="step-title">Drive Protected</div>
+          <p class="step-body">Policy emailed instantly. At the rental counter, simply decline CDW — you're already
+            covered.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <div class="step-title">Claim With Ease</div>
+          <p class="step-body">Submit documents online if anything goes wrong. Approved claims paid within a few
+            business days.</p>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:40px">
+        <a href="how-it-works.html" class="btn btn-outline">See the full process →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- COVERAGE TIERS -->
+  <section class="section section-soft">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-label">Choose Your Cover</span>
+        <h2 class="section-title">Pick the coverage that fits your trip</h2>
+        <p class="section-sub">From $9.96/day — the same class of protection the rental desk charges $35+ for.</p>
+      </div>
+      <div class="tiers-grid" data-aos="fade-up">
+        <div class="tier-card">
+          <span class="tier-limit">$4,000</span>
+          <span class="tier-price">$9.96<small>/day</small></span>
+          <span class="tier-badge">Base price</span>
+        </div>
+        <div class="tier-card">
+          <span class="tier-limit">$5,000</span>
+          <span class="tier-price">$11.27<small>/day</small></span>
+          <span class="tier-badge">+$1.31/day</span>
+        </div>
+        <div class="tier-card" style="position:relative">
+          <span class="tier-best">Best Value</span>
+          <span class="tier-limit">$6,000</span>
+          <span class="tier-price">$14.42<small>/day</small></span>
+          <span class="tier-badge">+$3.15/day</span>
+        </div>
+        <div class="tier-card">
+          <span class="tier-limit">$7,000</span>
+          <span class="tier-price">$15.48<small>/day</small></span>
+          <span class="tier-badge">+$1.06/day</span>
+        </div>
+        <div class="tier-card">
+          <span class="tier-limit">$8,000</span>
+          <span class="tier-price">$16.79<small>/day</small></span>
+          <span class="tier-badge">+$1.31/day</span>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:20px">All tiers include $0 excess ·
+        Collision · Theft · Windscreen · All authorized drivers</p>
+      <div style="text-align:center;margin-top:28px">
+        <a href="#quote" class="btn btn-primary btn-lg">Get a Quote Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT'S COVERED -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-label">Transparency</span>
+        <h2 class="section-title">Know exactly what you're covered for</h2>
+      </div>
+      <div class="coverage-cols" data-aos="fade-up">
+        <div class="coverage-box">
+          <div class="coverage-box-header covered-header"><span class="css-check" style="margin-right:8px"></span>
+            Covered</div>
+          <ul class="coverage-list">
+            <li>Collision damage (up to your coverage limit)</li>
+            <li>Theft of the rental vehicle</li>
+            <li>Windscreen & glass damage</li>
+            <li>Tyre damage</li>
+            <li>Undercarriage damage</li>
+            <li>Key replacement & lockout</li>
+            <li>Admin & processing fees</li>
+            <li>Towing costs after accident</li>
+            <li>All authorized drivers on agreement</li>
+          </ul>
+        </div>
+        <div class="coverage-box">
+          <div class="coverage-box-header excluded-header"><span class="css-cross" style="margin-right:8px"></span> Not
+            Covered</div>
+          <ul class="coverage-list">
+            <li>Interior damage from misuse</li>
+            <li>Driving under the influence</li>
+            <li>Off-road use (without specific add-on)</li>
+            <li>Personal belongings in vehicle</li>
+            <li>Mechanical or electrical failure</li>
+            <li>Racing or sports use</li>
+          </ul>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:24px">
+        <a href="coverage.html" class="btn btn-outline">View Full Coverage Details →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BRANDS MARQUEE -->
+  <section class="section-dark section-sm">
+    <div class="container" style="margin-bottom:20px;text-align:center">
+      <p
+        style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);font-weight:700">
+        Compatible with all major rental brands</p>
+    </div>
+    <div class="marquee-wrap">
+      <div class="marquee-track">
+        <span class="marquee-item">Hertz</span><span class="marquee-item">Avis</span>
+        <span class="marquee-item">Budget</span><span class="marquee-item">Enterprise</span>
+        <span class="marquee-item">Europcar</span><span class="marquee-item">Thrifty</span>
+        <span class="marquee-item">Alamo</span><span class="marquee-item">Sixt</span>
+        <span class="marquee-item">Jucy</span><span class="marquee-item">Apollo</span>
+        <span class="marquee-item">Hertz</span><span class="marquee-item">Avis</span>
+        <span class="marquee-item">Budget</span><span class="marquee-item">Enterprise</span>
+        <span class="marquee-item">Europcar</span><span class="marquee-item">Thrifty</span>
+        <span class="marquee-item">Alamo</span><span class="marquee-item">Sixt</span>
+        <span class="marquee-item">Jucy</span><span class="marquee-item">Apollo</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST / UNDERWRITER -->
+  <section class="section section-dark">
+    <div class="container">
+      <div class="section-header center">
+        <div style="display:flex;justify-content:center;margin-bottom:24px">
+          <div class="icon-box" style="background:rgba(255,255,255,0.1);color:#fff;width:64px;height:64px">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+        </div>
+        <h2>Built on the world's most trusted<br>insurance foundations.</h2>
+        <p style="max-width:580px;margin:16px auto 0">Your policy is distributed under AFSL-authorised standards,
+          underwritten by global insurance institutions operating under Lloyd's of London benchmarks.</p>
+      </div>
+      <div class="trust-pillars mt-48" data-aos="fade-up">
+        <div class="trust-pillar">
+          <div class="trust-pillar-title">Lloyd's Standards</div>
+          <div class="trust-pillar-sub">Global insurance benchmark</div>
+        </div>
+        <div class="trust-pillar">
+          <div class="trust-pillar-title">AFSL Authorised</div>
+          <div class="trust-pillar-sub">Australian Financial Services Licensed</div>
+        </div>
+        <div class="trust-pillar">
+          <div class="trust-pillar-title">Secure Payments</div>
+          <div class="trust-pillar-sub">256-bit SSL encryption</div>
+        </div>
+        <div class="trust-pillar">
+          <div class="trust-pillar-title">100+ Countries</div>
+          <div class="trust-pillar-sub">Valid for overseas rentals</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY THEY WON'T TELL YOU -->
+  <section class="section section-soft">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-label">Insider Knowledge</span>
+        <h2 class="section-title">What the rental company won't tell you</h2>
+      </div>
+      <div class="features-grid" data-aos="fade-up">
+        <div class="feature-card">
+          <div class="icon-box red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M15 9l-6 6M9 9l6 6" />
+            </svg></div>
+          <div class="feature-title">CDW doesn't cover everything</div>
+          <p class="feature-body">Windscreen cracks, tyre damage, admin fees and processing charges are often excluded
+            from the rental desk CDW — even after you've paid for it.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon-box amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+              <line x1="1" y1="10" x2="23" y2="10" />
+            </svg></div>
+          <div class="feature-title">Your credit card may not protect you</div>
+          <p class="feature-body">Most credit card cover is secondary — you'd need to claim through your personal auto
+            insurance first, which can raise your premiums.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon-box green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+              <path d="M22 4L12 14.01l-3-3" />
+            </svg></div>
+          <div class="feature-title">You can say NO at the counter</div>
+          <p class="feature-body">If you have your own independent policy, you're legally protected. Simply decline the
+            counter upsell and save yourself hundreds of dollars.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-label">FAQ</span>
+        <h2 class="section-title">Common questions answered</h2>
+      </div>
+      <div class="faq-list container-sm" data-aos="fade-up">
+        <div class="faq-item">
+          <button class="faq-btn"><span class="faq-q">What is car hire excess insurance?</span><span
+              class="faq-icon">+</span></button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Car hire excess insurance covers the excess (deductible) you'd otherwise have
+              to pay if your rental car is damaged or stolen. Most rental cars come with basic insurance built in, but
+              you're still liable for the excess — often up to $4,500. Rental Sheild reimburses you for that excess so
+              you pay nothing out of pocket.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn"><span class="faq-q">How much does it cost?</span><span
+              class="faq-icon">+</span></button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Our policies start at just $9.96/day for $4,000 of coverage. You can increase
+              your coverage up to $8,000 for $16.79/day. Compare that to rental desks charging $25–$35/day for similar
+              cover. Save up to 72% by buying with us before you pick up the car.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn"><span class="faq-q">Do I need to show my policy at the rental counter?</span><span
+              class="faq-icon">+</span></button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">No. You don't need to show your policy document at the counter. Simply tell
+              the rental agent you don't need CDW or LDW — you already have your own cover. They may push back, but
+              you're legally entitled to decline.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn"><span class="faq-q">What rental companies are covered?</span><span
+              class="faq-icon">+</span></button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Our policies are compatible with all licensed commercial car rental companies
+              including Hertz, Avis, Budget, Enterprise, Europcar, Thrifty, Alamo, Sixt, Jucy, Apollo and thousands more
+              — anywhere in Australia and overseas.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn"><span class="faq-q">Can I cancel and get a refund?</span><span
+              class="faq-icon">+</span></button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Yes. You can cancel your policy at any time before your rental pickup date for
+              a complete full refund. No questions asked, no cancellation fees.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn"><span class="faq-q">Are additional drivers covered?</span><span
+              class="faq-icon">+</span></button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Yes. All licensed drivers listed on your rental vehicle agreement are covered
+              under your policy at no extra charge. This is a major advantage over many credit card policies which often
+              only cover the primary cardholder.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn"><span class="faq-q">How do I make a claim?</span><span
+              class="faq-icon">+</span></button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Log into your account after your rental, click "New Claim," and upload your
+              documents (rental agreement, damage invoice, driver licence, and photos). We'll acknowledge your claim
+              within 24 hours and process approved claims within 3–5 business days.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-btn"><span class="faq-q">What states are covered?</span><span
+              class="faq-icon">+</span></button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">We cover rentals across all Australian states and territories: NSW, VIC, QLD,
+              WA, SA, TAS, ACT, and NT. Higher coverage tiers ($5,000–$8,000) also include international/overseas
+              rentals.</div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:32px">
+        <a href="faq.html" class="btn btn-outline">View all FAQs →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <div class="container">
+      <h2>Don't Let the Rental Desk<br>Charge You Twice</h2>
+      <p>Get instant rental car protection for up to 50% less. No commitment. Cancel anytime before pickup for a full
+        refund.</p>
+      <a href="#quote" class="btn btn-outline-white btn-lg">GET A QUOTE NOW →</a>
+      <div class="cta-pills">
+        <span class="cta-pill">Bank-grade security</span>
+        <span class="cta-pill">Instant policy to inbox</span>
+        <span class="cta-pill">Full refund before pickup</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">
+            <div class="nav-logo-icon"><img src="assets/images/logo.png" alt="Rental Sheild Logo" width="200"
+                height="60" style="object-fit: contain;"></div>
+            Rental Sheild
+          </div>
+          <p class="footer-desc">Australia's smarter alternative to rental desk insurance. Same protection, up to 50%
+            cheaper, instant digital policy.</p>
+          <p style="font-size:12px;color:rgba(255,255,255,0.35)">ABN: 19 686 732 043 &middot; info@rentalshield.com.au
+            &middot; www.rentalshield.com.au · AFSL: XXXXXX</p>
+        </div>
+        <div>
+          <div class="footer-col-title">Coverage</div>
+          <div class="footer-links">
+            <a href="coverage.html" class="footer-link">What's Covered</a>
+            <a href="coverage.html#tiers" class="footer-link">Coverage Tiers</a>
+            <a href="how-it-works.html" class="footer-link">How It Works</a>
+            <a href="claims.html" class="footer-link">Make a Claim</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Support</div>
+          <div class="footer-links">
+            <a href="faq.html" class="footer-link">FAQ</a>
+            <a href="claims.html" class="footer-link">Track a Claim</a>
+            <a href="about.html" class="footer-link">Contact Us</a>
+            <a href="login.html" class="footer-link">My Account</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Legal</div>
+          <div class="footer-links">
+            <a href="#" class="footer-link">Privacy Policy</a>
+            <a href="#" class="footer-link">Terms & Conditions</a>
+            <a href="#" class="footer-link">Product Disclosure</a>
+            <a href="about.html" class="footer-link">About Us</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-legal">"Rental Sheild" is an AFSL-authorised insurance distributor. This site contains general
+          information only. Before purchasing, please read the Product Disclosure Statement. Insurance is underwritten
+          by institutions operating under global insurance standards.</p>
+        <div class="footer-payment-icons">
+          <span class="payment-icon">VISA</span>
+          <span class="payment-icon">MC</span>
+          <span class="payment-icon">AMEX</span>
+          <span class="payment-icon">PAYPAL</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/quote.js"></script>
+
+  <!-- Initialize AOS -->
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    if (typeof AOS !== 'undefined') {
+      AOS.init({ once: true, duration: 600, easing: 'ease-out-cubic' });
+    }
+    // Track quote form submit
+    const globalQuoteForm = document.getElementById('quoteForm');
+    if (globalQuoteForm) {
+      globalQuoteForm.addEventListener('submit', function () {
+        if (typeof fbq !== 'undefined') {
+          fbq('track', 'InitiateCheckout');
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
