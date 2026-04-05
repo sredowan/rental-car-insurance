@@ -1,4 +1,5 @@
 RewriteEngine On
+DirectorySlash Off
 RewriteBase /api/
 
 # Block access to PHP config files directly
