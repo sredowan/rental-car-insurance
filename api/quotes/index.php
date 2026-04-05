@@ -3,6 +3,7 @@
 // POST /api/quotes  — Create quote (NO price in response)
 // GET  /api/quotes/:id — Get quote detail WITH price
 // ============================================================
+require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../middleware/cors.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../helpers/response.php';
