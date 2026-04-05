@@ -2,7 +2,7 @@
 .env
 
 # Dependencies
-vendor/
+# vendor/ — included in repo for Hostinger deployment (no composer on server)
 composer.phar
 composer-setup.php
 
