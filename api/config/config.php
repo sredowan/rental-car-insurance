@@ -14,10 +14,19 @@ $envFile = __DIR__ . '/../../.env';
 if (file_exists($envFile)) {
     $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
-        if (str_starts_with(trim($line), '#')) continue;
-        if (strpos($line, '=') !== false) {
-            putenv(trim($line));
+        $line = trim($line);
+        if ($line === '' || str_starts_with($line, '#')) continue;
+        $eqPos = strpos($line, '=');
+        if ($eqPos === false) continue;
+        $key   = trim(substr($line, 0, $eqPos));
+        $value = trim(substr($line, $eqPos + 1));
+        // Strip surrounding quotes if present
+        if ((str_starts_with($value, '"') && str_ends_with($value, '"')) ||
+            (str_starts_with($value, "'") && str_ends_with($value, "'"))) {
+            $value = substr($value, 1, -1);
         }
+        putenv("$key=$value");
+        $_ENV[$key] = $value;
     }
 }
 
