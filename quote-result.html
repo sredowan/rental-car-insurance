@@ -6,13 +6,196 @@
 <meta name="description" content="Your personalised rental car insurance quote. Choose your coverage level and see your price.">
 <link rel="stylesheet" href="css/main.css">
 <style>
-.inclusions-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
-.inclusion-item{display:flex;align-items:center;gap:8px;font-size:14px;color:rgba(255,255,255,0.8)}
-.inclusion-item span{color:var(--emerald);font-size:12px}
-.edit-link{font-size:13px;color:var(--text-muted);cursor:pointer;font-weight:500}
-.edit-link:hover{color:var(--primary)}
-.tier-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
-.tier-card.selected .tier-sub{color:rgba(232,0,58,0.6)}
+/* ── Quote Result Page Overhaul ── */
+.qr-page{padding:88px 0 40px;background:var(--bg-soft);min-height:100vh}
+
+/* Trip summary bar — compact horizontal */
+.trip-bar{background:#fff;border-radius:var(--r-lg);border:1px solid var(--border);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:var(--shadow-sm)}
+.trip-bar-item{display:flex;flex-direction:column;gap:1px;min-width:0}
+.trip-bar-label{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);font-weight:700}
+.trip-bar-value{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:var(--text-dark);white-space:nowrap}
+.trip-bar-divider{width:1px;height:32px;background:var(--border);flex-shrink:0}
+.trip-bar-vehicle{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--text-dark)}
+.trip-bar-edit{margin-left:auto;font-size:12px;font-weight:600;color:var(--primary);flex-shrink:0}
+
+/* Vehicle coverage note */
+.vt-banner{background:var(--bg-blue);border:1px solid #BFDBFE;border-radius:var(--r-md);padding:14px 16px;margin-bottom:20px;display:flex;gap:14px;align-items:center;font-size:12px;color:var(--text-body)}
+.vt-banner-left{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;min-width:48px}
+.vt-banner-left .vt-icon{font-size:24px;line-height:1}
+.vt-banner-left .vt-label{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:13px;color:var(--text-dark)}
+.vt-banner-rows{flex:1;display:flex;flex-direction:column;gap:6px}
+.vt-row{display:flex;align-items:center;gap:6px;font-size:12px;line-height:1.3}
+.vt-row-tag{font-weight:700;font-size:10px;padding:2px 6px;border-radius:var(--r-sm);white-space:nowrap;flex-shrink:0}
+.vt-row-tag.covered{background:rgba(5,150,105,0.1);color:var(--emerald)}
+.vt-row-tag.not-covered{background:rgba(239,68,68,0.08);color:var(--red)}
+.vt-row-text{color:var(--text-body)}
+
+/* Plan cards — stacked vertically on mobile for clarity */
+.plans-section{margin-bottom:20px}
+.plans-section h3{font-size:16px;margin-bottom:4px}
+.plans-section p{font-size:13px;color:var(--text-muted);margin-bottom:16px}
+.plan-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+
+/* Enhanced plan card */
+.plan-card-v2{background:#fff;border:2px solid var(--border);border-radius:var(--r-lg);padding:16px;text-align:center;cursor:pointer;transition:var(--transition);position:relative;display:flex;flex-direction:column;align-items:center}
+.plan-card-v2:hover{border-color:var(--primary);box-shadow:0 4px 20px rgba(30,127,216,0.12);transform:translateY(-2px)}
+.plan-card-v2.selected{border-color:var(--primary);background:var(--primary-lt);box-shadow:0 4px 20px rgba(30,127,216,0.15)}
+.plan-card-v2 .plan-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:16px;color:var(--text-dark);margin-bottom:2px}
+.plan-card-v2 .plan-price{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:22px;color:var(--primary)}
+.plan-card-v2 .plan-price small{font-size:12px;font-weight:500;color:var(--text-muted)}
+.plan-card-v2 .plan-tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--r-full);background:var(--bg-soft);color:var(--text-muted);margin:6px 0 8px;text-transform:uppercase;letter-spacing:0.04em}
+.plan-card-v2.selected .plan-tag{background:rgba(30,127,216,0.1);color:var(--primary)}
+.plan-card-v2 .plan-total-mini{font-size:12px;font-weight:700;color:var(--text-dark);margin-top:4px}
+.plan-card-v2 .plan-cta{display:inline-flex;align-items:center;justify-content:center;gap:4px;margin-top:10px;padding:8px 16px;border-radius:var(--r-sm);font-size:12px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;background:transparent;border:1.5px solid var(--border);color:var(--text-muted);transition:var(--transition);width:100%}
+.plan-card-v2.selected .plan-cta{background:var(--primary);border-color:var(--primary);color:#fff}
+.plan-card-v2 .plan-badge-top{position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:800;padding:2px 10px;border-radius:var(--r-full);white-space:nowrap;font-family:'Plus Jakarta Sans',sans-serif}
+.plan-card-v2 .plan-badge-best{background:var(--amber);color:#fff}
+.plan-card-v2 .plan-badge-max{background:linear-gradient(135deg,#7C3AED,#A78BFA);color:#fff}
+
+/* Features section */
+.features-card{background:#fff;border-radius:var(--r-lg);border:1px solid var(--border);padding:20px;margin-bottom:20px;box-shadow:var(--shadow-sm)}
+.features-card h4{font-size:15px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.features-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+.feat-item{display:flex;align-items:center;gap:8px;font-size:13px;line-height:1.3}
+.feat-item.excluded{opacity:0.4;text-decoration:line-through}
+
+/* Price summary — sticky bottom on mobile */
+.price-summary{background:var(--bg-navy);border-radius:var(--r-xl);padding:24px;color:#fff;box-shadow:var(--shadow-xl)}
+.price-summary .ps-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:8px}
+.price-summary .ps-plan-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:18px;color:#fff}
+.ps-coverage-pill{font-size:10px;font-weight:800;letter-spacing:0.04em;padding:4px 10px;border-radius:var(--r-full);background:linear-gradient(135deg,rgba(5,150,105,0.2),rgba(5,150,105,0.08));border:1px solid rgba(5,150,105,0.3);color:#34D399;white-space:nowrap}
+
+/* Compare button */
+.compare-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:var(--r-full);border:1px solid var(--border);background:#fff;font-size:11px;font-weight:600;color:var(--primary);cursor:pointer;transition:var(--transition);font-family:'Plus Jakarta Sans',sans-serif}
+.compare-btn:hover{background:var(--primary-lt);border-color:var(--primary)}
+.compare-btn svg{flex-shrink:0}
+
+/* Compare Modal */
+.cmp-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px}
+.cmp-overlay.open{display:flex}
+.cmp-modal{background:#fff;border-radius:var(--r-xl);max-width:720px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-xl);animation:slideUp 0.3s ease}
+.cmp-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 12px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;border-radius:var(--r-xl) var(--r-xl) 0 0;z-index:2}
+.cmp-header h3{font-size:18px}
+.cmp-close{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--text-muted);transition:var(--transition)}
+.cmp-close:hover{background:var(--red-lt);border-color:var(--red);color:var(--red)}
+.cmp-body{padding:16px 24px 24px}
+.cmp-table{width:100%;border-collapse:collapse}
+.cmp-table th{padding:10px 12px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);text-align:center;border-bottom:2px solid var(--border);background:var(--bg-soft)}
+.cmp-table th:first-child{text-align:left;color:var(--text-dark)}
+.cmp-table th.cmp-best{background:var(--primary-lt);color:var(--primary)}
+.cmp-table td{padding:10px 12px;font-size:13px;text-align:center;border-bottom:1px solid var(--border-light);color:var(--text-body)}
+.cmp-table td:first-child{text-align:left;font-weight:600;color:var(--text-dark);font-size:13px}
+.cmp-table tr:last-child td{border-bottom:none}
+.cmp-table .cmp-check{color:var(--emerald);font-size:16px}
+.cmp-table .cmp-cross{color:var(--text-light);font-size:14px}
+.cmp-table .cmp-col-best{background:rgba(30,127,216,0.03)}
+.cmp-price-row td{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:16px;color:var(--primary);padding:14px 12px;border-top:2px solid var(--border)}
+.cmp-price-row td:first-child{color:var(--text-dark);font-size:13px;font-weight:700}
+@media(max-width:600px){
+  .cmp-modal{border-radius:var(--r-lg) var(--r-lg) 0 0;max-height:85vh;align-self:flex-end}
+  .cmp-header{padding:16px 18px 10px}
+  .cmp-body{padding:12px 14px 20px}
+  .cmp-table th,.cmp-table td{padding:8px 6px;font-size:11px}
+  .cmp-price-row td{font-size:14px}
+}
+.ps-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px;color:rgba(255,255,255,0.65)}
+.ps-row strong{color:#fff;font-weight:700}
+.ps-divider{border:none;border-top:1px solid rgba(255,255,255,0.08);margin:8px 0}
+.ps-total{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0 0}
+.ps-total-label{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:rgba(255,255,255,0.6)}
+.ps-total-price{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:36px;color:var(--primary);line-height:1}
+.ps-compare{font-size:11px;color:rgba(255,255,255,0.35);text-align:right;margin-top:4px}
+.ps-buy-btn{margin-top:16px;background:var(--primary);color:#fff;border:none;width:100%;padding:15px;border-radius:var(--r-md);font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;transition:var(--transition);cursor:pointer}
+.ps-buy-btn:hover{background:var(--primary-dk);transform:translateY(-1px);box-shadow:0 8px 24px rgba(30,127,216,0.35)}
+.ps-cancel-note{font-size:11px;color:rgba(255,255,255,0.35);text-align:center;margin-top:8px}
+.ps-trust{display:flex;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.08);flex-wrap:wrap}
+.ps-trust-item{font-size:11px;color:rgba(255,255,255,0.45);display:flex;align-items:center;gap:4px}
+
+/* Layout */
+.qr-grid{display:grid;grid-template-columns:1fr 360px;gap:24px;align-items:start}
+
+/* Mobile overhaul */
+@media(max-width:900px){
+  .navbar{display:none !important}
+  .qr-page{padding:16px 0 100px}
+  .qr-grid{grid-template-columns:1fr;gap:16px}
+  .trip-bar{padding:12px 14px;gap:10px}
+  .trip-bar-divider{height:24px}
+  .trip-bar-value{font-size:13px}
+  .plan-cards-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .plan-card-v2{padding:12px 8px}
+  .plan-card-v2 .plan-name{font-size:14px}
+  .plan-card-v2 .plan-price{font-size:18px}
+  .plan-card-v2 .plan-cta{padding:6px 10px;font-size:11px}
+  .features-grid{grid-template-columns:1fr;gap:6px}
+  .features-card{padding:16px}
+  .price-summary{border-radius:var(--r-lg);padding:20px}
+  .ps-total-price{font-size:28px}
+  /* Sticky buy bar on mobile */
+  .mobile-buy-bar{display:flex !important;position:fixed;bottom:0;left:0;right:0;z-index:999;background:var(--bg-navy);padding:12px 16px;box-shadow:0 -4px 20px rgba(0,0,0,0.15);align-items:center;gap:12px}
+  .mobile-buy-bar .mbb-price{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:20px;color:#fff;white-space:nowrap}
+  .mobile-buy-bar .mbb-sub{font-size:10px;color:rgba(255,255,255,0.5);font-weight:600}
+  .mobile-buy-bar .mbb-btn{flex:1;background:var(--primary);color:#fff;border:none;padding:12px;border-radius:var(--r-sm);font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+}
+@media(max-width:420px){
+  .plan-cards-grid{grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .plan-card-v2 .plan-name{font-size:12px}
+  .plan-card-v2 .plan-price{font-size:16px}
+  .plan-card-v2 .plan-tag{font-size:9px;padding:2px 6px}
+}
+.mobile-buy-bar{display:none}
+
+/* Exclusion card */
+.excl-card{background:#fff;border-radius:var(--r-lg);border:1px solid var(--border);border-left:3px solid var(--red);padding:16px 20px;margin-bottom:20px;box-shadow:var(--shadow-sm)}
+.excl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.excl-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:var(--text-dark);display:flex;align-items:center;gap:6px}
+.excl-title svg{flex-shrink:0}
+.excl-details-btn{display:inline-flex;align-items:center;gap:3px;padding:3px 10px;border-radius:var(--r-full);border:1px solid var(--border);background:#fff;font-size:10px;font-weight:700;color:var(--red);cursor:pointer;transition:var(--transition);font-family:'Plus Jakarta Sans',sans-serif}
+.excl-details-btn:hover{background:var(--red-lt);border-color:var(--red)}
+.excl-vehicle{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg-soft);border-radius:var(--r-md);margin-bottom:10px;font-size:13px}
+.excl-vehicle-icon{font-size:20px}
+.excl-vehicle-info{display:flex;flex-direction:column;gap:1px}
+.excl-vehicle-covered{font-size:12px;color:var(--emerald);font-weight:600}
+.excl-vehicle-not{font-size:12px;color:var(--text-muted)}
+.excl-brief{font-size:12px;color:var(--text-muted);line-height:1.5;display:flex;align-items:flex-start;gap:6px}
+.excl-brief svg{flex-shrink:0;margin-top:1px}
+
+/* Exclusion details modal */
+.excl-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px}
+.excl-overlay.open{display:flex}
+.excl-modal{background:#fff;border-radius:var(--r-xl);max-width:480px;width:100%;box-shadow:var(--shadow-xl);animation:slideUp 0.3s ease}
+.excl-modal-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 12px;border-bottom:1px solid var(--border)}
+.excl-modal-header h4{font-size:16px;display:flex;align-items:center;gap:8px}
+.excl-modal-body{padding:16px 24px 24px}
+.excl-modal-list{display:flex;flex-direction:column;gap:10px}
+.excl-modal-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text-body);line-height:1.5}
+.excl-modal-item svg{flex-shrink:0;margin-top:2px}
+@media(max-width:600px){
+  .excl-modal{border-radius:var(--r-lg) var(--r-lg) 0 0;align-self:flex-end}
+  .excl-card{padding:14px 16px}
+}
+
+/* Full Protection modal */
+.fp-overlay{display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px}
+.fp-overlay.open{display:flex}
+.fp-modal{background:#fff;border-radius:var(--r-xl);max-width:640px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-xl);animation:slideUp 0.3s ease}
+.fp-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 14px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff;border-radius:var(--r-xl) var(--r-xl) 0 0;z-index:2}
+.fp-header h3{font-size:17px;display:flex;align-items:center;gap:8px}
+.fp-body{padding:20px 24px 28px}
+.fp-section{margin-bottom:20px}
+.fp-section:last-child{margin-bottom:0}
+.fp-section-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:var(--text-dark);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.fp-list{display:flex;flex-direction:column;gap:8px}
+.fp-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;line-height:1.5;color:var(--text-body)}
+.fp-item svg{flex-shrink:0;margin-top:2px}
+.fp-note{font-size:11px;color:var(--text-muted);line-height:1.6;padding:12px;background:var(--bg-soft);border-radius:var(--r-md);margin-top:16px}
+.fp-link{display:flex;align-items:center;gap:6px;margin-top:14px;padding:10px 14px;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--r-md);font-size:12px;font-weight:600;color:var(--primary);cursor:pointer;transition:var(--transition);text-decoration:none}
+.fp-link:hover{background:var(--primary-lt);border-color:var(--primary)}
+@media(max-width:600px){
+  .fp-modal{border-radius:var(--r-lg) var(--r-lg) 0 0;max-height:85vh;align-self:flex-end}
+  .fp-header{padding:16px 18px 10px}
+  .fp-body{padding:16px 18px 24px}
+}
 </style>
 
   <!-- Facebook Pixel Code -->
@@ -51,95 +234,223 @@
   </div>
 </nav>
 
-<div class="result-page">
+<div class="qr-page">
   <div class="container">
-    <!-- Breadcrumb -->
-    <div style="margin-bottom:24px;font-size:13px;color:var(--text-muted)">
-      <a href="index.html" style="color:var(--primary)">← Back to home</a> &nbsp;/ Your Quote
-    </div>
-
-    <div class="result-grid">
+    <div class="qr-grid">
       <!-- Left Column -->
       <div>
-        <!-- Trip Summary -->
-        <div class="result-trip-card">
-          <div class="flex-between">
-            <h4>Your Rental Details</h4>
-            <a href="index.html" class="edit-link">Edit</a>
+        <!-- Trip Summary Bar -->
+        <div class="trip-bar" data-aos="fade-up">
+          <div class="trip-bar-item">
+            <span class="trip-bar-label">Location</span>
+            <span class="trip-bar-value" id="result-state">&mdash;</span>
           </div>
-          <div class="result-trip-grid">
-            <div class="result-trip-item"><span class="result-trip-label">State</span><span class="result-trip-value" id="result-state">—</span></div>
-            <div class="result-trip-item"><span class="result-trip-label">Start</span><span class="result-trip-value" id="result-start">—</span></div>
-            <div class="result-trip-item"><span class="result-trip-label">End</span><span class="result-trip-value" id="result-end">—</span></div>
-            <div class="result-trip-item"><span class="result-trip-label">Duration</span><span class="result-trip-value" id="result-days">—</span></div>
+          <div class="trip-bar-divider"></div>
+          <div class="trip-bar-item">
+            <span class="trip-bar-label">Pickup</span>
+            <span class="trip-bar-value" id="result-start">&mdash;</span>
+          </div>
+          <div class="trip-bar-divider"></div>
+          <div class="trip-bar-item">
+            <span class="trip-bar-label">Return</span>
+            <span class="trip-bar-value" id="result-end">&mdash;</span>
+          </div>
+          <div class="trip-bar-divider"></div>
+          <div class="trip-bar-item">
+            <span class="trip-bar-label">Duration</span>
+            <span class="trip-bar-value" id="result-days">&mdash;</span>
+          </div>
+          <a href="index.html" class="trip-bar-edit">Edit</a>
+        </div>
+
+        <!-- Vehicle Banner -->
+        <div class="vt-banner" data-aos="fade-up" data-aos-delay="50">
+          <div class="vt-banner-left">
+            <span class="vt-icon" id="result-vehicle-icon">🚗</span>
+            <span class="vt-label" id="result-vehicle-label">Car</span>
+          </div>
+          <div class="vt-banner-rows" id="vehicleCoverageNotes">
+            <!-- Rendered by JS -->
           </div>
         </div>
 
-        <!-- Coverage Selector -->
-        <div class="coverage-selector">
-          <h3>Choose Your Coverage Level</h3>
-          <p style="font-size:14px;color:var(--text-muted);margin-top:6px">Higher coverage = more protection for high-value rentals. All tiers include $0 excess.</p>
-          <div class="tier-list" id="coverageTiers"><!-- Rendered by JS --></div>
+        <!-- Plan Selection -->
+        <div class="plans-section" data-aos="fade-up" data-aos-delay="100">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <h3>Choose Your Plan</h3>
+            <button class="compare-btn" id="openCompareBtn" type="button">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="2" fill="currentColor"/><circle cx="17" cy="12" r="2" fill="currentColor"/><circle cx="11" cy="18" r="2" fill="currentColor"/></svg>
+              Compare
+            </button>
+          </div>
+          <p>All plans include $100,000 coverage &middot; Zero excess</p>
+          <div class="plan-cards-grid" id="coverageTiers"><!-- Rendered by JS --></div>
         </div>
 
         <!-- What's Included -->
-        <div class="card mt-24">
-          <h4 style="margin-bottom:16px">What's included at this level</h4>
-          <ul style="display:flex;flex-direction:column;gap:12px">
-            <li style="display:flex;gap:12px;font-size:14px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" style="vertical-align: middle; margin-right: 6px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Collision damage up to your coverage limit</li>
-            <li style="display:flex;gap:12px;font-size:14px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" style="vertical-align: middle; margin-right: 6px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Theft of vehicle</li>
-            <li style="display:flex;gap:12px;font-size:14px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" style="vertical-align: middle; margin-right: 6px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Windscreen & glass</li>
-            <li style="display:flex;gap:12px;font-size:14px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" style="vertical-align: middle; margin-right: 6px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Tyres, undercarriage, keys</li>
-            <li style="display:flex;gap:12px;font-size:14px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" style="vertical-align: middle; margin-right: 6px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Admin & processing fees</li>
-            <li style="display:flex;gap:12px;font-size:14px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" style="vertical-align: middle; margin-right: 6px;"><polyline points="20 6 9 17 4 12"></polyline></svg> Towing costs</li>
-            <li style="display:flex;gap:12px;font-size:14px;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" style="vertical-align: middle; margin-right: 6px;"><polyline points="20 6 9 17 4 12"></polyline></svg> All authorized drivers</li>
-            <li style="display:flex;gap:12px;font-size:14px;color:var(--emerald);font-weight:700;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" style="vertical-align: middle; margin-right: 6px;"><polyline points="20 6 9 17 4 12"></polyline></svg> $0 excess — you pay nothing on a claim</li>
-          </ul>
-          <a href="coverage.html" style="display:inline-block;margin-top:16px;font-size:13px;color:var(--primary);font-weight:600">See full policy document →</a>
-        </div>
-
-        <!-- Trust -->
-        <div style="display:flex;gap:16px;margin-top:20px;flex-wrap:wrap">
-          <span class="badge badge-navy">Secure Checkout</span>
-          <span class="badge badge-emerald">Instant Policy Email</span>
-          <span class="badge badge-navy">Cancel Before Pickup</span>
+        <div class="features-card" data-aos="fade-up" data-aos-delay="150">
+          <h4>
+            <span>What's included</span>
+            <a href="coverage.html" style="font-size:12px;font-weight:600;color:var(--primary)">View all &rarr;</a>
+          </h4>
+          <div class="features-grid" id="includedFeaturesList">
+            <!-- Rendered dynamically by JS -->
+          </div>
+          <a class="fp-link" id="openFpBtn" href="javascript:void(0)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            See full protection details
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="margin-left:auto"><path d="M9 18l6-6-6-6"/></svg>
+          </a>
         </div>
       </div>
 
-      <!-- Right Column — Price Breakdown -->
+      <!-- Right Column — Price Summary -->
       <div>
-        <div class="price-breakdown-card">
-          <div class="pb-title">Your Price Breakdown</div>
-          <div class="pb-row"><span class="pb-label">Coverage limit</span><span class="pb-value" id="result-coverage">$4,000</span></div>
-          <div class="pb-row"><span class="pb-label">Per day</span><span class="pb-value" id="result-price-per-day">$9.96</span></div>
-          <div class="pb-row"><span class="pb-label">Duration</span><span class="pb-value" id="result-duration">7 days</span></div>
-          <div class="pb-total-row">
-            <span class="pb-total-label">TOTAL</span>
-            <span class="pb-total-price" id="result-total">$69.72</span>
+        <div class="price-summary" data-aos="fade-up" data-aos-delay="100">
+          <div class="ps-header">
+            <span class="ps-plan-name" id="result-plan">Essential</span>
+            <span class="ps-coverage-pill">✓ $100K COVERAGE</span>
           </div>
-          <p class="pb-compare">vs $245+ at the rental desk for 7 days</p>
-
-          <div class="inclusions-list" style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.10)">
-            <div class="inclusion-item"><span class="css-check" style="width:12px;height:12px;margin-right:4px"></span> $0 excess on every claim</div>
-            <div class="inclusion-item"><span class="css-check" style="width:12px;height:12px;margin-right:4px"></span> Collision & theft</div>
-            <div class="inclusion-item"><span class="css-check" style="width:12px;height:12px;margin-right:4px"></span> All authorized drivers</div>
-            <div class="inclusion-item"><span class="css-check" style="width:12px;height:12px;margin-right:4px"></span> Cancel before pickup — full refund</div>
+          <div class="ps-row"><span>Per day</span><strong id="result-price-per-day">$22.99</strong></div>
+          <div class="ps-row"><span>Duration</span><strong id="result-duration">7 days</strong></div>
+          <div class="ps-row" id="result-coverage" style="display:none"></div>
+          <hr class="ps-divider">
+          <div class="ps-total">
+            <span class="ps-total-label">Total</span>
+            <span class="ps-total-price" id="result-total">$160.93</span>
           </div>
+          <p class="ps-compare">vs $245+ at the rental desk</p>
 
-          <button id="checkoutBtn" class="btn-quote" style="margin-top:24px">
+          <button id="checkoutBtn" class="ps-buy-btn">
             PURCHASE NOW
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
-          <p style="font-size:11px;color:rgba(255,255,255,0.4);text-align:center;margin-top:10px">Cancel anytime before your rental start date for a full refund</p>
+          <p class="ps-cancel-note">Cancel before pickup for a full refund</p>
+
+          <div class="ps-trust">
+            <span class="ps-trust-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> SSL Secured</span>
+            <span class="ps-trust-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Instant Policy</span>
+            <span class="ps-trust-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> $0 Excess</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Full Protection Details Modal -->
+<div class="fp-overlay" id="fpOverlay">
+  <div class="fp-modal">
+    <div class="fp-header">
+      <h3>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        Full Protection Details
+      </h3>
+      <button class="cmp-close" id="closeFpBtn" type="button">&times;</button>
+    </div>
+    <div class="fp-body">
+
+      <!-- What's Covered -->
+      <div class="fp-section">
+        <div class="fp-section-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          What's covered
+        </div>
+        <div class="fp-list" id="fpCoveredList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Not Covered -->
+      <div class="fp-section">
+        <div class="fp-section-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+          You are not covered if
+        </div>
+        <div class="fp-list" id="fpNotCoveredList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- General Conditions -->
+      <div class="fp-section">
+        <div class="fp-section-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          General Conditions
+        </div>
+        <div class="fp-list" id="fpConditionsList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Making a Claim -->
+      <div class="fp-section">
+        <div class="fp-section-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Making a Claim
+        </div>
+        <div class="fp-list" id="fpClaimsList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <div class="fp-note">
+        <strong>Rental Sheild</strong> · ABN: 19 686 732 043<br>
+        Level 25/6 Parramatta Sq, Parramatta NSW 2150<br>
+        info@rentalshield.com.au
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Exclusion Details Modal -->
+<div class="excl-overlay" id="exclOverlay">
+  <div class="excl-modal">
+    <div class="excl-modal-header">
+      <h4>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <span id="exclModalTitle">What's not covered — Car</span>
+      </h4>
+      <button class="cmp-close" id="closeExclBtn" type="button">&times;</button>
+    </div>
+    <div class="excl-modal-body">
+      <div class="excl-modal-list" id="exclModalList">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Compare Plans Modal -->
+<div class="cmp-overlay" id="compareOverlay">
+  <div class="cmp-modal">
+    <div class="cmp-header">
+      <h3>Compare Plans</h3>
+      <button class="cmp-close" id="closeCompareBtn" type="button">&times;</button>
+    </div>
+    <div class="cmp-body">
+      <table class="cmp-table" id="compareTable">
+        <!-- Populated dynamically by JS -->
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Sticky Buy Bar -->
+<div class="mobile-buy-bar">
+  <div>
+    <div class="mbb-price" id="mbb-total">$160.93</div>
+    <div class="mbb-sub" id="mbb-plan">Essential · 7 days</div>
+  </div>
+  <button class="mbb-btn" id="mbbCheckoutBtn">
+    BUY NOW
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </button>
+</div>
+
 <script src="js/app.js"></script>
-<script src="js/api.js"></script>
 <script src="js/quote.js"></script>
+<script src="js/api.js"></script>
 
   <!-- Initialize AOS -->
   <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
@@ -155,6 +466,16 @@
                fbq('track', 'InitiateCheckout');
            }
        });
+    }
+    // Hide mobile buy bar when price summary is visible
+    const priceSummary = document.querySelector('.price-summary');
+    const mobileBuyBar = document.querySelector('.mobile-buy-bar');
+    if (priceSummary && mobileBuyBar) {
+      const observer = new IntersectionObserver(([entry]) => {
+        mobileBuyBar.style.transform = entry.isIntersecting ? 'translateY(100%)' : 'translateY(0)';
+        mobileBuyBar.style.transition = 'transform 0.3s ease';
+      }, { threshold: 0.15 });
+      observer.observe(priceSummary);
     }
   </script>
 </body>

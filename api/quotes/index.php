@@ -20,11 +20,18 @@ if ($method === 'POST') {
     $errors = validate_required($body, ['state', 'start_date', 'end_date']);
     if ($errors) json_error('Validation failed.', 422, $errors);
 
-    $state      = sanitize($body['state']);
-    $start_date = $body['start_date'];
-    $end_date   = $body['end_date'];
-    $start_time = $body['start_time'] ?? '09:00';
-    $end_time   = $body['end_time']   ?? '09:00';
+    $state        = sanitize($body['state']);
+    $start_date   = $body['start_date'];
+    $end_date     = $body['end_date'];
+    $start_time   = $body['start_time'] ?? '09:00';
+    $end_time     = $body['end_time']   ?? '09:00';
+    $vehicle_type = sanitize($body['vehicle_type'] ?? 'car');
+
+    // Validate vehicle type
+    $valid_vehicles = array_keys(VEHICLE_SURCHARGES);
+    if (!in_array($vehicle_type, $valid_vehicles)) {
+        $vehicle_type = 'car';
+    }
 
     // Validate dates
     if (!strtotime($start_date) || !strtotime($end_date)) {
@@ -46,18 +53,19 @@ if ($method === 'POST') {
 
     $db = Database::get();
     $stmt = $db->prepare(
-        'INSERT INTO quotes (customer_id, state, start_date, start_time, end_date, end_time, days, status, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, "pending", NOW())'
+        'INSERT INTO quotes (customer_id, state, vehicle_type, start_date, start_time, end_date, end_time, days, status, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, "pending", NOW())'
     );
-    $stmt->execute([$customer_id, $state, $start_date, $start_time, $end_date, $end_time, $days]);
+    $stmt->execute([$customer_id, $state, $vehicle_type, $start_date, $start_time, $end_date, $end_time, $days]);
     $quote_id = (int) $db->lastInsertId();
 
     // Return quote_id ONLY — price is revealed only on GET /quotes/:id
     json_success([
-        'quote_id' => $quote_id,
-        'state'    => $state,
-        'days'     => $days,
-        'redirect' => '/quote-result.html?q=' . $quote_id,
+        'quote_id'     => $quote_id,
+        'state'        => $state,
+        'vehicle_type' => $vehicle_type,
+        'days'         => $days,
+        'redirect'     => '/quote-result.html?q=' . $quote_id,
     ], 'Quote created.', 201);
 }
 
@@ -78,27 +86,36 @@ if ($method === 'GET') {
 
     if (!$quote) json_error('Quote not found.', 404);
 
-    // Build all tier pricing options
-    $tiers = COVERAGE_TIERS;
+    $vehicle_type = $quote['vehicle_type'] ?? 'car';
+    $surcharge    = VEHICLE_SURCHARGES[$vehicle_type] ?? 0;
+
+    // Build all plan pricing options
+    $plans   = COVERAGE_PLANS;
     $options = [];
-    foreach ($tiers as $amount => $rate) {
+    foreach ($plans as $key => $plan) {
+        $price_per_day = round($plan['price_per_day'] + $surcharge, 2);
         $options[] = [
-            'coverage_amount' => $amount,
-            'price_per_day'   => $rate,
-            'total_price'     => round($rate * $quote['days'], 2),
+            'plan'            => $key,
+            'plan_label'      => $plan['label'],
+            'badge'           => $plan['badge'],
+            'coverage_amount' => $plan['coverage_amount'],
+            'price_per_day'   => $price_per_day,
+            'total_price'     => round($price_per_day * $quote['days'], 2),
+            'features'        => $plan['features'],
         ];
     }
 
     json_success([
-        'quote_id'   => (int) $quote['id'],
-        'state'      => $quote['state'],
-        'start_date' => $quote['start_date'],
-        'start_time' => $quote['start_time'],
-        'end_date'   => $quote['end_date'],
-        'end_time'   => $quote['end_time'],
-        'days'       => (int) $quote['days'],
-        'status'     => $quote['status'],
-        'options'    => $options,  // All 5 tiers with prices
+        'quote_id'     => (int) $quote['id'],
+        'state'        => $quote['state'],
+        'vehicle_type' => $vehicle_type,
+        'start_date'   => $quote['start_date'],
+        'start_time'   => $quote['start_time'],
+        'end_date'     => $quote['end_date'],
+        'end_time'     => $quote['end_time'],
+        'days'         => (int) $quote['days'],
+        'status'       => $quote['status'],
+        'options'      => $options,  // 3 plans with features
     ], 'Quote retrieved.');
 }
 

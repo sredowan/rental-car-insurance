@@ -18,7 +18,9 @@
 
   // ── Populate order summary ───────────────────────────────
   const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  setEl('co-coverage', `$${parseInt(quote.coverage || 0).toLocaleString()} — ${quote.tierLabel || ''}`);
+  const vtData = CoveragePricing.vehicleSurcharges[quote.vehicle_type || 'car'] || CoveragePricing.vehicleSurcharges.car;
+  setEl('co-coverage', `${quote.planLabel || 'Essential'} — $${parseInt(quote.coverage || 100000).toLocaleString()}`);
+  setEl('co-vehicle', `${vtData.icon} ${vtData.label}`);
   setEl('co-state', quote.state || '—');
   setEl('co-start', quote.start_date ? new Date(quote.start_date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }) : '—');
   setEl('co-end', quote.end_date ? new Date(quote.end_date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' }) : '—');
@@ -108,7 +110,8 @@
       // Step 1: Create PaymentIntent on server
       const intentRes = await apiCall('payments/create-intent', 'POST', {
         quote_id: quote.quote_id,
-        coverage_amount: parseInt(quote.coverage),
+        plan: quote.plan || 'essential',
+        vehicle_type: quote.vehicle_type || 'car',
         email: email,
       });
 
@@ -139,7 +142,8 @@
         const confirmRes = await apiCall('payments/confirm', 'POST', {
           payment_intent_id: paymentIntent.id,
           quote_id: quote.quote_id,
-          coverage_amount: parseInt(quote.coverage),
+          plan: quote.plan || 'essential',
+          vehicle_type: quote.vehicle_type || 'car',
           email: email,
           name: fullName,
           phone: phone,

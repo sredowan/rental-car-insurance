@@ -3,8 +3,57 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About Us | Rental Sheild</title>
-<meta name="description" content="Rental Sheild exists to end rental desk overcharging. Learn about our mission, values and underwriter credentials.">
+<meta name="description" content="Rental Sheild exists to end rental desk overcharging. Learn about our mission, values and commitment to fair pricing.">
 <link rel="stylesheet" href="css/main.css">
+<style>
+  .about-hero{background:var(--bg-navy);padding:120px 0 80px;text-align:center;position:relative;overflow:hidden}
+  .about-hero::before{content:'';position:absolute;top:-50%;right:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(30,127,216,0.08) 0%,transparent 70%);border-radius:50%}
+  .about-hero h1{color:#fff;margin-bottom:20px;position:relative}
+  .about-hero p{color:rgba(255,255,255,0.7);font-size:1.15rem;max-width:580px;margin:0 auto;position:relative}
+
+  .quote-block{text-align:center;padding:60px 0}
+  .quote-mark{font-size:48px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--primary);line-height:0.6;margin-bottom:20px;display:block}
+  .quote-text{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:clamp(18px,2.5vw,24px);color:var(--text-dark);line-height:1.4;max-width:700px;margin:0 auto}
+  .quote-sub{color:var(--text-muted);margin-top:24px;max-width:640px;margin-left:auto;margin-right:auto;font-size:15px;line-height:1.7}
+
+  .values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .value-card{background:#fff;border-radius:var(--r-lg);padding:28px 24px;border:1px solid var(--border);box-shadow:var(--shadow-sm);transition:var(--transition)}
+  .value-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md)}
+  .value-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+  .vi-blue{background:rgba(30,127,216,0.08)}
+  .vi-red{background:rgba(220,53,69,0.06)}
+  .vi-green{background:rgba(5,150,105,0.06)}
+  .vi-amber{background:rgba(245,158,11,0.06)}
+  .vi-navy{background:rgba(11,30,61,0.06)}
+  .vi-purple{background:rgba(124,58,237,0.06)}
+  .value-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16px;color:var(--text-dark);margin-bottom:8px}
+  .value-body{font-size:14px;color:var(--text-muted);line-height:1.6}
+
+  .trust-section{background:var(--bg-navy);padding:80px 0;text-align:center}
+  .trust-icon-box{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 24px}
+  .trust-section h2{color:#fff;margin-bottom:16px}
+  .trust-section p{color:rgba(255,255,255,0.6);max-width:620px;margin:0 auto 48px}
+  .trust-pillars-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .tp{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:var(--r-lg);padding:24px 16px;text-align:center}
+  .tp-icon{margin-bottom:12px;display:flex;justify-content:center}
+  .tp-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:4px}
+  .tp-sub{font-size:12px;color:rgba(255,255,255,0.5)}
+
+  .biz-card{max-width:600px;margin:0 auto;background:#fff;border-radius:var(--r-lg);border:1px solid var(--border);padding:32px;box-shadow:var(--shadow-sm)}
+  .biz-step{display:flex;gap:16px;align-items:flex-start}
+  .biz-step+.biz-step{margin-top:16px}
+  .biz-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;font-weight:700;color:#fff}
+
+  .legal-bar{background:var(--bg-soft);padding:32px 0;text-align:center}
+  .legal-links{display:flex;gap:20px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+  .legal-links a{font-size:13px;color:var(--primary);font-weight:600;text-decoration:none}
+  .legal-links a:hover{text-decoration:underline}
+
+  @media(max-width:768px){
+    .values-grid{grid-template-columns:1fr}
+    .trust-pillars-row{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
 
   <!-- Facebook Pixel Code -->
   <script>
@@ -42,20 +91,20 @@
 </nav>
 
 <!-- HERO -->
-<section style="background:var(--bg-navy);padding:120px 0 80px;text-align:center">
+<section class="about-hero">
   <div class="container-sm">
     <span class="section-label" style="color:var(--amber)">Our Mission</span>
-    <h1 style="color:#fff;margin-bottom:20px">We exist to end<br>rental desk overcharging.</h1>
-    <p style="color:rgba(255,255,255,0.7);font-size:1.15rem;max-width:580px;margin:0 auto">Every year, Australian car renters are overcharged millions of dollars at rental counters for insurance they could get for half the price.</p>
+    <h1 data-aos="fade-up">We exist to end<br>rental desk overcharging.</h1>
+    <p data-aos="fade-up" data-aos-delay="100">Every year, Australian car renters are overcharged millions of dollars at rental counters for insurance they could get for half the price.</p>
   </div>
 </section>
 
-<!-- MISSION STATEMENT -->
+<!-- MISSION QUOTE -->
 <section class="section">
-  <div class="container-sm" style="text-align:center">
-    <div style="font-size:64px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--primary);line-height:0.8;margin-bottom:16px">"</div>
-    <p style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:24px;color:var(--text-dark);line-height:1.4;max-width:700px;margin:0 auto">Rental Sheild was founded with a single mission: to give every car renter access to the same protection at a fair, transparent price — before they ever reach the rental counter.</p>
-    <p style="color:var(--text-muted);margin-top:24px;max-width:640px;margin-left:auto;margin-right:auto">When you pick up a rental car, you're often rushed, tired, and unfamiliar with the paperwork. Counter staff are trained to capitalise on that. We're here to change the equation — giving you the information and protection you need, ahead of time, at a price that's simply fair.</p>
+  <div class="container-sm quote-block">
+    <span class="quote-mark" data-aos="fade-up">"</span>
+    <p class="quote-text" data-aos="fade-up" data-aos-delay="100">Rental Sheild was founded with a single mission: to give every car renter access to the same protection at a fair, transparent price — before they ever reach the rental counter.</p>
+    <p class="quote-sub" data-aos="fade-up" data-aos-delay="200">When you pick up a rental car, you're often rushed, tired, and unfamiliar with the paperwork. Counter staff are trained to capitalise on that. We're here to change the equation — giving you the information and protection you need, ahead of time, at a price that's simply fair.</p>
   </div>
 </section>
 
@@ -63,28 +112,92 @@
 <section class="section section-soft">
   <div class="container">
     <div class="section-header center"><span class="section-label">What We Stand For</span><h2 class="section-title">Our core values</h2></div>
-    <div class="features-grid" data-animate>
-      <div class="feature-card"><div class="feature-icon fi-blue">💰</div><div class="feature-title">Radical Transparency</div><p class="feature-body">We show you exactly what's covered and what's not. Our pricing is published and fixed. No small print designed to trap you, no surprises when you claim.</p></div>
-      <div class="feature-card"><div class="feature-icon fi-red">⚖️</div><div class="feature-title">Fair Pricing Always</div><p class="feature-body">Our prices are determined by risk and cost — not by how much we can extract at a checkout counter. From $9.96/day, unchanged.</p></div>
-      <div class="feature-card"><div class="feature-icon fi-green">⚡</div><div class="feature-title">Speed & Simplicity</div><p class="feature-body">Quote in 2 minutes. Policy in seconds. Claim acknowledged in 24 hours. We respect your time.</p></div>
-      <div class="feature-card"><div class="feature-icon fi-amber">🤝</div><div class="feature-title">Customer First</div><p class="feature-body">We're on your side — not the rental company's. Our only incentive is to protect you well and pay claims promptly.</p></div>
-      <div class="feature-card"><div class="feature-icon fi-navy">🔐</div><div class="feature-title">Security & Trust</div><p class="feature-body">Your data is encrypted. Payments are PCI-compliant. Policies are backed by AFSL-authorised institutions.</p></div>
-      <div class="feature-card"><div class="feature-icon fi-purple">🌱</div><div class="feature-title">Continuous Improvement</div><p class="feature-body">We actively improve our claims process, coverage offerings, and pricing based on real customer outcomes.</p></div>
+    <div class="values-grid" data-animate>
+
+      <div class="value-card" data-aos="fade-up" data-aos-delay="50">
+        <div class="value-icon vi-blue">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        </div>
+        <div class="value-title">Radical Transparency</div>
+        <p class="value-body">We show you exactly what's covered and what's not. Our pricing is published and fixed. No small print designed to trap you, no surprises when you claim.</p>
+      </div>
+
+      <div class="value-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="value-icon vi-red">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#DC3545" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="value-title">Fair Pricing Always</div>
+        <p class="value-body">Our prices are determined by risk and cost — not by how much we can extract at a checkout counter. Transparent, competitive rates.</p>
+      </div>
+
+      <div class="value-card" data-aos="fade-up" data-aos-delay="150">
+        <div class="value-icon vi-amber">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="value-title">Speed & Simplicity</div>
+        <p class="value-body">Quote in 2 minutes. Policy in seconds. Claim acknowledged in 24 hours. We respect your time.</p>
+      </div>
+
+      <div class="value-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="value-icon vi-green">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="value-title">Customer First</div>
+        <p class="value-body">We're on your side — not the rental company's. Our only incentive is to protect you well and pay claims promptly.</p>
+      </div>
+
+      <div class="value-card" data-aos="fade-up" data-aos-delay="250">
+        <div class="value-icon vi-navy">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-dark)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1"/></svg>
+        </div>
+        <div class="value-title">Security & Trust</div>
+        <p class="value-body">Your data is encrypted with 256-bit SSL. Payments are PCI-compliant. Your protection is our priority.</p>
+      </div>
+
+      <div class="value-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="value-icon vi-purple">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div class="value-title">Continuous Improvement</div>
+        <p class="value-body">We actively improve our claims process, coverage offerings, and pricing based on real customer outcomes.</p>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- UNDERWRITER TRUST -->
-<section class="section section-dark">
-  <div class="container" style="text-align:center">
-    <div style="font-size:60px;margin-bottom:20px">🛡️</div>
-    <h2>Built on global insurance foundations.</h2>
-    <p style="max-width:620px;margin:20px auto 48px">Rental Sheild operates as an AFSL-authorised insurance distributor. Our policies are underwritten by institutions operating under the highest global insurance standards — including those set by Lloyd's of London, the world's oldest and most respected insurance market.</p>
-    <div class="trust-pillars">
-      <div class="trust-pillar"><div class="trust-pillar-icon">🏛️</div><div class="trust-pillar-title">Lloyd's Standards</div><div class="trust-pillar-sub">Global insurance benchmark</div></div>
-      <div class="trust-pillar"><div class="trust-pillar-icon">📋</div><div class="trust-pillar-title">AFSL Authorised</div><div class="trust-pillar-sub">Regulated by ASIC</div></div>
-      <div class="trust-pillar"><div class="trust-pillar-icon">🔐</div><div class="trust-pillar-title">256-bit SSL</div><div class="trust-pillar-sub">Payment security</div></div>
-      <div class="trust-pillar"><div class="trust-pillar-icon">⚖️</div><div class="trust-pillar-title">ASIC Compliant</div><div class="trust-pillar-sub">Australian law</div></div>
+<!-- TRUST SECTION -->
+<section class="trust-section">
+  <div class="container">
+    <div class="trust-icon-box" data-aos="fade-up">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        <path d="m9 12 2 2 4-4"/>
+      </svg>
+    </div>
+    <h2 data-aos="fade-up" data-aos-delay="50">Built on trust and transparency.</h2>
+    <p data-aos="fade-up" data-aos-delay="100">Rental Sheild provides rental car excess insurance with full transparency, zero hidden fees, and a commitment to paying claims promptly and fairly.</p>
+    <div class="trust-pillars-row" data-aos="fade-up" data-aos-delay="150">
+      <div class="tp">
+        <div class="tp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+        <div class="tp-title">$100K Coverage</div>
+        <div class="tp-sub">Maximum protection limit</div>
+      </div>
+      <div class="tp">
+        <div class="tp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+        <div class="tp-title">$0 Excess</div>
+        <div class="tp-sub">You pay nothing on a claim</div>
+      </div>
+      <div class="tp">
+        <div class="tp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        <div class="tp-title">Secure Payments</div>
+        <div class="tp-sub">256-bit SSL encryption</div>
+      </div>
+      <div class="tp">
+        <div class="tp-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div class="tp-title">Australia-Wide</div>
+        <div class="tp-sub">All states & territories</div>
+      </div>
     </div>
   </div>
 </section>
@@ -93,26 +206,33 @@
 <section class="section">
   <div class="container-sm">
     <div class="section-header center"><span class="section-label">Transparency</span><h2 class="section-title">How our business works</h2></div>
-    <div class="card" style="max-width:600px;margin:0 auto">
-      <p style="margin-bottom:16px">We believe you should know how we make money:</p>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div style="display:flex;gap:16px;align-items:flex-start"><div style="width:32px;height:32px;background:var(--primary-lt);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">1</div><div><strong style="display:block;margin-bottom:3px">You pay a premium</strong><span style="font-size:14px;color:var(--text-muted)">Based on your coverage tier and rental duration.</span></div></div>
-        <div style="display:flex;gap:16px;align-items:flex-start"><div style="width:32px;height:32px;background:var(--blue-lt);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">2</div><div><strong style="display:block;margin-bottom:3px">We distribute your policy</strong><span style="font-size:14px;color:var(--text-muted)">We earn a distribution commission on each policy sold.</span></div></div>
-        <div style="display:flex;gap:16px;align-items:flex-start"><div style="width:32px;height:32px;background:var(--emerald-lt);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">3</div><div><strong style="display:block;margin-bottom:3px">Underwriter takes the risk</strong><span style="font-size:14px;color:var(--text-muted)">Your premium contributes to a shared claims pool managed by licensed underwriters.</span></div></div>
-        <div style="display:flex;gap:16px;align-items:flex-start"><div style="width:32px;height:32px;background:var(--amber-lt);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">4</div><div><strong style="display:block;margin-bottom:3px">Claims are paid from the pool</strong><span style="font-size:14px;color:var(--text-muted)">We never profit from denied claims — our business grows when customers renew and refer others.</span></div></div>
+    <div class="biz-card" data-aos="fade-up">
+      <p style="margin-bottom:20px;font-size:15px">We believe you should know how we make money:</p>
+
+      <div class="biz-step">
+        <div class="biz-num" style="background:var(--primary)">1</div>
+        <div><strong style="display:block;margin-bottom:3px">You pay a premium</strong><span style="font-size:14px;color:var(--text-muted)">Based on your coverage tier and rental duration.</span></div>
+      </div>
+      <div class="biz-step">
+        <div class="biz-num" style="background:var(--blue)">2</div>
+        <div><strong style="display:block;margin-bottom:3px">We provide your policy</strong><span style="font-size:14px;color:var(--text-muted)">Instant digital delivery with full documentation.</span></div>
+      </div>
+      <div class="biz-step">
+        <div class="biz-num" style="background:var(--emerald)">3</div>
+        <div><strong style="display:block;margin-bottom:3px">Claims are processed fairly</strong><span style="font-size:14px;color:var(--text-muted)">We pay valid claims promptly — our business grows when customers renew and refer others.</span></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- LEGAL -->
-<section class="section-sm section-soft">
-  <div class="container-sm" style="text-align:center">
-    <p style="font-size:12px;color:var(--text-muted);line-height:1.8">ABN: 19 686 732 043 &middot; info@rentalshield.com.au &middot; www.rentalshield.com.au · AFSL Licence: XXXXXX · Authorised Representative: [Entity Name] · Regulator: ASIC</p>
-    <div style="display:flex;gap:20px;justify-content:center;margin-top:16px;flex-wrap:wrap">
-      <a href="#" style="font-size:13px;color:var(--primary);font-weight:600">Financial Services Guide (PDF)</a>
-      <a href="#" style="font-size:13px;color:var(--primary);font-weight:600">Target Market Determination</a>
-      <a href="#" style="font-size:13px;color:var(--primary);font-weight:600">Product Disclosure Statement</a>
+<section class="legal-bar">
+  <div class="container-sm">
+    <p style="font-size:12px;color:var(--text-muted);line-height:1.8">ABN: 19 686 732 043 &middot; info@rentalshield.com.au &middot; Level 25/6 Parramatta Sq, Parramatta NSW 2150</p>
+    <div class="legal-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms & Conditions</a>
+      <a href="#">Product Disclosure Statement</a>
     </div>
   </div>
 </section>
@@ -120,23 +240,15 @@
 <section class="cta-banner">
   <div class="container"><h2>Protect your next rental with a company that's on your side.</h2><a href="index.html#quote" class="btn btn-outline-white btn-lg">GET A QUOTE →</a></div>
 </section>
-<footer class="footer"><div class="container"><div class="footer-bottom"><p class="footer-legal">Rental Sheild · AFSL Authorised · ABN: 19 686 732 043</p></div></div></footer>
+<footer class="footer"><div class="container"><div class="footer-bottom"><p class="footer-legal">Rental Sheild · ABN: 19 686 732 043 &middot; Level 25/6 Parramatta Sq, Parramatta NSW 2150</p></div></div></footer>
 <script src="js/app.js"></script>
 
   <!-- Initialize AOS -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
   <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
   <script>
     if(typeof AOS !== 'undefined') {
         AOS.init({ once: true, duration: 600, easing: 'ease-out-cubic' });
-    }
-    // Track quote form submit
-    const globalQuoteForm = document.getElementById('quoteForm');
-    if (globalQuoteForm) {
-       globalQuoteForm.addEventListener('submit', function() {
-           if(typeof fbq !== 'undefined') {
-               fbq('track', 'InitiateCheckout');
-           }
-       });
     }
   </script>
 </body>

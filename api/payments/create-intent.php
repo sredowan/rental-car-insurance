@@ -19,19 +19,24 @@ $customer_id = $user ? (int) $user['sub'] : null;
 
 // Parse input
 $data = get_body();
-$quote_id         = intval($data['quote_id'] ?? 0);
-$coverage_amount  = intval($data['coverage_amount'] ?? 0);
-$guest_email      = trim($data['email'] ?? '');
+$quote_id      = intval($data['quote_id'] ?? 0);
+$plan          = trim($data['plan'] ?? '');
+$vehicle_type  = trim($data['vehicle_type'] ?? 'car');
+$guest_email   = trim($data['email'] ?? '');
 
-if (!$quote_id || !$coverage_amount) {
-    json_error('quote_id and coverage_amount are required', 400);
+if (!$quote_id || !$plan) {
+    json_error('quote_id and plan are required', 400);
 }
 
-// Validate coverage tier
-$tiers = COVERAGE_TIERS;
-if (!isset($tiers[$coverage_amount])) {
-    json_error('Invalid coverage amount', 400);
+// Validate plan
+$plans = COVERAGE_PLANS;
+if (!isset($plans[$plan])) {
+    json_error('Invalid plan selected', 400);
 }
+
+// Validate vehicle type
+$surcharges = VEHICLE_SURCHARGES;
+$surcharge  = $surcharges[$vehicle_type] ?? 0;
 
 try {
     $db = Database::connect();
@@ -56,7 +61,8 @@ try {
     }
 
     // Calculate price server-side (NEVER trust client)
-    $price_per_day = $tiers[$coverage_amount];
+    $price_per_day = round($plans[$plan]['price_per_day'] + $surcharge, 2);
+    $coverage_amount = $plans[$plan]['coverage_amount'];
     $days          = intval($quote['days']);
     $total_price   = round($price_per_day * $days, 2);
     $total_cents   = intval($total_price * 100); // Stripe uses cents
@@ -66,7 +72,10 @@ try {
 
     $metadata = [
         'quote_id'         => $quote_id,
+        'plan'             => $plan,
+        'plan_label'       => $plans[$plan]['label'],
         'coverage_amount'  => $coverage_amount,
+        'vehicle_type'     => $vehicle_type,
         'days'             => $days,
         'price_per_day'    => $price_per_day,
     ];
@@ -78,7 +87,7 @@ try {
         'currency'             => STRIPE_CURRENCY,
         'payment_method_types' => ['card'],
         'metadata'             => $metadata,
-        'description'          => "DriveSafe Cover — \${$coverage_amount} coverage, {$days} days",
+        'description'          => "Rental Shield — {$plans[$plan]['label']} plan, {$vehicle_type}, {$days} days",
     ]);
 
     json_success([

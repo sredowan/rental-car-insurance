@@ -282,16 +282,22 @@
           <p class="hero-sub" data-aos="fade-up" data-aos-delay="200">
             Excess cover in the event <br>your hire car is damaged or stolen.
           </p>
-          <p class="hero-fear mt-16" data-aos="fade-up" data-aos-delay="300">
-            Prices from <span class="hero-price" style="color:var(--primary); font-weight:800;">$9.96/day</span>
-          </p>
+          <div class="hero-badges" data-aos="fade-up" data-aos-delay="300" style="display:flex;gap:10px;flex-wrap:wrap">
+            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:40px;background:rgba(5,150,105,0.08);border:1px solid rgba(5,150,105,0.2);font-size:13px;font-weight:700;color:#059669"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> $0 Excess</span>
+            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:40px;background:rgba(30,127,216,0.06);border:1px solid rgba(30,127,216,0.15);font-size:13px;font-weight:700;color:var(--primary)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> $100K Coverage</span>
+            <span style="display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:40px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);font-size:13px;font-weight:700;color:#D97706"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Cancel Anytime</span>
+          </div>
 
         </div>
 
         <!-- Quote Card (right col) -->
         <div class="hero-card-col animate-slide delay-2" id="quote">
           <div class="quote-card">
-            <div class="quote-card-title">Get a Quote</div>
+            <div class="quote-card-title" style="display:flex;align-items:center;gap:10px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              Get Your Free Quote
+            </div>
+            <p style="font-size:12px;color:var(--text-muted);margin:-6px 0 12px">Takes 30 seconds · No payment required</p>
             <div class="quote-card-rule"></div>
             <form class="quote-form" id="quoteForm" novalidate>
               <div class="form-group">
@@ -318,9 +324,20 @@
                 </div>
               </div>
 
+              <div class="form-group">
+                <label class="form-label" for="quoteVehicleType">I'm renting a:</label>
+                <select id="quoteVehicleType" name="vehicle_type" class="form-input form-select">
+                  <option value="car">🚗 Car</option>
+                  <option value="campervan">🚐 Campervan</option>
+                  <option value="motorhome">🏠 Motorhome / RV</option>
+                  <option value="bus">🚌 Bus / Small Coach</option>
+                  <option value="4x4">🚙 4x4</option>
+                </select>
+              </div>
+
               <div class="form-row">
                 <div class="form-group">
-                  <label class="form-label" for="quoteStartDate">Start Date</label>
+                  <label class="form-label" for="quoteStartDate">Pickup Date</label>
                   <input type="date" id="quoteStartDate" name="start_date" class="form-input" required>
                 </div>
                 <div class="form-group">
@@ -345,7 +362,7 @@
 
               <div class="form-row">
                 <div class="form-group">
-                  <label class="form-label" for="quoteEndDate">End Date</label>
+                  <label class="form-label" for="quoteEndDate">Return Date</label>
                   <input type="date" id="quoteEndDate" name="end_date" class="form-input" required>
                 </div>
                 <div class="form-group">
@@ -371,7 +388,7 @@
               <div id="quoteDuration" class="duration-chip"></div>
 
               <button type="submit" class="btn-quote" id="quoteSubmit">
-                GET A QUOTE
+                SEE MY QUOTE
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
@@ -440,7 +457,7 @@
           <h2>Rental desks have been overcharging you for years.</h2>
           <p style="margin:20px 0 28px">When you pick up a rental car, counter staff are trained to sell CDW or LDW for
             $25–$35 per day. That's up to <strong>$245 for a single week</strong> — for the exact same protection you
-            can get right now for $9.96/day.</p>
+            can get right now for $22.99/day.</p>
           <div class="price-compare" style="justify-content:flex-start;gap:16px;flex-wrap:wrap;margin:0 0 28px">
             <div class="price-box" style="padding:20px 28px">
               <div class="price-box-label">Rental Desk</div>
@@ -450,11 +467,11 @@
             <div class="price-vs">VS</div>
             <div class="price-box" style="padding:20px 28px;border-color:var(--primary)">
               <div class="price-box-label" style="color:var(--primary)">Rental Sheild</div>
-              <div class="price-box-amount highlight">$9.96</div>
+              <div class="price-box-amount highlight">$22.99</div>
               <div class="price-box-unit">/day</div>
             </div>
           </div>
-          <span class="price-saving">That's up to 72% cheaper — same protection</span>
+          <span class="price-saving">That's up to 35% cheaper — with even more protection</span>
         </div>
         <div data-aos="fade-up" class="card" style="border-color:rgba(232,0,58,0.12)">
           <h4 style="margin-bottom:16px">Here's what you get:</h4>
@@ -523,39 +540,50 @@
     <div class="container">
       <div class="section-header center">
         <span class="section-label">Choose Your Cover</span>
-        <h2 class="section-title">Pick the coverage that fits your trip</h2>
-        <p class="section-sub">From $9.96/day — the same class of protection the rental desk charges $35+ for.</p>
+        <h2 class="section-title">Pick the plan that fits your trip</h2>
+        <p class="section-sub">All plans include $100,000 coverage and zero excess. From $22.99/day.</p>
       </div>
-      <div class="tiers-grid" data-aos="fade-up">
+      <div class="tiers-grid tiers-grid-3" data-aos="fade-up">
         <div class="tier-card">
-          <span class="tier-limit">$4,000</span>
-          <span class="tier-price">$9.96<small>/day</small></span>
-          <span class="tier-badge">Base price</span>
-        </div>
-        <div class="tier-card">
-          <span class="tier-limit">$5,000</span>
-          <span class="tier-price">$11.27<small>/day</small></span>
-          <span class="tier-badge">+$1.31/day</span>
+          <span class="plan-label">Essential</span>
+          <span class="tier-price">$22.99<small>/day</small></span>
+          <span class="tier-badge">Starter</span>
+          <div style="margin-top:12px;font-size:12px;color:var(--text-muted);line-height:1.8;text-align:left">
+            <div style="display:flex;align-items:center;gap:6px"><span class="css-check" style="width:12px;height:12px"></span> Collision, theft, windscreen</div>
+            <div style="display:flex;align-items:center;gap:6px"><span class="css-check" style="width:12px;height:12px"></span> Tyres, undercarriage, keys</div>
+            <div style="display:flex;align-items:center;gap:6px"><span class="css-check" style="width:12px;height:12px"></span> Zero excess on all claims</div>
+            <div style="display:flex;align-items:center;gap:6px"><span class="css-check" style="width:12px;height:12px"></span> All authorized drivers</div>
+          </div>
         </div>
         <div class="tier-card" style="position:relative">
-          <span class="tier-best">Best Value</span>
-          <span class="tier-limit">$6,000</span>
-          <span class="tier-price">$14.42<small>/day</small></span>
-          <span class="tier-badge">+$3.15/day</span>
+          <span class="tier-best">★ Best Value</span>
+          <span class="plan-label">Premium</span>
+          <span class="tier-price">$44.99<small>/day</small></span>
+          <span class="tier-badge">Best Value</span>
+          <div style="margin-top:12px;font-size:12px;color:var(--text-muted);line-height:1.8;text-align:left">
+            <div style="display:flex;align-items:center;gap:6px"><span class="css-check" style="width:12px;height:12px"></span> Everything in Essential</div>
+            <div style="display:flex;align-items:center;gap:6px"><span class="css-check" style="width:12px;height:12px"></span> Headlights, mirrors & lights</div>
+            <div style="display:flex;align-items:center;gap:6px"><span class="css-check" style="width:12px;height:12px"></span> Roof, hail & dent damage</div>
+            <div style="display:flex;align-items:center;gap:6px"><span class="css-check" style="width:12px;height:12px"></span> Misfuelling & overseas</div>
+            <div style="display:flex;align-items:center;gap:6px"><span class="css-check" style="width:12px;height:12px"></span> Priority claim processing</div>
+          </div>
         </div>
         <div class="tier-card">
-          <span class="tier-limit">$7,000</span>
-          <span class="tier-price">$15.48<small>/day</small></span>
-          <span class="tier-badge">+$1.06/day</span>
-        </div>
-        <div class="tier-card">
-          <span class="tier-limit">$8,000</span>
-          <span class="tier-price">$16.79<small>/day</small></span>
-          <span class="tier-badge">+$1.31/day</span>
+          <span class="tier-best" style="background:linear-gradient(135deg,#7C3AED,#A78BFA);color:#fff">Maximum Protection</span>
+          <span class="plan-label">Ultimate</span>
+          <span class="tier-price">$66.99<small>/day</small></span>
+          <span class="tier-badge">Maximum Protection</span>
+          <div style="margin-top:12px;font-size:12px;color:var(--text-muted);line-height:1.8;text-align:left">
+            <div style="display:flex;align-items:center;gap:6px"><span class="css-check" style="width:12px;height:12px"></span> Everything in Premium</div>
+            <div style="display:flex;align-items:center;gap:6px"><span class="css-check" style="width:12px;height:12px"></span> Luxury vehicle coverage</div>
+            <div style="display:flex;align-items:center;gap:6px"><span class="css-check" style="width:12px;height:12px"></span> Interior, scratch & paint</div>
+            <div style="display:flex;align-items:center;gap:6px"><span class="css-check" style="width:12px;height:12px"></span> Rollover, water & flood</div>
+            <div style="display:flex;align-items:center;gap:6px"><span class="css-check" style="width:12px;height:12px"></span> 24/7 support & claims manager</div>
+          </div>
         </div>
       </div>
-      <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:20px">All tiers include $0 excess ·
-        Collision · Theft · Windscreen · All authorized drivers</p>
+      <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:20px">All plans include $100,000 coverage ·
+        Zero excess · All authorized drivers · Vehicle surcharges may apply</p>
       <div style="text-align:center;margin-top:28px">
         <a href="#quote" class="btn btn-primary btn-lg">Get a Quote Now</a>
       </div>
@@ -604,28 +632,7 @@
     </div>
   </section>
 
-  <!-- BRANDS MARQUEE -->
-  <section class="section-dark section-sm">
-    <div class="container" style="margin-bottom:20px;text-align:center">
-      <p
-        style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.45);font-weight:700">
-        Compatible with all major rental brands</p>
-    </div>
-    <div class="marquee-wrap">
-      <div class="marquee-track">
-        <span class="marquee-item">Hertz</span><span class="marquee-item">Avis</span>
-        <span class="marquee-item">Budget</span><span class="marquee-item">Enterprise</span>
-        <span class="marquee-item">Europcar</span><span class="marquee-item">Thrifty</span>
-        <span class="marquee-item">Alamo</span><span class="marquee-item">Sixt</span>
-        <span class="marquee-item">Jucy</span><span class="marquee-item">Apollo</span>
-        <span class="marquee-item">Hertz</span><span class="marquee-item">Avis</span>
-        <span class="marquee-item">Budget</span><span class="marquee-item">Enterprise</span>
-        <span class="marquee-item">Europcar</span><span class="marquee-item">Thrifty</span>
-        <span class="marquee-item">Alamo</span><span class="marquee-item">Sixt</span>
-        <span class="marquee-item">Jucy</span><span class="marquee-item">Apollo</span>
-      </div>
-    </div>
-  </section>
+
 
   <!-- TRUST / UNDERWRITER -->
   <section class="section section-dark">
@@ -638,26 +645,26 @@
             </svg>
           </div>
         </div>
-        <h2>Built on the world's most trusted<br>insurance foundations.</h2>
-        <p style="max-width:580px;margin:16px auto 0">Your policy is distributed under AFSL-authorised standards,
-          underwritten by global insurance institutions operating under Lloyd's of London benchmarks.</p>
+        <h2>Built on trust and<br>transparency.</h2>
+        <p style="max-width:580px;margin:16px auto 0">Your policy is backed by professional insurance standards,
+          with full transparency and zero hidden fees.</p>
       </div>
       <div class="trust-pillars mt-48" data-aos="fade-up">
         <div class="trust-pillar">
-          <div class="trust-pillar-title">Lloyd's Standards</div>
-          <div class="trust-pillar-sub">Global insurance benchmark</div>
+          <div class="trust-pillar-title">$100K Coverage</div>
+          <div class="trust-pillar-sub">Maximum protection limit</div>
         </div>
         <div class="trust-pillar">
-          <div class="trust-pillar-title">AFSL Authorised</div>
-          <div class="trust-pillar-sub">Australian Financial Services Licensed</div>
+          <div class="trust-pillar-title">$0 Excess</div>
+          <div class="trust-pillar-sub">You pay nothing on a claim</div>
         </div>
         <div class="trust-pillar">
           <div class="trust-pillar-title">Secure Payments</div>
           <div class="trust-pillar-sub">256-bit SSL encryption</div>
         </div>
         <div class="trust-pillar">
-          <div class="trust-pillar-title">100+ Countries</div>
-          <div class="trust-pillar-sub">Valid for overseas rentals</div>
+          <div class="trust-pillar-title">Australia-Wide</div>
+          <div class="trust-pillar-sub">All states & territories</div>
         </div>
       </div>
     </div>
@@ -724,9 +731,7 @@
           <button class="faq-btn"><span class="faq-q">How much does it cost?</span><span
               class="faq-icon">+</span></button>
           <div class="faq-answer">
-            <div class="faq-answer-inner">Our policies start at just $9.96/day for $4,000 of coverage. You can increase
-              your coverage up to $8,000 for $16.79/day. Compare that to rental desks charging $25–$35/day for similar
-              cover. Save up to 72% by buying with us before you pick up the car.</div>
+            <div class="faq-answer-inner">Our policies start at just $22.99/day for $100,000 of coverage with our Essential plan. Upgrade to Premium for $44.99/day or Ultimate for $66.99/day for enhanced protection. Vehicle type surcharges may apply. Compare that to rental desks charging $25–$35/day for similar cover.</div>
           </div>
         </div>
         <div class="faq-item">
@@ -817,7 +822,7 @@
           <p class="footer-desc">Australia's smarter alternative to rental desk insurance. Same protection, up to 50%
             cheaper, instant digital policy.</p>
           <p style="font-size:12px;color:rgba(255,255,255,0.35)">ABN: 19 686 732 043 &middot; info@rentalshield.com.au
-            &middot; www.rentalshield.com.au · AFSL: XXXXXX</p>
+            &middot; Level 25/6 Parramatta Sq, Parramatta NSW 2150</p>
         </div>
         <div>
           <div class="footer-col-title">Coverage</div>
@@ -848,9 +853,8 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p class="footer-legal">"Rental Sheild" is an AFSL-authorised insurance distributor. This site contains general
-          information only. Before purchasing, please read the Product Disclosure Statement. Insurance is underwritten
-          by institutions operating under global insurance standards.</p>
+        <p class="footer-legal">"Rental Sheild" provides rental car excess insurance. This site contains general
+          information only. Before purchasing, please read the Product Disclosure Statement.</p>
         <div class="footer-payment-icons">
           <span class="payment-icon">VISA</span>
           <span class="payment-icon">MC</span>

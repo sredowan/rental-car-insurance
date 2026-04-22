@@ -92,12 +92,14 @@ if (quoteForm) {
     btn.disabled = true;
     btn.innerHTML = '<span style="opacity:.7">Calculating...</span>';
 
+    const vehicleEl = document.getElementById('quoteVehicleType');
     const payload = {
-      state:      document.getElementById('quoteState').value,
-      start_date: startEl.value,
-      start_time: document.getElementById('quoteStartTime').value,
-      end_date:   endEl.value,
-      end_time:   document.getElementById('quoteEndTime').value,
+      state:        document.getElementById('quoteState').value,
+      start_date:   startEl.value,
+      start_time:   document.getElementById('quoteStartTime').value,
+      end_date:     endEl.value,
+      end_time:     document.getElementById('quoteEndTime').value,
+      vehicle_type: vehicleEl ? vehicleEl.value : 'car',
     };
 
     if (!payload.state) {
@@ -109,13 +111,14 @@ if (quoteForm) {
       const res = await apiCall('quotes', 'POST', payload);
       // Save minimal context (no price)
       sessionStorage.setItem('dsc_quote', JSON.stringify({
-        quote_id:   res.data.quote_id,
-        state:      payload.state,
-        start_date: payload.start_date,
-        start_time: payload.start_time,
-        end_date:   payload.end_date,
-        end_time:   payload.end_time,
-        days:       res.data.days,
+        quote_id:     res.data.quote_id,
+        state:        payload.state,
+        vehicle_type: payload.vehicle_type,
+        start_date:   payload.start_date,
+        start_time:   payload.start_time,
+        end_date:     payload.end_date,
+        end_time:     payload.end_time,
+        days:         res.data.days,
       }));
       window.location.href = Auth.isLoggedIn() ? `/dashboard-quote.html?q=${res.data.quote_id}` : `/quote-result.html?q=${res.data.quote_id}`;
     } catch (err) {
@@ -132,7 +135,7 @@ if (document.getElementById('coverageTiers')) {
 
   if (!quoteId) { window.location.href = '/'; }
 
-  let selectedCoverage = 4000;
+  let selectedPlan = 'essential';
   let quoteData = null;
 
   async function loadQuote() {
@@ -146,80 +149,341 @@ if (document.getElementById('coverageTiers')) {
   }
 
   function renderQuoteResult(q) {
-    // Trip summary
     const fmt = d => new Date(d).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
     document.getElementById('result-state') && (document.getElementById('result-state').textContent = q.state);
     document.getElementById('result-start') && (document.getElementById('result-start').textContent = fmt(q.start_date));
     document.getElementById('result-end')   && (document.getElementById('result-end').textContent   = fmt(q.end_date));
     document.getElementById('result-days')  && (document.getElementById('result-days').textContent  = `${q.days} days`);
 
-    // Render tier cards
+    // Show vehicle type
+    const vt = q.vehicle_type || 'car';
+    const vtData = CoveragePricing.vehicleSurcharges[vt] || CoveragePricing.vehicleSurcharges.car;
+
+    // Vehicle icon + label
+    const vtIconEl = document.getElementById('result-vehicle-icon');
+    const vtLabelEl = document.getElementById('result-vehicle-label');
+    if (vtIconEl) vtIconEl.textContent = vtData.icon;
+    if (vtLabelEl) vtLabelEl.textContent = vtData.label;
+
+    // Vehicle coverage rows
+    const vtNotesEl = document.getElementById('vehicleCoverageNotes');
+    if (vtNotesEl) {
+      vtNotesEl.innerHTML = `
+        <div class="vt-row">
+          <span class="vt-row-tag covered">✓ Covered</span>
+          <span class="vt-row-text">${vtData.covered}</span>
+        </div>
+        <div class="vt-row">
+          <span class="vt-row-tag not-covered">✗ Not covered</span>
+          <span class="vt-row-text">${vtData.exclusionBrief || vtData.notCovered}</span>
+          <button class="excl-details-btn" id="openExclBtn" type="button" style="margin-left:auto">
+            Details <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      `;
+      // Re-bind the Details button since it was just created
+      document.getElementById('openExclBtn')?.addEventListener('click', openExclModal);
+    }
+
+    // Render plan cards (compact v2)
     const container = document.getElementById('coverageTiers');
     if (!container) return;
     container.innerHTML = '';
     q.options.forEach(opt => {
-      const isDefault = opt.coverage_amount === 4000;
-      const isBest    = opt.coverage_amount === 6000;
+      const isDefault = opt.plan === 'essential';
+      const isBest    = opt.plan === 'premium';
+      const isMax     = opt.plan === 'ultimate';
       const card = document.createElement('div');
-      card.className = `tier-card${isDefault ? ' selected' : ''}`;
-      card.dataset.coverage    = opt.coverage_amount;
+      card.className = `plan-card-v2${isDefault ? ' selected' : ''}`;
+      card.dataset.plan       = opt.plan;
       card.dataset.pricePerDay = opt.price_per_day;
       card.dataset.total       = opt.total_price;
+
       card.innerHTML = `
-        ${isBest ? '<span class="tier-best">⭐ Best Value</span>' : ''}
-        <span class="tier-limit">$${opt.coverage_amount.toLocaleString()}</span>
-        <span class="tier-price">$${opt.price_per_day}<small>/day</small></span>
-        <span class="tier-badge">Total: $${opt.total_price}</span>
+        ${isBest ? '<span class="plan-badge-top plan-badge-best">★ Best Value</span>' : ''}
+        ${isMax ? '<span class="plan-badge-top plan-badge-max">Max Protection</span>' : ''}
+        <span class="plan-name">${opt.plan_label}</span>
+        <span class="plan-price">$${opt.price_per_day}<small>/day</small></span>
+        <span class="plan-tag">${opt.badge}</span>
+        <span class="plan-total-mini">$${opt.total_price} total</span>
+        <span class="plan-cta">${isDefault ? 'Selected' : 'Select'}</span>
       `;
-      card.addEventListener('click', () => selectTier(card, opt));
+      card.addEventListener('click', () => selectPlan(card, opt));
       container.appendChild(card);
     });
 
     // Default selection
-    const defaultOpt = q.options.find(o => o.coverage_amount === 4000);
+    const defaultOpt = q.options.find(o => o.plan === 'essential');
     if (defaultOpt) {
       updateBreakdown(defaultOpt, q.days);
-      // Save default to sessionStorage so checkout has it
+      updateIncludedFeatures(defaultOpt);
       const saved = JSON.parse(sessionStorage.getItem('dsc_quote') || '{}');
-      if (!saved.coverage) {
+      if (!saved.plan) {
         sessionStorage.setItem('dsc_quote', JSON.stringify({
           ...saved,
-          coverage:    defaultOpt.coverage_amount,
-          pricePerDay: defaultOpt.price_per_day,
-          totalPrice:  defaultOpt.total_price,
-          tierLabel:   `$${defaultOpt.coverage_amount.toLocaleString()} Coverage`,
+          plan:         defaultOpt.plan,
+          planLabel:    defaultOpt.plan_label,
+          vehicle_type: vt,
+          coverage:     defaultOpt.coverage_amount,
+          pricePerDay:  defaultOpt.price_per_day,
+          totalPrice:   defaultOpt.total_price,
         }));
       }
     }
   }
 
-  function selectTier(card, opt) {
-    document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
+  function selectPlan(card, opt) {
+    document.querySelectorAll('.plan-card-v2').forEach(c => {
+      c.classList.remove('selected');
+      const cta = c.querySelector('.plan-cta');
+      if (cta) cta.textContent = 'Select';
+    });
     card.classList.add('selected');
-    selectedCoverage = opt.coverage_amount;
+    const cta = card.querySelector('.plan-cta');
+    if (cta) cta.textContent = 'Selected';
+    selectedPlan = opt.plan;
     updateBreakdown(opt, quoteData.days);
-    // Update saved quote with selection
+    updateIncludedFeatures(opt);
     const saved = JSON.parse(sessionStorage.getItem('dsc_quote') || '{}');
     sessionStorage.setItem('dsc_quote', JSON.stringify({
       ...saved,
-      coverage:    opt.coverage_amount,
-      pricePerDay: opt.price_per_day,
-      totalPrice:  opt.total_price,
-      tierLabel:   `$${opt.coverage_amount.toLocaleString()} Coverage`,
+      plan:         opt.plan,
+      planLabel:    opt.plan_label,
+      vehicle_type: quoteData.vehicle_type || 'car',
+      coverage:     opt.coverage_amount,
+      pricePerDay:  opt.price_per_day,
+      totalPrice:   opt.total_price,
     }));
   }
 
   function updateBreakdown(opt, days) {
     const animate = el => { el.classList.remove('price-update'); void el.offsetWidth; el.classList.add('price-update'); };
     const set = (id, v) => { const el = document.getElementById(id); if (el) { el.textContent = v; animate(el); } };
-    set('result-coverage',      `$${opt.coverage_amount.toLocaleString()}`);
-    set('result-price-per-day', `$${opt.price_per_day}/day`);
+    set('result-plan',          opt.plan_label);
+    set('result-price-per-day', `$${opt.price_per_day}`);
     set('result-duration',      `${days} days`);
     set('result-total',         `$${opt.total_price}`);
+    // Mobile sticky bar
+    set('mbb-total', `$${opt.total_price}`);
+    set('mbb-plan', `${opt.plan_label} · ${days} days`);
   }
 
+  function updateIncludedFeatures(opt) {
+    const listEl = document.getElementById('includedFeaturesList');
+    if (!listEl) return;
+    const checkSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+    const crossSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="2" style="flex-shrink:0"><path d="M18 6L6 18M6 6l12 12"></path></svg>';
+
+    // All possible features from Ultimate plan
+    const allFeatures = CoveragePricing.plans.ultimate.features;
+    const included = new Set(opt.features);
+
+    listEl.innerHTML = allFeatures.map(f => {
+      const isIncluded = included.has(f);
+      return `<div class="feat-item${isIncluded ? '' : ' excluded'}">
+        ${isIncluded ? checkSvg : crossSvg} ${f}
+      </div>`;
+    }).join('');
+  }
+
+  // Checkout buttons (desktop + mobile)
   document.getElementById('checkoutBtn')?.addEventListener('click', () => {
     window.location.href = '/checkout.html';
+  });
+  document.getElementById('mbbCheckoutBtn')?.addEventListener('click', () => {
+    window.location.href = '/checkout.html';
+  });
+
+  // ── Compare Plans Modal ──────────────────────────────────
+  const compareOverlay = document.getElementById('compareOverlay');
+  const compareTable   = document.getElementById('compareTable');
+
+  function buildCompareTable() {
+    if (!compareTable || !quoteData?.options) return;
+    const plans = quoteData.options; // [essential, premium, ultimate]
+    const allFeatures = CoveragePricing.plans.ultimate.features;
+    const checkMark = '<span class="cmp-check">✓</span>';
+    const crossMark = '<span class="cmp-cross">✗</span>';
+
+    // Build feature sets for quick lookup
+    const featureSets = plans.map(p => new Set(p.features));
+
+    // Header row
+    let html = '<thead><tr><th>Feature</th>';
+    plans.forEach((p, i) => {
+      const isBest = p.plan === 'premium';
+      html += `<th class="${isBest ? 'cmp-best' : ''}">${p.plan_label}</th>`;
+    });
+    html += '</tr></thead><tbody>';
+
+    // Feature rows
+    allFeatures.forEach(feat => {
+      html += '<tr>';
+      html += `<td>${feat}</td>`;
+      plans.forEach((p, i) => {
+        const has = featureSets[i].has(feat);
+        const isBest = p.plan === 'premium';
+        html += `<td class="${isBest ? 'cmp-col-best' : ''}">${has ? checkMark : crossMark}</td>`;
+      });
+      html += '</tr>';
+    });
+
+    // Price row
+    html += '<tr class="cmp-price-row"><td>Per day</td>';
+    plans.forEach(p => {
+      html += `<td>$${p.price_per_day}</td>`;
+    });
+    html += '</tr>';
+
+    // Total row
+    html += '<tr class="cmp-price-row"><td>Total</td>';
+    plans.forEach(p => {
+      html += `<td>$${p.total_price}</td>`;
+    });
+    html += '</tr>';
+
+    html += '</tbody>';
+    compareTable.innerHTML = html;
+  }
+
+  document.getElementById('openCompareBtn')?.addEventListener('click', () => {
+    buildCompareTable();
+    compareOverlay?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+
+  document.getElementById('closeCompareBtn')?.addEventListener('click', () => {
+    compareOverlay?.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+
+  compareOverlay?.addEventListener('click', (e) => {
+    if (e.target === compareOverlay) {
+      compareOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // ── Exclusion Details Modal ──────────────────────────────
+  const exclOverlay = document.getElementById('exclOverlay');
+  const exclModalList = document.getElementById('exclModalList');
+  const exclModalTitle = document.getElementById('exclModalTitle');
+
+  function openExclModal() {
+    const vt = quoteData?.vehicle_type || 'car';
+    const vtData = CoveragePricing.vehicleSurcharges[vt] || CoveragePricing.vehicleSurcharges.car;
+    if (exclModalTitle) exclModalTitle.textContent = `What's not covered — ${vtData.label}`;
+    if (exclModalList) {
+      const crossIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>';
+      exclModalList.innerHTML = (vtData.exclusions || []).map(item =>
+        `<div class="excl-modal-item">${crossIcon}<span>${item}</span></div>`
+      ).join('');
+    }
+    exclOverlay?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  document.getElementById('closeExclBtn')?.addEventListener('click', () => {
+    exclOverlay?.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+
+  exclOverlay?.addEventListener('click', (e) => {
+    if (e.target === exclOverlay) {
+      exclOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // ── Full Protection Details Modal ──────────────────────────
+  const fpOverlay = document.getElementById('fpOverlay');
+
+  // Full protection data — generic, safe content
+  const fpData = {
+    covered: [
+      { label: 'Excess Charges', desc: 'The full excess amount you are liable for under your rental agreement' },
+      { label: 'Body Damage', desc: 'Damage to the bodywork, including roof and undercarriage' },
+      { label: 'Windscreen & Glass', desc: 'All glass including windscreens, windows, and sunroofs' },
+      { label: 'Tyres & Wheels', desc: 'Including punctures, repairs, and full wheel replacement' },
+      { label: 'Lights & Mirrors', desc: 'Headlights, taillights, indicators, and side mirrors' },
+      { label: 'Theft', desc: 'The excess amount if the rental vehicle is stolen' },
+      { label: 'Admin & Processing Fees', desc: 'All admin or claim handling fees charged by the rental company' },
+      { label: 'Towing & Recovery', desc: 'Recovery costs for accidents or breakdowns' },
+      { label: 'Key Replacement', desc: 'Costs for lost, stolen, or damaged rental car keys' },
+      { label: 'Misfuelling', desc: 'Costs to flush the engine and fuel system if the wrong fuel is used' }
+    ],
+    notCovered: [
+      'You breach any terms of your rental agreement (e.g. unauthorized drivers)',
+      'Driving on unsealed roads (unless the vehicle is a 4x4) or in prohibited areas',
+      'Damage caused by extreme negligence, driving under the influence, or intentional damage',
+      'Interior damage not caused by a collision (e.g. cigarette burns, spills)',
+      'Theft or damage to personal items inside the vehicle',
+      'Mechanical failure not related to an accident'
+    ],
+    conditions: [
+      'You must have at least the basic CDW/LDW provided by the rental company',
+      'Only drivers listed on the rental agreement are covered',
+      'You must notify us of any claim as soon as possible after the incident',
+      'Coverage applies up to the maximum benefit of $100,000 per claim'
+    ],
+    claims: [
+      { step: '1', label: 'Pay the rental company', desc: 'Pay the damage charges to the rental company at the desk' },
+      { step: '2', label: 'Gather documents', desc: 'Rental agreement, damage report, and final invoice showing charges' },
+      { step: '3', label: 'Submit online', desc: 'Log in to your account and upload documents to receive your refund' }
+    ]
+  };
+
+  function buildFpModal() {
+    const checkSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+    const crossSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>';
+    const infoSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>';
+    const stepSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>';
+
+    const coveredEl = document.getElementById('fpCoveredList');
+    if (coveredEl) {
+      coveredEl.innerHTML = fpData.covered.map(c =>
+        `<div class="fp-item">${checkSvg}<span><strong>${c.label}</strong> — ${c.desc}</span></div>`
+      ).join('');
+    }
+
+    const notCoveredEl = document.getElementById('fpNotCoveredList');
+    if (notCoveredEl) {
+      notCoveredEl.innerHTML = fpData.notCovered.map(t =>
+        `<div class="fp-item">${crossSvg}<span>${t}</span></div>`
+      ).join('');
+    }
+
+    const conditionsEl = document.getElementById('fpConditionsList');
+    if (conditionsEl) {
+      conditionsEl.innerHTML = fpData.conditions.map(t =>
+        `<div class="fp-item">${infoSvg}<span>${t}</span></div>`
+      ).join('');
+    }
+
+    const claimsEl = document.getElementById('fpClaimsList');
+    if (claimsEl) {
+      claimsEl.innerHTML = fpData.claims.map(c =>
+        `<div class="fp-item">${stepSvg}<span><strong>Step ${c.step}: ${c.label}</strong> — ${c.desc}</span></div>`
+      ).join('');
+    }
+  }
+
+  document.getElementById('openFpBtn')?.addEventListener('click', () => {
+    buildFpModal();
+    fpOverlay?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+
+  document.getElementById('closeFpBtn')?.addEventListener('click', () => {
+    fpOverlay?.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+
+  fpOverlay?.addEventListener('click', (e) => {
+    if (e.target === fpOverlay) {
+      fpOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
   });
 
   loadQuote();
@@ -473,6 +737,17 @@ window.openQuoteModal = function() {
               </div>
             </div>
 
+            <div class="form-group">
+              <label class="form-label" for="pqVehicleType">I'm renting a:</label>
+              <select id="pqVehicleType" name="vehicle_type" class="form-input form-select">
+                <option value="car">🚗 Car</option>
+                <option value="campervan">🚐 Campervan</option>
+                <option value="motorhome">🏠 Motorhome / RV</option>
+                <option value="bus">🚌 Bus / Small Coach</option>
+                <option value="4x4">🚙 4x4</option>
+              </select>
+            </div>
+
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="pqStartDate">Start Date</label>
@@ -561,6 +836,7 @@ window.openQuoteModal = function() {
         start_time: document.getElementById('pqStartTime').value,
         end_date: endEl.value,
         end_time: document.getElementById('pqEndTime').value,
+        vehicle_type: document.getElementById('pqVehicleType').value,
       };
 
       if (!payload.state) {
@@ -573,6 +849,7 @@ window.openQuoteModal = function() {
         sessionStorage.setItem('dsc_quote', JSON.stringify({
           quote_id: res.data.quote_id,
           state: payload.state,
+          vehicle_type: payload.vehicle_type,
           start_date: payload.start_date,
           start_time: payload.start_time,
           end_date: payload.end_date,

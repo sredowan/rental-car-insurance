@@ -20,7 +20,7 @@
   };
 
   async function load() {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted)">Loading...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text-muted)">Loading...</td></tr>';
 
     try {
       const status = document.getElementById('policyStatusFilter')?.value || '';
@@ -41,7 +41,7 @@
 
       renderTable();
     } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--crimson)">${err.message || 'Failed to load'}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--crimson)">${err.message || 'Failed to load'}</td></tr>`;
     }
   }
 
@@ -54,16 +54,32 @@
     });
 
     if (filtered.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted)">No policies found</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text-muted)">No policies found</td></tr>';
       return;
     }
+
+    const planBadge = (plan) => {
+      const map = {
+        essential: ['badge-grey', 'Essential'],
+        premium:   ['badge-navy', '★ Premium'],
+        ultimate:  ['badge-crimson', 'Ultimate'],
+      };
+      const [cls, label] = map[plan] || ['badge-grey', plan || 'Legacy'];
+      return `<span class="badge ${cls}">${label}</span>`;
+    };
+
+    const vtLabel = (vt) => {
+      const map = { car: '🚗', campervan: '🚐', motorhome: '🏠', bus: '🚌', '4x4': '🚙' };
+      return `${map[vt] || '🚗'} ${(vt || 'car').charAt(0).toUpperCase() + (vt || 'car').slice(1)}`;
+    };
 
     tbody.innerHTML = filtered.map(p => `
       <tr>
         <td class="mono" style="color:var(--blue);font-weight:600">${p.policy_number || '—'}</td>
         <td>${p.customer_name || '—'}</td>
+        <td>${planBadge(p.plan)}</td>
+        <td style="font-size:12px">${vtLabel(p.vehicle_type)}</td>
         <td>${p.state || '—'}</td>
-        <td>$${parseInt(p.coverage_amount || 0).toLocaleString()}</td>
         <td style="font-size:12px">${fmt(p.start_date)}</td>
         <td style="font-size:12px">${fmt(p.end_date)}</td>
         <td style="font-weight:700;color:var(--crimson)">$${parseFloat(p.total_price || 0).toFixed(2)}</td>

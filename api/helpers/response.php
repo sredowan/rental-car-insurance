@@ -75,25 +75,32 @@ function generate_otp(): string {
     return str_pad((string) random_int(0, 999999), OTP_LENGTH, '0', STR_PAD_LEFT);
 }
 
-function calculate_quote(int $coverage_amount, string $start_date, string $end_date): array {
-    $tiers = COVERAGE_TIERS;
-    if (!array_key_exists($coverage_amount, $tiers)) {
-        return ['error' => 'Invalid coverage amount.'];
+function calculate_quote(string $plan, string $vehicle_type, string $start_date, string $end_date): array {
+    $plans = COVERAGE_PLANS;
+    if (!array_key_exists($plan, $plans)) {
+        return ['error' => 'Invalid plan selected.'];
     }
+    $surcharges = VEHICLE_SURCHARGES;
+    $surcharge  = $surcharges[$vehicle_type] ?? 0;
+
     $start     = new DateTime($start_date);
     $end       = new DateTime($end_date);
     $diff      = $start->diff($end);
     $days      = $diff->days;
     if ($days < 1) return ['error' => 'End date must be after start date.'];
 
-    $price_per_day = $tiers[$coverage_amount];
+    $price_per_day = round($plans[$plan]['price_per_day'] + $surcharge, 2);
     $total         = round($price_per_day * $days, 2);
 
     return [
-        'coverage_amount' => $coverage_amount,
+        'plan'            => $plan,
+        'plan_label'      => $plans[$plan]['label'],
+        'coverage_amount' => $plans[$plan]['coverage_amount'],
+        'vehicle_type'    => $vehicle_type,
         'price_per_day'   => $price_per_day,
         'days'            => $days,
         'total_price'     => $total,
+        'features'        => $plans[$plan]['features'],
     ];
 }
 

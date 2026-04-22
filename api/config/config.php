@@ -77,13 +77,84 @@ define('ALLOWED_EXTENSIONS', ['jpg','jpeg','png','gif','pdf']);
 define('OTP_EXPIRY_MINUTES', 5);
 define('OTP_LENGTH', 6);
 
-// ─── Pricing Tiers ────────────────────────────────────────
-define('COVERAGE_TIERS', [
-    4000 => 9.96,
-    5000 => 11.27,
-    6000 => 14.42,
-    7000 => 15.48,
-    8000 => 16.79,
+// ─── Coverage Plans ───────────────────────────────────────
+define('COVERAGE_PLANS', [
+    'essential' => [
+        'price_per_day'   => 22.99,
+        'coverage_amount' => 100000,
+        'label'           => 'Essential',
+        'badge'           => 'Starter',
+        'features'        => [
+            'Collision damage up to your coverage limit',
+            'Theft of vehicle',
+            'Windscreen & glass',
+            'Tyres, undercarriage, keys',
+            'Admin & processing fees',
+            'Towing costs',
+            'All authorized drivers',
+            'Zero excess — you pay nothing on a claim',
+        ],
+    ],
+    'premium' => [
+        'price_per_day'   => 44.99,
+        'coverage_amount' => 100000,
+        'label'           => 'Premium',
+        'badge'           => 'Best Value',
+        'features'        => [
+            'Collision damage up to your coverage limit',
+            'Theft of vehicle',
+            'Windscreen & glass',
+            'Tyres, undercarriage, keys',
+            'Admin & processing fees',
+            'Towing costs',
+            'All authorized drivers',
+            'Zero excess — you pay nothing on a claim',
+            'Headlights, mirrors & exterior lights',
+            'Roof & hail damage',
+            'Door dents & panel damage',
+            'Misfuelling damage',
+            'Overseas rentals covered',
+            'Priority claim processing',
+        ],
+    ],
+    'ultimate' => [
+        'price_per_day'   => 66.99,
+        'coverage_amount' => 100000,
+        'label'           => 'Ultimate',
+        'badge'           => 'Maximum Protection',
+        'features'        => [
+            'Collision damage up to your coverage limit',
+            'Theft of vehicle',
+            'Windscreen & glass',
+            'Tyres, undercarriage, keys',
+            'Admin & processing fees',
+            'Towing costs',
+            'All authorized drivers',
+            'Zero excess — you pay nothing on a claim',
+            'Headlights, mirrors & exterior lights',
+            'Roof & hail damage',
+            'Door dents & panel damage',
+            'Misfuelling damage',
+            'Overseas rentals covered',
+            'Priority claim processing',
+            'Premium & luxury vehicle coverage',
+            'Full interior damage (seats, dashboard, upholstery)',
+            'Scratch & cosmetic paint damage',
+            'Single vehicle rollover',
+            'Water & flood damage',
+            '24/7 priority claims support',
+            'Dedicated claims manager',
+        ],
+    ],
+]);
+
+// ─── Vehicle Type Surcharges ──────────────────────────────
+define('VEHICLE_SURCHARGES', [
+    'car'       => 0,
+    'campervan' => 3,
+    'motorhome' => 4,
+    'bus'       => 5,
+    '4x4'      => 6,
 ]);
 
 // ─── Policy Number Prefix ─────────────────────────────────

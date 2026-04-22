@@ -188,7 +188,8 @@
       <div>
         <div class="order-card">
           <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.5);margin-bottom:16px;font-weight:700">Order Summary</div>
-          <div class="order-row"><span class="order-label">Coverage</span><span class="order-value" id="co-coverage">—</span></div>
+          <div class="order-row"><span class="order-label">Plan</span><span class="order-value" id="co-coverage">—</span></div>
+          <div class="order-row"><span class="order-label">Vehicle</span><span class="order-value" id="co-vehicle">—</span></div>
           <div class="order-row"><span class="order-label">State</span><span class="order-value" id="co-state">—</span></div>
           <div class="order-row"><span class="order-label">Start</span><span class="order-value" id="co-start">—</span></div>
           <div class="order-row"><span class="order-label">End</span><span class="order-value" id="co-end">—</span></div>
@@ -199,11 +200,10 @@
             <span class="order-total-price" id="co-total">$0.00</span>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08)">
-            <span style="font-size:11px;color:rgba(255,255,255,0.4)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="3" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"></polyline></svg> $0 Excess</span>
-            <span style="font-size:11px;color:rgba(255,255,255,0.4)">· <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="3" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"></polyline></svg> Collision</span>
-            <span style="font-size:11px;color:rgba(255,255,255,0.4)">· <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="3" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"></polyline></svg> Theft</span>
+            <span style="font-size:11px;color:rgba(255,255,255,0.4)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="3" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"></polyline></svg> Zero Excess</span>
+            <span style="font-size:11px;color:rgba(255,255,255,0.4)">· <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="3" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"></polyline></svg> $100K Coverage</span>
           </div>
-          <a href="dashboard-quote.html" style="display:block;text-align:center;font-size:12px;color:rgba(255,255,255,0.4);margin-top:12px">← Change coverage</a>
+          <a href="dashboard-quote.html" style="display:block;text-align:center;font-size:12px;color:rgba(255,255,255,0.4);margin-top:12px">← Change plan</a>
         </div>
         <div class="guarantee-box">
           <strong style="display:block;margin-bottom:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;vertical-align:-3px"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg> Cancel Anytime</strong>
@@ -217,6 +217,7 @@
 </div>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="js/app.js"></script>
+<script src="js/quote.js"></script>
 <script src="js/api.js"></script>
 <script src="js/checkout.js"></script>
 

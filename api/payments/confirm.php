@@ -20,19 +20,22 @@ $customer_id = $user ? (int) $user['sub'] : null;
 $data = get_body();
 $payment_intent_id = trim($data['payment_intent_id'] ?? '');
 $quote_id          = intval($data['quote_id'] ?? 0);
-$coverage_amount   = intval($data['coverage_amount'] ?? 0);
+$plan              = trim($data['plan'] ?? '');
+$vehicle_type      = trim($data['vehicle_type'] ?? 'car');
 $guest_email       = trim($data['email'] ?? '');
 $guest_name        = trim($data['name'] ?? '');
 $guest_phone       = trim($data['phone'] ?? '');
 
-if (!$payment_intent_id || !$quote_id || !$coverage_amount) {
-    json_error('payment_intent_id, quote_id, and coverage_amount are required', 400);
+if (!$payment_intent_id || !$quote_id || !$plan) {
+    json_error('payment_intent_id, quote_id, and plan are required', 400);
 }
 
-$tiers = COVERAGE_TIERS;
-if (!isset($tiers[$coverage_amount])) {
-    json_error('Invalid coverage amount', 400);
+$plans = COVERAGE_PLANS;
+if (!isset($plans[$plan])) {
+    json_error('Invalid plan selected', 400);
 }
+$surcharges = VEHICLE_SURCHARGES;
+$surcharge  = $surcharges[$vehicle_type] ?? 0;
 
 try {
     // Verify the PaymentIntent with Stripe
@@ -107,7 +110,8 @@ try {
     }
 
     // Calculate price server-side
-    $price_per_day = $tiers[$coverage_amount];
+    $coverage_amount = $plans[$plan]['coverage_amount'];
+    $price_per_day = round($plans[$plan]['price_per_day'] + $surcharge, 2);
     $days          = intval($quote['days']);
     $total_price   = round($price_per_day * $days, 2);
 
@@ -119,16 +123,18 @@ try {
 
     // Create policy
     $stmt = $db->prepare("
-        INSERT INTO policies (customer_id, quote_id, policy_number, state, coverage_amount, 
+        INSERT INTO policies (customer_id, quote_id, policy_number, state, plan, vehicle_type, coverage_amount, 
                               start_date, end_date, days, price_per_day, total_price,
                               payment_reference, payment_amount, status, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', NOW())
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', NOW())
     ");
     $stmt->execute([
         $customer_id,
         $quote_id,
         $policy_number,
         $quote['state'],
+        $plan,
+        $vehicle_type,
         $coverage_amount,
         $quote['start_date'],
         $quote['end_date'],
