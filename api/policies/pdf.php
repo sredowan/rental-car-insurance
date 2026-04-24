@@ -1,6 +1,6 @@
 <?php
 // ============================================================
-// DriveSafe Cover — Policy PDF Download
+// Rental Shield — Policy PDF Download
 // GET /api/policies/pdf?id=X — Download policy as PDF
 // ============================================================
 
