@@ -486,6 +486,176 @@ if (document.getElementById('coverageTiers')) {
     }
   });
 
+  // ── Editable Trip Dates ──────────────────────────────────
+  const qrEditBtn    = document.getElementById('qrTripEditBtn');
+  const qrEditForm   = document.getElementById('qrTripEditForm');
+  const qrEditStart  = document.getElementById('qrEditStart');
+  const qrEditEnd    = document.getElementById('qrEditEnd');
+  const qrSaveBtn    = document.getElementById('qrEditSave');
+  const qrCancelBtn  = document.getElementById('qrEditCancel');
+
+  if (qrEditBtn && qrEditForm) {
+    qrEditBtn.addEventListener('click', () => {
+      qrEditForm.classList.toggle('show');
+      // Pre-fill from current quote data
+      const saved = JSON.parse(sessionStorage.getItem('dsc_quote') || '{}');
+      if (saved.start_date) qrEditStart.value = saved.start_date;
+      if (saved.end_date) qrEditEnd.value = saved.end_date;
+      qrEditStart.min = new Date().toISOString().split('T')[0];
+    });
+
+    qrCancelBtn.addEventListener('click', () => {
+      qrEditForm.classList.remove('show');
+    });
+
+    qrEditStart.addEventListener('change', () => {
+      qrEditEnd.min = qrEditStart.value;
+      if (qrEditEnd.value && qrEditEnd.value <= qrEditStart.value) {
+        const d = new Date(qrEditStart.value);
+        d.setDate(d.getDate() + 1);
+        qrEditEnd.value = d.toISOString().split('T')[0];
+      }
+    });
+
+    qrSaveBtn.addEventListener('click', async () => {
+      const newStart = qrEditStart.value;
+      const newEnd   = qrEditEnd.value;
+      if (!newStart || !newEnd || newEnd <= newStart) {
+        showToast('Please select valid dates.', 'error');
+        return;
+      }
+
+      qrSaveBtn.textContent = 'Updating...';
+      qrSaveBtn.disabled = true;
+
+      try {
+        const saved = JSON.parse(sessionStorage.getItem('dsc_quote') || '{}');
+        // Step 1: Create new quote with updated dates
+        const res = await apiCall('quotes', 'POST', {
+          state:        saved.state || quoteData?.state || 'NSW',
+          start_date:   newStart,
+          start_time:   saved.start_time || '09:00',
+          end_date:     newEnd,
+          end_time:     saved.end_time || '09:00',
+          vehicle_type: saved.vehicle_type || quoteData?.vehicle_type || 'car',
+        });
+
+        const newQuoteId = res.data.quote_id;
+
+        // Step 2: GET the quote to fetch pricing
+        const priceRes = await apiCall(`quotes?id=${newQuoteId}`);
+
+        // Update session
+        const updatedQuote = {
+          ...saved,
+          quote_id:    newQuoteId,
+          start_date:  newStart,
+          end_date:    newEnd,
+          days:        priceRes.data.days,
+        };
+        sessionStorage.setItem('dsc_quote', JSON.stringify(updatedQuote));
+
+        // Update quoteData with FULL pricing and re-render
+        quoteData = priceRes.data;
+        renderQuoteResult(quoteData);
+        qrEditForm.classList.remove('show');
+        showToast('Dates updated! Prices refreshed.', 'success');
+
+        // Update URL with new quote ID
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('q', newQuoteId);
+        window.history.replaceState({}, '', newUrl);
+      } catch (err) {
+        showToast(err.message || 'Failed to update dates.', 'error');
+      }
+
+      qrSaveBtn.textContent = 'Update Dates';
+      qrSaveBtn.disabled = false;
+    });
+  }
+
+  // ── Editable Trip Dates (dashboard-quote page) ──────────
+  const dqEditBtn    = document.getElementById('dqTripEditBtn');
+  const dqEditForm   = document.getElementById('dqTripEditForm');
+  const dqEditStart  = document.getElementById('dqEditStart');
+  const dqEditEnd    = document.getElementById('dqEditEnd');
+  const dqSaveBtn    = document.getElementById('dqEditSave');
+  const dqCancelBtn  = document.getElementById('dqEditCancel');
+
+  if (dqEditBtn && dqEditForm) {
+    dqEditBtn.addEventListener('click', () => {
+      const isOpen = dqEditForm.style.display === 'block';
+      dqEditForm.style.display = isOpen ? 'none' : 'block';
+      const saved = JSON.parse(sessionStorage.getItem('dsc_quote') || '{}');
+      if (saved.start_date) dqEditStart.value = saved.start_date;
+      if (saved.end_date) dqEditEnd.value = saved.end_date;
+      dqEditStart.min = new Date().toISOString().split('T')[0];
+    });
+
+    dqCancelBtn.addEventListener('click', () => {
+      dqEditForm.style.display = 'none';
+    });
+
+    dqEditStart.addEventListener('change', () => {
+      dqEditEnd.min = dqEditStart.value;
+      if (dqEditEnd.value && dqEditEnd.value <= dqEditStart.value) {
+        const d = new Date(dqEditStart.value);
+        d.setDate(d.getDate() + 1);
+        dqEditEnd.value = d.toISOString().split('T')[0];
+      }
+    });
+
+    dqSaveBtn.addEventListener('click', async () => {
+      const newStart = dqEditStart.value;
+      const newEnd   = dqEditEnd.value;
+      if (!newStart || !newEnd || newEnd <= newStart) {
+        showToast('Please select valid dates.', 'error');
+        return;
+      }
+
+      dqSaveBtn.textContent = 'Updating...';
+      dqSaveBtn.disabled = true;
+
+      try {
+        const saved = JSON.parse(sessionStorage.getItem('dsc_quote') || '{}');
+        // Step 1: Create new quote with updated dates
+        const res = await apiCall('quotes', 'POST', {
+          state:        saved.state || quoteData?.state || 'NSW',
+          start_date:   newStart,
+          start_time:   saved.start_time || '09:00',
+          end_date:     newEnd,
+          end_time:     saved.end_time || '09:00',
+          vehicle_type: saved.vehicle_type || quoteData?.vehicle_type || 'car',
+        });
+
+        const newQuoteId = res.data.quote_id;
+
+        // Step 2: GET the quote to fetch pricing
+        const priceRes = await apiCall(`quotes?id=${newQuoteId}`);
+
+        const updatedQuote = {
+          ...saved,
+          quote_id:    newQuoteId,
+          start_date:  newStart,
+          end_date:    newEnd,
+          days:        priceRes.data.days,
+        };
+        sessionStorage.setItem('dsc_quote', JSON.stringify(updatedQuote));
+
+        // Update with FULL pricing and re-render
+        quoteData = priceRes.data;
+        renderQuoteResult(quoteData);
+        dqEditForm.style.display = 'none';
+        showToast('Dates updated! Prices refreshed.', 'success');
+      } catch (err) {
+        showToast(err.message || 'Failed to update dates.', 'error');
+      }
+
+      dqSaveBtn.textContent = 'Update Dates';
+      dqSaveBtn.disabled = false;
+    });
+  }
+
   loadQuote();
 }
 
@@ -718,20 +888,20 @@ window.openQuoteModal = function() {
         <div class="quote-card-title">Get a Quote</div>
         <div class="quote-card-rule"></div>
         <form class="quote-form" id="pqForm" novalidate>
+            <div class="form-row quote-hire-row">
             <div class="form-group">
               <label class="form-label" for="pqState">Where are you hiring your car from?</label>
               <div class="input-icon-wrap">
                 <svg class="input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 <select id="pqState" name="state" class="form-input form-select" style="padding-left:44px" required>
-                  <option value="">Select a state</option>
-                  <option value="NSW">NSW — New South Wales</option>
-                  <option value="VIC">VIC — Victoria</option>
-                  <option value="QLD">QLD — Queensland</option>
-                  <option value="WA">WA — Western Australia</option>
-                  <option value="SA">SA — South Australia</option>
-                  <option value="TAS">TAS — Tasmania</option>
-                  <option value="ACT">ACT — Australian Capital Territory</option>
-                  <option value="NT">NT — Northern Territory</option>
+                  <option value="NSW" selected>NSW</option>
+                  <option value="VIC">VIC</option>
+                  <option value="QLD">QLD</option>
+                  <option value="WA">WA</option>
+                  <option value="SA">SA</option>
+                  <option value="TAS">TAS</option>
+                  <option value="ACT">ACT</option>
+                  <option value="NT">NT</option>
                   <option value="Overseas">Overseas</option>
                 </select>
               </div>
@@ -747,8 +917,9 @@ window.openQuoteModal = function() {
                 <option value="4x4">🚙 4x4</option>
               </select>
             </div>
+            </div>
 
-            <div class="form-row">
+            <div class="form-row date-time-row">
               <div class="form-group">
                 <label class="form-label" for="pqStartDate">Start Date</label>
                 <input type="date" id="pqStartDate" name="start_date" class="form-input" required>
@@ -767,7 +938,7 @@ window.openQuoteModal = function() {
               </div>
             </div>
 
-            <div class="form-row">
+            <div class="form-row date-time-row">
               <div class="form-group">
                 <label class="form-label" for="pqEndDate">End Date</label>
                 <input type="date" id="pqEndDate" name="end_date" class="form-input" required>

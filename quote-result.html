@@ -10,13 +10,28 @@
 .qr-page{padding:88px 0 40px;background:var(--bg-soft);min-height:100vh}
 
 /* Trip summary bar — compact horizontal */
-.trip-bar{background:#fff;border-radius:var(--r-lg);border:1px solid var(--border);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:var(--shadow-sm)}
+.trip-bar{background:#fff;border-radius:var(--r-lg);border:1px solid var(--border);padding:16px 20px;margin-bottom:20px;box-shadow:var(--shadow-sm)}
+.trip-bar-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.trip-bar-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13px;color:var(--text-dark);display:flex;align-items:center;gap:6px}
+.trip-bar-grid{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .trip-bar-item{display:flex;flex-direction:column;gap:1px;min-width:0}
 .trip-bar-label{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);font-weight:700}
 .trip-bar-value{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:var(--text-dark);white-space:nowrap}
 .trip-bar-divider{width:1px;height:32px;background:var(--border);flex-shrink:0}
 .trip-bar-vehicle{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--text-dark)}
-.trip-bar-edit{margin-left:auto;font-size:12px;font-weight:600;color:var(--primary);flex-shrink:0}
+.trip-bar-edit-btn{font-size:12px;font-weight:700;color:var(--primary);cursor:pointer;display:flex;align-items:center;gap:4px;background:none;border:1px solid var(--primary-lt);font-family:'Plus Jakarta Sans',sans-serif;transition:var(--transition);padding:4px 10px;border-radius:var(--r-full)}
+.trip-bar-edit-btn:hover{background:var(--primary-lt)}
+/* Inline date editor */
+.trip-edit-form{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.trip-edit-form.show{display:block}
+.trip-edit-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.trip-edit-row .form-input{padding:10px 12px;font-size:13px}
+.trip-edit-row .form-label{font-size:11px;margin-bottom:2px}
+.trip-edit-actions{display:flex;gap:8px;justify-content:flex-end}
+.trip-edit-save{padding:7px 18px;border-radius:var(--r-sm);background:var(--primary);color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:var(--transition)}
+.trip-edit-save:hover{background:var(--primary-dk)}
+.trip-edit-cancel{padding:7px 18px;border-radius:var(--r-sm);background:transparent;color:var(--text-muted);font-size:12px;font-weight:700;border:1px solid var(--border);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:var(--transition)}
+.trip-edit-cancel:hover{background:var(--bg-soft)}
 
 /* Vehicle coverage note */
 .vt-banner{background:var(--bg-blue);border:1px solid #BFDBFE;border-radius:var(--r-md);padding:14px 16px;margin-bottom:20px;display:flex;gap:14px;align-items:center;font-size:12px;color:var(--text-body)}
@@ -245,28 +260,56 @@
     <div class="qr-grid">
       <!-- Left Column -->
       <div>
-        <!-- Trip Summary Bar -->
-        <div class="trip-bar" data-aos="fade-up">
-          <div class="trip-bar-item">
-            <span class="trip-bar-label">Location</span>
-            <span class="trip-bar-value" id="result-state">&mdash;</span>
+        <!-- Trip Summary Bar (editable) -->
+        <div class="trip-bar" data-aos="fade-up" id="qrTripBar">
+          <div class="trip-bar-top">
+            <span class="trip-bar-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 002 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+              Your Rental
+            </span>
+            <button class="trip-bar-edit-btn" id="qrTripEditBtn" type="button">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Edit dates
+            </button>
           </div>
-          <div class="trip-bar-divider"></div>
-          <div class="trip-bar-item">
-            <span class="trip-bar-label">Pickup</span>
-            <span class="trip-bar-value" id="result-start">&mdash;</span>
+          <div class="trip-bar-grid">
+            <div class="trip-bar-item">
+              <span class="trip-bar-label">Location</span>
+              <span class="trip-bar-value" id="result-state">&mdash;</span>
+            </div>
+            <div class="trip-bar-divider"></div>
+            <div class="trip-bar-item">
+              <span class="trip-bar-label">Pickup</span>
+              <span class="trip-bar-value" id="result-start">&mdash;</span>
+            </div>
+            <div class="trip-bar-divider"></div>
+            <div class="trip-bar-item">
+              <span class="trip-bar-label">Return</span>
+              <span class="trip-bar-value" id="result-end">&mdash;</span>
+            </div>
+            <div class="trip-bar-divider"></div>
+            <div class="trip-bar-item">
+              <span class="trip-bar-label">Duration</span>
+              <span class="trip-bar-value" id="result-days">&mdash;</span>
+            </div>
           </div>
-          <div class="trip-bar-divider"></div>
-          <div class="trip-bar-item">
-            <span class="trip-bar-label">Return</span>
-            <span class="trip-bar-value" id="result-end">&mdash;</span>
+          <!-- Inline Date Editor -->
+          <div class="trip-edit-form" id="qrTripEditForm">
+            <div class="trip-edit-row">
+              <div class="form-group">
+                <label class="form-label">Pickup Date</label>
+                <input type="date" id="qrEditStart" class="form-input">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Return Date</label>
+                <input type="date" id="qrEditEnd" class="form-input">
+              </div>
+            </div>
+            <div class="trip-edit-actions">
+              <button class="trip-edit-cancel" id="qrEditCancel" type="button">Cancel</button>
+              <button class="trip-edit-save" id="qrEditSave" type="button">Update Dates</button>
+            </div>
           </div>
-          <div class="trip-bar-divider"></div>
-          <div class="trip-bar-item">
-            <span class="trip-bar-label">Duration</span>
-            <span class="trip-bar-value" id="result-days">&mdash;</span>
-          </div>
-          <a href="index.html" class="trip-bar-edit">Edit</a>
         </div>
 
         <!-- Vehicle Banner -->

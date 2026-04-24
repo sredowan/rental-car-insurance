@@ -300,6 +300,7 @@
             <p style="font-size:12px;color:var(--text-muted);margin:-6px 0 12px">Takes 30 seconds · No payment required</p>
             <div class="quote-card-rule"></div>
             <form class="quote-form" id="quoteForm" novalidate>
+              <div class="form-row quote-hire-row">
               <div class="form-group">
                 <label class="form-label" for="quoteState">Where are you hiring your car from?</label>
                 <div class="input-icon-wrap">
@@ -310,15 +311,14 @@
                   </svg>
                   <select id="quoteState" name="state" class="form-input form-select" style="padding-left:44px"
                     required>
-                    <option value="">Select a state</option>
-                    <option value="NSW">NSW — New South Wales</option>
-                    <option value="VIC">VIC — Victoria</option>
-                    <option value="QLD">QLD — Queensland</option>
-                    <option value="WA">WA — Western Australia</option>
-                    <option value="SA">SA — South Australia</option>
-                    <option value="TAS">TAS — Tasmania</option>
-                    <option value="ACT">ACT — Australian Capital Territory</option>
-                    <option value="NT">NT — Northern Territory</option>
+                    <option value="NSW" selected>NSW</option>
+                    <option value="VIC">VIC</option>
+                    <option value="QLD">QLD</option>
+                    <option value="WA">WA</option>
+                    <option value="SA">SA</option>
+                    <option value="TAS">TAS</option>
+                    <option value="ACT">ACT</option>
+                    <option value="NT">NT</option>
                     <option value="Overseas">Overseas</option>
                   </select>
                 </div>
@@ -334,8 +334,9 @@
                   <option value="4x4">🚙 4x4</option>
                 </select>
               </div>
+              </div>
 
-              <div class="form-row">
+              <div class="form-row date-time-row">
                 <div class="form-group">
                   <label class="form-label" for="quoteStartDate">Pickup Date</label>
                   <input type="date" id="quoteStartDate" name="start_date" class="form-input" required>
@@ -360,7 +361,7 @@
                 </div>
               </div>
 
-              <div class="form-row">
+              <div class="form-row date-time-row">
                 <div class="form-group">
                   <label class="form-label" for="quoteEndDate">Return Date</label>
                   <input type="date" id="quoteEndDate" name="end_date" class="form-input" required>

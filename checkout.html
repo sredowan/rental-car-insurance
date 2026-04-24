@@ -2,262 +2,348 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Dashboard | Rental Sheild</title>
+<title>Secure Checkout | Rental Sheild</title>
 <meta name="stripe-key" content="pk_test_51TIDlC7RWNoVAisBZ6kcziA6lcvxk1XR8RK9GZeomRo3fuqrTp7WOp8stcdRvj8mDNrP7pim6SPWEcKJhpHyjPYm00h7kBcSx3">
 <link rel="stylesheet" href="css/main.css">
-<style>
-.policy-hero-card{background:linear-gradient(135deg,var(--bg-navy),#1E3A5F);border-radius:var(--r-xl);padding:28px;color:#fff;margin-bottom:24px}
-.policy-hero-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
-.policy-number-mono{font-family:'JetBrains Mono',monospace;font-size:16px;color:rgba(255,255,255,0.7)}
-.policy-detail-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}
-.policy-det{display:flex;flex-direction:column;gap:3px}
-.policy-det-label{font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.5);font-weight:600}
-.policy-det-value{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#fff}
-.quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
-.quick-action-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;text-align:center;cursor:pointer;transition:var(--transition);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:10px}
-.quick-action-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--primary)}
-.qa-icon{font-size:28px}
-.qa-label{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:var(--text-dark)}
-.empty-policy-state{text-align:center;padding:48px 24px;background:var(--bg-soft);border:2px dashed var(--border);border-radius:var(--r-xl);margin-bottom:24px}
-.empty-policy-state h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--text-dark);margin-bottom:8px}
-.empty-policy-state p{color:var(--text-muted);margin-bottom:20px}
-.skeleton{background:linear-gradient(90deg,rgba(255,255,255,0.1) 25%,rgba(255,255,255,0.2) 50%,rgba(255,255,255,0.1) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;height:20px;width:80px;display:inline-block}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-@media(max-width:800px){.policy-detail-row{grid-template-columns:repeat(2,1fr)}.quick-actions{grid-template-columns:repeat(2,1fr)}}
-</style>
+<link rel="icon" type="image/png" href="assets/images/favicon.png">
 
-  <!-- Facebook Pixel Code -->
-  <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', 'FB_PIXEL_ID_PLACEHOLDER');
-    fbq('track', 'PageView');
-  </script>
-  <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=FB_PIXEL_ID_PLACEHOLDER&ev=PageView&noscript=1"
-  /></noscript>
-  <!-- End Facebook Pixel Code -->
+<!-- Facebook Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init','FB_PIXEL_ID_PLACEHOLDER');fbq('track','PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=FB_PIXEL_ID_PLACEHOLDER&ev=PageView&noscript=1"/></noscript>
 
-  <!-- AOS Animations -->
-  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-  <link rel="icon" type="image/png" href="assets/images/favicon.png">
 <style>
-.checkout-page{min-height:100vh;padding:88px 0 60px;background:var(--bg-soft)}
-.checkout-grid{display:grid;grid-template-columns:1fr 380px;gap:32px;align-items:start}
-.checkout-form-card{background:#fff;border-radius:var(--r-xl);border:1px solid var(--border);padding:36px;box-shadow:var(--shadow-card)}
-.section-divider{font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border);display:block}
-.card-icons{display:flex;gap:8px;align-items:center;margin-top:8px}
-.card-icon-chip{background:var(--bg-soft);border:1px solid var(--border);border-radius:4px;padding:3px 10px;font-size:12px;font-weight:700;color:var(--text-muted)}
-.security-row{display:flex;gap:16px;flex-wrap:wrap;padding:14px 16px;background:var(--emerald-lt);border-radius:var(--r-sm);font-size:12px;color:var(--emerald);font-weight:600;align-items:center}
-.order-card{background:var(--bg-navy);border-radius:var(--r-xl);padding:28px;color:#fff;position:sticky;top:88px}
-.order-row{display:flex;justify-content:space-between;font-size:14px;padding:8px 0}
-.order-label{color:rgba(255,255,255,0.6)}
-.order-value{color:#fff;font-weight:600}
-.order-total{display:flex;justify-content:space-between;align-items:center;padding:16px 0 0;margin-top:8px;border-top:1px solid rgba(255,255,255,0.10)}
-.order-total-label{font-size:12px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.6);font-weight:700}
-.order-total-price{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:36px;color:var(--primary)}
-.guarantee-box{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25);border-radius:var(--r-md);padding:14px 16px;margin-top:20px;font-size:13px;color:var(--amber)}
-@media(max-width:800px){.checkout-grid{grid-template-columns:1fr}.order-card{position:static}}
-.progress-steps{display:flex;align-items:center;gap:0;margin-bottom:28px}
-.progress-step{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text-muted)}
-.progress-step.active{color:var(--primary)}
-.progress-step.done{color:var(--emerald)}
-.step-dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
-.progress-step.active .step-dot{background:var(--primary);border-color:var(--primary);color:#fff}
-.progress-step.done .step-dot{background:var(--emerald);border-color:var(--emerald);color:#fff}
-.step-line{flex:1;height:2px;background:var(--border);margin:0 8px}
-.step-line.done{background:var(--emerald)}
-#stripe-card-element{padding:14px 16px;border:1.5px solid var(--border);border-radius:var(--r-md);background:#fff;transition:var(--transition)}
-#stripe-card-element.StripeElement--focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(220,38,38,0.08)}
+/* ── Checkout Page Redesign ── */
+.co-page{min-height:100vh;padding:88px 0 40px;background:var(--bg-soft)}
+
+/* Progress bar */
+.co-progress{display:flex;align-items:center;gap:0;margin-bottom:20px;padding:12px 4px 0}
+.co-step{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--text-light);font-family:'Plus Jakarta Sans',sans-serif}
+.co-step.done{color:var(--emerald)}
+.co-step.active{color:var(--primary)}
+.co-step-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;transition:var(--transition)}
+.co-step.done .co-step-dot{background:var(--emerald);border-color:var(--emerald);color:#fff}
+.co-step.active .co-step-dot{background:var(--primary);border-color:var(--primary);color:#fff}
+.co-step-line{flex:1;height:2px;background:var(--border);margin:0 6px}
+.co-step-line.done{background:var(--emerald)}
+
+/* Trip summary bar — editable */
+.co-trip{background:#fff;border-radius:var(--r-lg);border:1px solid var(--border);padding:14px 18px;margin-bottom:16px;box-shadow:var(--shadow-sm)}
+.co-trip-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.co-trip-title{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13px;color:var(--text-dark);display:flex;align-items:center;gap:6px}
+.co-trip-edit{font-size:12px;font-weight:700;color:var(--primary);cursor:pointer;display:flex;align-items:center;gap:4px;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif;transition:var(--transition);padding:4px 10px;border-radius:var(--r-full);border:1px solid var(--primary-lt)}
+.co-trip-edit:hover{background:var(--primary-lt)}
+.co-trip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.co-trip-item{display:flex;flex-direction:column;gap:2px}
+.co-trip-label{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);font-weight:700}
+.co-trip-val{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:var(--text-dark)}
+
+/* Editable date inputs (hidden by default) */
+.co-trip-edit-form{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.co-trip-edit-form.show{display:block}
+.co-trip-edit-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.co-trip-edit-row .form-input{padding:10px 12px;font-size:13px}
+.co-trip-edit-row .form-label{font-size:11px;margin-bottom:2px}
+.co-trip-edit-actions{display:flex;gap:8px;justify-content:flex-end}
+.co-trip-save{padding:7px 18px;border-radius:var(--r-sm);background:var(--primary);color:#fff;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:var(--transition)}
+.co-trip-save:hover{background:var(--primary-dk)}
+.co-trip-cancel{padding:7px 18px;border-radius:var(--r-sm);background:transparent;color:var(--text-muted);font-size:12px;font-weight:700;border:1px solid var(--border);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:var(--transition)}
+.co-trip-cancel:hover{background:var(--bg-soft)}
+
+/* Layout grid */
+.co-grid{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+
+/* Order summary — light compact card */
+.co-order{background:#fff;border-radius:var(--r-lg);border:1px solid var(--border);padding:18px;box-shadow:var(--shadow-sm);position:sticky;top:88px}
+.co-order-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px}
+.co-order-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13px;color:var(--text-body)}
+.co-order-row strong{color:var(--text-dark);font-weight:700}
+.co-order-divider{border:none;border-top:1px solid var(--border);margin:8px 0}
+.co-order-total{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0 0}
+.co-order-total-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
+.co-order-total-price{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:28px;color:var(--primary);line-height:1}
+.co-order-badges{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.co-order-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:var(--r-full);display:flex;align-items:center;gap:3px}
+.co-order-badge.green{background:var(--emerald-lt);color:var(--emerald)}
+.co-order-badge.blue{background:var(--primary-lt);color:var(--primary)}
+.co-order-change{display:block;text-align:center;font-size:11px;color:var(--text-muted);margin-top:10px;text-decoration:none}
+.co-order-change:hover{color:var(--primary)}
+.co-order-guarantee{display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding:10px 12px;background:var(--amber-lt);border:1px solid rgba(245,158,11,0.2);border-radius:var(--r-sm);font-size:11px;color:#92400E;line-height:1.4}
+.co-order-guarantee svg{flex-shrink:0;margin-top:1px}
+
+/* Form card */
+.co-form-card{background:#fff;border-radius:var(--r-lg);border:1px solid var(--border);padding:24px;box-shadow:var(--shadow-sm)}
+.co-section-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.co-form-fields{display:flex;flex-direction:column;gap:14px}
+.co-name-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* Stripe card element */
+#stripe-card-element{padding:13px 14px;border:1.5px solid var(--border);border-radius:var(--r-sm);background:#fff;transition:var(--transition)}
+#stripe-card-element.StripeElement--focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(30,127,216,0.08)}
 #stripe-card-element.StripeElement--invalid{border-color:var(--red)}
-#card-errors{color:var(--primary);font-size:13px;margin-top:6px;min-height:20px}
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin-right:8px;vertical-align:middle}
+#card-errors{color:var(--red);font-size:12px;margin-top:4px;min-height:16px}
+
+/* Pay button */
+.co-pay-btn{background:var(--primary);color:#fff;border:none;width:100%;padding:15px;border-radius:var(--r-md);font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:15px;letter-spacing:0.02em;display:flex;align-items:center;justify-content:center;gap:8px;transition:var(--transition);cursor:pointer;margin-top:20px}
+.co-pay-btn:hover{background:var(--primary-dk);transform:translateY(-1px);box-shadow:0 8px 24px rgba(30,127,216,0.35)}
+.co-pay-btn:disabled{opacity:.7;cursor:not-allowed;transform:none;box-shadow:none}
+.co-pay-note{text-align:center;font-size:11px;color:var(--text-muted);margin-top:6px}
+
+/* Spinner */
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin-right:6px;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* Trust row */
+.co-trust{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+.co-trust-item{font-size:11px;font-weight:600;color:var(--text-muted);display:flex;align-items:center;gap:4px}
+
+/* ── Mobile Overrides ── */
+@media(max-width:800px){
+  .co-page{padding:76px 0 100px}
+  .co-grid{grid-template-columns:1fr;gap:14px}
+  .co-order{position:static;order:-1}
+  .co-trip-grid{grid-template-columns:repeat(2,1fr);gap:6px}
+  .co-name-row{grid-template-columns:1fr 1fr;gap:10px}
+  .co-form-card{padding:18px}
+  .co-order{padding:14px}
+  .co-trip{padding:12px 14px}
+  .co-trip-edit-row{grid-template-columns:1fr 1fr;gap:8px}
+
+  /* Sticky bottom bar */
+  .co-mobile-bar{display:flex !important;position:fixed;bottom:0;left:0;right:0;z-index:999;background:#fff;border-top:1px solid var(--border);padding:10px 16px;box-shadow:0 -4px 20px rgba(0,0,0,0.08);align-items:center;gap:12px}
+  .co-mobile-bar .comb-info{flex:1}
+  .co-mobile-bar .comb-total{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:20px;color:var(--text-dark)}
+  .co-mobile-bar .comb-sub{font-size:10px;color:var(--text-muted);font-weight:600}
+  .co-mobile-bar .comb-btn{background:var(--primary);color:#fff;border:none;padding:12px 24px;border-radius:var(--r-sm);font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:var(--transition)}
+  .co-mobile-bar .comb-btn:hover{background:var(--primary-dk)}
+
+  /* Hide desktop pay button on mobile */
+  .co-pay-btn{display:none}
+  .co-pay-note{display:none}
+}
+@media(min-width:801px){
+  .co-mobile-bar{display:none !important}
+}
+@media(max-width:420px){
+  .co-trip-grid{grid-template-columns:1fr 1fr}
+  .co-name-row{grid-template-columns:1fr}
+}
 </style>
 </head>
 
 <body>
-<div class="dashboard-layout" id="dashboardPage">
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      Rental Sheild
-    </div>
-    <nav class="sidebar-nav">
-      <a href="dashboard.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Dashboard</a>
-      <a href="index.html#quote" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 10 20 15 15 20"/><path d="M4 4v7a4 4 0 0 0 4 4h12"/></svg> Get a Quote</a>
-      <a href="my-policies.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> My Policies</a>
-      <a href="my-claims.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> My Claims</a>
-      <div class="sidebar-divider"></div>
-      <a href="my-profile.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> My Profile</a>
-    </nav>
-    <div class="sidebar-bottom">
-      <a href="#" class="sidebar-item" data-signout style="color:rgba(239,68,68,0.8);text-decoration:none;padding:8px 0"><span class="sidebar-item-icon">→</span> Sign Out</a>
-    </div>
-  </aside>
 
-  <!-- Main -->
-  <div class="dashboard-main">
-    <div class="dashboard-topbar">
-      <div class="topbar-title">Dashboard</div>
-      <div class="topbar-right">
-        <a href="index.html#quote" class="btn btn-primary btn-sm">+ New Quote</a>
-        <div class="topbar-avatar" title="User"></div>
+<!-- NAVBAR -->
+<nav class="navbar scrolled">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon"><img src="assets/images/logo.png" alt="Rental Sheild Logo" width="200" height="60" style="object-fit: contain;"></div>
+    </a>
+    <div class="nav-links">
+      <a href="how-it-works.html" class="nav-link">How It Works</a>
+      <a href="coverage.html" class="nav-link">Coverage</a>
+      <a href="faq.html" class="nav-link">FAQ</a>
+      <a href="about.html" class="nav-link">About</a>
+    </div>
+    <div class="nav-right">
+      <a href="login.html" class="btn btn-outline btn-sm">Sign In</a>
+    </div>
+    <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="co-page">
+  <div class="container">
+
+    <!-- Progress Steps -->
+    <div class="co-progress">
+      <div class="co-step done"><div class="co-step-dot">✓</div> Quote</div>
+      <div class="co-step-line done"></div>
+      <div class="co-step done"><div class="co-step-dot">✓</div> Plan</div>
+      <div class="co-step-line done"></div>
+      <div class="co-step active"><div class="co-step-dot">3</div> Payment</div>
+    </div>
+
+    <!-- Trip Summary Bar (editable) -->
+    <div class="co-trip" id="coTrip">
+      <div class="co-trip-top">
+        <span class="co-trip-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 002 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+          Your Rental
+        </span>
+        <button class="co-trip-edit" id="coTripEditBtn" type="button">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit dates
+        </button>
+      </div>
+      <div class="co-trip-grid" id="coTripDisplay">
+        <div class="co-trip-item">
+          <span class="co-trip-label">Location</span>
+          <span class="co-trip-val" id="co-state">—</span>
+        </div>
+        <div class="co-trip-item">
+          <span class="co-trip-label">Pickup</span>
+          <span class="co-trip-val" id="co-start">—</span>
+        </div>
+        <div class="co-trip-item">
+          <span class="co-trip-label">Return</span>
+          <span class="co-trip-val" id="co-end">—</span>
+        </div>
+        <div class="co-trip-item">
+          <span class="co-trip-label">Duration</span>
+          <span class="co-trip-val" id="co-days">—</span>
+        </div>
+      </div>
+
+      <!-- Inline Date Editor (hidden) -->
+      <div class="co-trip-edit-form" id="coTripEditForm">
+        <div class="co-trip-edit-row">
+          <div class="form-group">
+            <label class="form-label">Pickup Date</label>
+            <input type="date" id="coEditStart" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Return Date</label>
+            <input type="date" id="coEditEnd" class="form-input">
+          </div>
+        </div>
+        <div class="co-trip-edit-actions">
+          <button class="co-trip-cancel" id="coEditCancel" type="button">Cancel</button>
+          <button class="co-trip-save" id="coEditSave" type="button">Update Dates</button>
+        </div>
       </div>
     </div>
 
-    <div class="dashboard-content">
-<!-- Breadcrumb -->
-<div style="margin-bottom:24px;font-size:13px;color:var(--text-muted)">
-<a href="dashboard-quote.html" style="color:var(--primary)">← Back to Quote</a> &nbsp;/ Secure Checkout
-</div>
-
-    <!-- Progress -->
-    <div class="progress-steps">
-      <div class="progress-step done"><div class="step-dot">✓</div> Quote</div>
-      <div class="step-line done"></div>
-      <div class="progress-step active"><div class="step-dot">2</div> Payment</div>
-      <div class="step-line"></div>
-      <div class="progress-step"><div class="step-dot">3</div> Confirmation</div>
-    </div>
-
-    <div class="checkout-grid">
-      <!-- Form -->
-      <div class="checkout-form-card">
-        <span class="section-divider">Your Details</span>
-        <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:28px">
-          <div class="form-row">
-            <div class="form-group"><label class="form-label">First Name</label><input type="text" id="checkoutFirstName" class="form-input" placeholder="James"></div>
-            <div class="form-group"><label class="form-label">Last Name</label><input type="text" id="checkoutLastName" class="form-input" placeholder="Miller"></div>
+    <div class="co-grid">
+      <!-- Left Column — Form -->
+      <div>
+        <div class="co-form-card">
+          <!-- Your Details -->
+          <div class="co-section-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Your Details
           </div>
-          <div class="form-group"><label class="form-label">Email Address <small style="color:var(--primary);font-weight:normal">(your policy will be sent here)</small></label><input type="email" id="checkoutEmail" class="form-input" placeholder="james@example.com"></div>
-          <div class="form-group">
-            <label class="form-label">Phone Number</label>
-            <div class="input-icon-wrap">
-              <span class="input-icon" style="font-size:13px;font-weight:600;left:12px">+61</span>
-              <input type="tel" id="checkoutPhone" class="form-input" style="padding-left:52px" placeholder="4XX XXX XXX">
+          <div class="co-form-fields" style="margin-bottom:24px">
+            <div class="co-name-row">
+              <div class="form-group"><label class="form-label">First Name</label><input type="text" id="checkoutFirstName" class="form-input" placeholder="James"></div>
+              <div class="form-group"><label class="form-label">Last Name</label><input type="text" id="checkoutLastName" class="form-input" placeholder="Miller"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email <small style="color:var(--primary);font-weight:normal">(policy sent here)</small></label>
+              <input type="email" id="checkoutEmail" class="form-input" placeholder="james@example.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <div class="input-icon-wrap">
+                <span class="input-icon" style="font-size:13px;font-weight:600;left:12px">+61</span>
+                <input type="tel" id="checkoutPhone" class="form-input" style="padding-left:52px" placeholder="4XX XXX XXX">
+              </div>
             </div>
           </div>
-        </div>
 
-        <span class="section-divider">Payment Method</span>
-
-        <!-- Stripe Card Element -->
-        <div style="margin-bottom:20px">
-          <div class="form-group">
-            <label class="form-label">Card Details</label>
-            <div id="stripe-card-element" style="padding:12px 14px; border:1px solid var(--border); border-radius:var(--r-sm); background:#fff;"></div>
-            <div id="card-errors" role="alert" style="color:var(--crimson); font-size:13px; margin-top:8px"></div>
+          <!-- Payment -->
+          <div class="co-section-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Payment
           </div>
-          <div class="card-icons" style="display:flex; gap:8px; margin-top:12px">
-            <img src="https://cdn.jsdelivr.net/gh/lukas-h/payment-icons@1.2.0/svg/visa.svg" height="24" alt="Visa">
-            <img src="https://cdn.jsdelivr.net/gh/lukas-h/payment-icons@1.2.0/svg/mastercard.svg" height="24" alt="MasterCard">
-            <img src="https://cdn.jsdelivr.net/gh/lukas-h/payment-icons@1.2.0/svg/amex.svg" height="24" alt="Amex">
+          <div class="co-form-fields">
+            <div class="form-group">
+              <label class="form-label">Card Details</label>
+              <div id="stripe-card-element"></div>
+              <div id="card-errors" role="alert"></div>
+            </div>
           </div>
-        </div>
 
-        <div class="security-row">
-          <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:middle"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> SSL Encrypted</span>
-          <span>PCI DSS Compliant</span>
-          <span>Stripe Secure</span>
-        </div>
+          <!-- Trust -->
+          <div class="co-trust">
+            <span class="co-trust-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> SSL Secured
+            </span>
+            <span class="co-trust-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Stripe Secure
+            </span>
+            <span class="co-trust-item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> PCI Compliant
+            </span>
+          </div>
 
-        <!-- Terms -->
-        <div style="margin-top:20px">
-          <label class="form-check">
-            <input type="checkbox" id="termsCheck">
-            <span class="form-check-label">I have read and agree to the <a href="#">Terms & Conditions</a>, <a href="#">Privacy Policy</a>, and <a href="#">Product Disclosure Statement</a>.</span>
-          </label>
-        </div>
+          <!-- Terms -->
+          <div style="margin-top:16px">
+            <label class="form-check">
+              <input type="checkbox" id="termsCheck">
+              <span class="form-check-label">I agree to the <a href="terms.html" target="_blank">Terms & Conditions</a>, <a href="privacy.html" target="_blank">Privacy Policy</a>, and <a href="pds.html" target="_blank">Product Disclosure Statement</a>.</span>
+            </label>
+          </div>
 
-        <button class="btn-quote" style="margin-top:24px" id="payBtn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px;vertical-align:middle"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> COMPLETE PURCHASE
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </button>
-        <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:8px">You'll be charged the total amount shown. No hidden fees.</p>
+          <!-- Pay Button (desktop) -->
+          <button class="co-pay-btn" id="payBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            PAY NOW
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <p class="co-pay-note">Charged the total shown. No hidden fees.</p>
+        </div>
       </div>
 
-      <!-- Order Summary -->
+      <!-- Right Column — Order Summary -->
       <div>
-        <div class="order-card">
-          <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.5);margin-bottom:16px;font-weight:700">Order Summary</div>
-          <div class="order-row"><span class="order-label">Plan</span><span class="order-value" id="co-coverage">—</span></div>
-          <div class="order-row"><span class="order-label">Vehicle</span><span class="order-value" id="co-vehicle">—</span></div>
-          <div class="order-row"><span class="order-label">State</span><span class="order-value" id="co-state">—</span></div>
-          <div class="order-row"><span class="order-label">Start</span><span class="order-value" id="co-start">—</span></div>
-          <div class="order-row"><span class="order-label">End</span><span class="order-value" id="co-end">—</span></div>
-          <div class="order-row"><span class="order-label">Duration</span><span class="order-value" id="co-days">—</span></div>
-          <div class="order-row"><span class="order-label">Rate</span><span class="order-value" id="co-rate">—</span></div>
-          <div class="order-total">
-            <span class="order-total-label">Total</span>
-            <span class="order-total-price" id="co-total">$0.00</span>
+        <div class="co-order">
+          <div class="co-order-title">Order Summary</div>
+          <div class="co-order-row"><span>Plan</span><strong id="co-coverage">—</strong></div>
+          <div class="co-order-row"><span>Vehicle</span><strong id="co-vehicle">—</strong></div>
+          <div class="co-order-row"><span>Rate</span><strong id="co-rate">—</strong></div>
+          <div class="co-order-row"><span>Duration</span><strong id="co-duration">—</strong></div>
+          <hr class="co-order-divider">
+          <div class="co-order-total">
+            <span class="co-order-total-label">Total</span>
+            <span class="co-order-total-price" id="co-total">$0.00</span>
           </div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08)">
-            <span style="font-size:11px;color:rgba(255,255,255,0.4)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="3" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"></polyline></svg> Zero Excess</span>
-            <span style="font-size:11px;color:rgba(255,255,255,0.4)">· <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="3" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"></polyline></svg> $100K Coverage</span>
+          <div class="co-order-badges">
+            <span class="co-order-badge green">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> $0 Excess
+            </span>
+            <span class="co-order-badge green">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> $100K Cover
+            </span>
+            <span class="co-order-badge blue">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> Instant Policy
+            </span>
           </div>
-          <a href="dashboard-quote.html" style="display:block;text-align:center;font-size:12px;color:rgba(255,255,255,0.4);margin-top:12px">← Change plan</a>
-        </div>
-        <div class="guarantee-box">
-          <strong style="display:block;margin-bottom:4px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right:4px;vertical-align:-3px"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg> Cancel Anytime</strong>
-          Cancel before your rental pickup date for a complete full refund. No questions asked.
+          <a href="javascript:history.back()" class="co-order-change">← Change plan</a>
+          <div class="co-order-guarantee">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;margin-top:1px"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg>
+            <span><strong>Cancel Anytime</strong> — Full refund before your rental pickup date. No questions asked.</span>
+          </div>
         </div>
       </div>
     </div>
-  
+
+  </div>
 </div>
+
+<!-- Mobile Sticky Bottom Bar -->
+<div class="co-mobile-bar">
+  <div class="comb-info">
+    <div class="comb-total" id="co-mob-total">$0.00</div>
+    <div class="comb-sub" id="co-mob-plan">— · — days</div>
+  </div>
+  <button class="comb-btn" id="coMobPayBtn">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+    PAY NOW
+  </button>
 </div>
-</div>
+
 <script src="https://js.stripe.com/v3/"></script>
 <script src="js/app.js"></script>
 <script src="js/quote.js"></script>
 <script src="js/api.js"></script>
 <script src="js/checkout.js"></script>
 
-  <!-- Initialize AOS -->
-  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-  <script>
-    if(typeof AOS !== 'undefined') {
-        AOS.init({ once: true, duration: 600, easing: 'ease-out-cubic' });
-    }
-    // Track quote form submit
-    const globalQuoteForm = document.getElementById('quoteForm');
-    if (globalQuoteForm) {
-       globalQuoteForm.addEventListener('submit', function() {
-           if(typeof fbq !== 'undefined') {
-               fbq('track', 'InitiateCheckout');
-           }
-       });
-    }
-  </script>
-
-<!-- Mobile App Bottom Nav -->
-<div class="app-bottom-nav">
-  <a href="dashboard.html" class="active">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    <span>Home</span>
-  </a>
-  <a href="my-policies.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-    <span>Policies</span>
-  </a>
-  <a href="my-claims.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    <span>Claims</span>
-  </a>
-  <a href="profile.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    <span>Profile</span>
-  </a>
-</div>
-
 </body>
-
 </html>
