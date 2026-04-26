@@ -9,7 +9,6 @@ RewriteRule ^config/ - [F,L]
 RewriteRule ^middleware/ - [F,L]
 RewriteRule ^helpers/ - [F,L]
 
-# Route everything to index.php
+# Route everything to index.php (even if it's a directory like /quotes)
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
