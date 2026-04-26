@@ -41,7 +41,9 @@ function rate_limit(string $key, int $maxAttempts = 60, int $windowSeconds = 60)
     }
 
     // Filter out old attempts
-    $data['attempts'] = array_filter($data['attempts'], fn($t) => $t > ($now - $windowSeconds));
+    $data['attempts'] = array_filter($data['attempts'], function($t) use ($now, $windowSeconds) {
+        return $t > ($now - $windowSeconds);
+    });
 
     if (count($data['attempts']) >= $maxAttempts) {
         $data['blocked_until'] = $now + $windowSeconds;
@@ -59,7 +61,7 @@ function rate_limit(string $key, int $maxAttempts = 60, int $windowSeconds = 60)
 }
 
 // ── Input Sanitizer ──────────────────────────────────────
-function deep_sanitize(mixed $input): mixed {
+function deep_sanitize($input) {
     if (is_string($input)) {
         // Strip null bytes, trim, strip tags
         $input = str_replace(chr(0), '', $input);

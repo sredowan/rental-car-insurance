@@ -3,7 +3,7 @@
 // DriveSafe Cover — JSON Response Helpers
 // ============================================================
 
-function json_success(mixed $data = null, string $message = 'Success', int $code = 200): never {
+function json_success($data = null, string $message = 'Success', int $code = 200) {
     http_response_code($code);
     echo json_encode([
         'success' => true,
@@ -13,7 +13,7 @@ function json_success(mixed $data = null, string $message = 'Success', int $code
     exit;
 }
 
-function json_error(string $message = 'An error occurred', int $code = 400, mixed $errors = null): never {
+function json_error(string $message = 'An error occurred', int $code = 400, $errors = null) {
     http_response_code($code);
     $body = ['success' => false, 'message' => $message];
     if ($errors !== null) $body['errors'] = $errors;
@@ -21,7 +21,7 @@ function json_error(string $message = 'An error occurred', int $code = 400, mixe
     exit;
 }
 
-function json_paginated(array $items, int $total, int $page, int $per_page, string $message = 'OK'): never {
+function json_paginated(array $items, int $total, int $page, int $per_page, string $message = 'OK') {
     http_response_code(200);
     echo json_encode([
         'success'    => true,

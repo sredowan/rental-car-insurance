@@ -94,7 +94,7 @@ if ($method === 'POST') {
             $files = $_FILES[$doc_type];
             // Normalize single vs multiple files
             if (!is_array($files['name'])) {
-                $files = array_map(fn($v) => [$v], $files);
+                $files = array_map(function($v) { return [$v]; }, $files);
             }
 
             $file_count = count($files['name']);
