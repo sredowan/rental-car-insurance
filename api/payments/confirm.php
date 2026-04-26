@@ -30,7 +30,7 @@ if (!$payment_intent_id || !$quote_id || !$plan) {
     json_error('payment_intent_id, quote_id, and plan are required', 400);
 }
 
-$plans = COVERAGE_PLANS;
+$plans = get_coverage_plans();
 if (!isset($plans[$plan])) {
     json_error('Invalid plan selected', 400);
 }

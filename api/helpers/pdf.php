@@ -59,7 +59,7 @@ class PolicyPDF {
      * Get plan features based on plan key
      */
     private static function getPlanFeatures(string $plan): array {
-        $plans = COVERAGE_PLANS;
+        $plans = get_coverage_plans();
         return $plans[$plan]['features'] ?? $plans['essential']['features'];
     }
 
@@ -67,7 +67,7 @@ class PolicyPDF {
      * Get plan label
      */
     private static function getPlanLabel(string $plan): string {
-        $plans = COVERAGE_PLANS;
+        $plans = get_coverage_plans();
         return $plans[$plan]['label'] ?? 'Essential';
     }
 

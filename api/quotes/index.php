@@ -90,7 +90,7 @@ if ($method === 'GET') {
     $surcharge    = VEHICLE_SURCHARGES[$vehicle_type] ?? 0;
 
     // Build all plan pricing options
-    $plans   = COVERAGE_PLANS;
+    $plans   = get_coverage_plans();
     $options = [];
     foreach ($plans as $key => $plan) {
         $price_per_day = round($plan['price_per_day'] + $surcharge, 2);

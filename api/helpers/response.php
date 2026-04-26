@@ -75,8 +75,30 @@ function generate_otp(): string {
     return str_pad((string) random_int(0, 999999), OTP_LENGTH, '0', STR_PAD_LEFT);
 }
 
-function calculate_quote(string $plan, string $vehicle_type, string $start_date, string $end_date): array {
+function get_coverage_plans(): array {
     $plans = COVERAGE_PLANS;
+    try {
+        $db = Database::get();
+        $stmt = $db->query("SELECT setting_key, setting_value FROM settings WHERE setting_key IN ('plan_price_essential', 'plan_price_premium', 'plan_price_ultimate')");
+        $settings = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+        
+        if (isset($settings['plan_price_essential']) && is_numeric($settings['plan_price_essential'])) {
+            $plans['essential']['price_per_day'] = (float) $settings['plan_price_essential'];
+        }
+        if (isset($settings['plan_price_premium']) && is_numeric($settings['plan_price_premium'])) {
+            $plans['premium']['price_per_day'] = (float) $settings['plan_price_premium'];
+        }
+        if (isset($settings['plan_price_ultimate']) && is_numeric($settings['plan_price_ultimate'])) {
+            $plans['ultimate']['price_per_day'] = (float) $settings['plan_price_ultimate'];
+        }
+    } catch (Exception $e) {
+        // Fallback to defaults if DB fails or isn't connected yet
+    }
+    return $plans;
+}
+
+function calculate_quote(string $plan, string $vehicle_type, string $start_date, string $end_date): array {
+    $plans = get_coverage_plans();
     if (!array_key_exists($plan, $plans)) {
         return ['error' => 'Invalid plan selected.'];
     }

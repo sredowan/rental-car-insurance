@@ -29,7 +29,7 @@ if (!$quote_id || !$plan) {
 }
 
 // Validate plan
-$plans = COVERAGE_PLANS;
+$plans = get_coverage_plans();
 if (!isset($plans[$plan])) {
     json_error('Invalid plan selected', 400);
 }

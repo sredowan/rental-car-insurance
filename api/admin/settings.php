@@ -37,9 +37,12 @@ if ($method === 'GET') {
         'mail_from_name'   => MAIL_FROM_NAME,
         'mail_from_email'  => MAIL_FROM_EMAIL,
         'stripe_mode'      => 'test',
-        'stripe_pub_key'   => substr(STRIPE_PUBLISHABLE_KEY, 0, 20) . '...',
-        'max_file_size_mb' => (string) (MAX_FILE_SIZE / 1024 / 1024),
-        'otp_expiry_min'   => (string) OTP_EXPIRY_MINUTES,
+        'stripe_pub_key'       => substr(STRIPE_PUBLISHABLE_KEY, 0, 20) . '...',
+        'max_file_size_mb'     => (string) (MAX_FILE_SIZE / 1024 / 1024),
+        'otp_expiry_min'       => (string) OTP_EXPIRY_MINUTES,
+        'plan_price_essential' => (string) COVERAGE_PLANS['essential']['price_per_day'],
+        'plan_price_premium'   => (string) COVERAGE_PLANS['premium']['price_per_day'],
+        'plan_price_ultimate'  => (string) COVERAGE_PLANS['ultimate']['price_per_day'],
     ];
 
     json_success(array_merge($defaults, $settings));
@@ -57,6 +60,7 @@ if ($method === 'PUT') {
         'mail_host', 'mail_port', 'mail_encryption',
         'mail_username', 'mail_password', 'mail_from_name', 'mail_from_email',
         'stripe_mode', 'max_file_size_mb', 'otp_expiry_min',
+        'plan_price_essential', 'plan_price_premium', 'plan_price_ultimate',
     ];
 
     $db->beginTransaction();
