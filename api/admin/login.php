@@ -7,6 +7,7 @@ require_once __DIR__ . '/../middleware/cors.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../helpers/response.php';
 require_once __DIR__ . '/../helpers/jwt.php';
+require_once __DIR__ . '/../helpers/mailer.php';
 
 $method  = $_SERVER['REQUEST_METHOD'];
 $segment = $_GET['action'] ?? 'login'; // 'login' or 'otp'
@@ -46,15 +47,20 @@ if ($method === 'POST' && $segment === 'login') {
 
     // Generate OTP
     $otp        = generate_otp();
-    $otp_expiry = date('Y-m-d H:i:s', strtotime('+' . OTP_EXPIRY_MINUTES . ' minutes'));
+    $expiryMinutes = max(1, (int) get_setting('otp_expiry_min', OTP_EXPIRY_MINUTES));
+    $otp_expiry = date('Y-m-d H:i:s', strtotime('+' . $expiryMinutes . ' minutes'));
     $otp_hash   = hash('sha256', $otp);
 
     $db->prepare(
         'UPDATE admins SET otp_code = ?, otp_expires_at = ?, otp_attempts = 0 WHERE id = ?'
     )->execute([$otp_hash, $otp_expiry, $admin['id']]);
 
-    // TODO: Send OTP via email
-    // For now, return OTP in dev mode only
+    $sent = Mailer::sendLoginCode($admin['email'], $otp);
+    if (!$sent && APP_ENV === 'production') {
+        json_error('Could not send verification code. Please contact support.', 500);
+    }
+
+    // Return OTP in development only for local testing.
     $dev_otp = APP_ENV === 'development' ? $otp : null;
 
     json_success([

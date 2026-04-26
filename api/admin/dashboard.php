@@ -10,6 +10,7 @@ require_once __DIR__ . '/../middleware/auth.php';
 require_method('GET');
 require_admin();
 
+try {
 $db   = Database::get();
 $now  = date('Y-m-d');
 $mon  = date('Y-m-01');
@@ -54,19 +55,23 @@ $revenue_change_pct = $revenue_last_month > 0
     ? round(($revenue_this_month - $revenue_last_month) / $revenue_last_month * 100, 1)
     : 0;
 
-// ── Coverage Tier Breakdown ───────────────────────────────────
+// ── Plan Revenue Breakdown ─────────────────────────────────────
 $tier_stmt = $db->query(
-    "SELECT coverage_amount, COUNT(*) as count, SUM(total_price) as revenue
+    "SELECT COALESCE(plan, 'essential') AS plan, coverage_amount, COUNT(*) as count, SUM(total_price) as revenue
      FROM policies WHERE created_at >= '$mon'
-     GROUP BY coverage_amount ORDER BY coverage_amount ASC"
+     GROUP BY COALESCE(plan, 'essential'), coverage_amount ORDER BY revenue DESC"
 );
 $tiers = $tier_stmt->fetchAll();
+$plans = get_coverage_plans();
 
 foreach ($tiers as &$t) {
+    $planKey = $t['plan'] ?: 'essential';
+    $t['plan']            = $planKey;
+    $t['plan_label']      = $plans[$planKey]['label'] ?? ucfirst($planKey);
     $t['coverage_amount'] = (int)   $t['coverage_amount'];
     $t['count']           = (int)   $t['count'];
     $t['revenue']         = (float) $t['revenue'];
-    $t['price_per_day']   = COVERAGE_TIERS[$t['coverage_amount']] ?? 0;
+    $t['price_per_day']   = (float) ($plans[$planKey]['price_per_day'] ?? 0);
 }
 
 // ── Claims by Status ─────────────────────────────────────────
@@ -87,7 +92,7 @@ $conversion_rate  = $total_quotes > 0 ? round($converted_quotes / $total_quotes 
 $recent_quotes_stmt = $db->query(
     "SELECT q.id, q.state, q.days, q.status, q.created_at,
             c.full_name as customer_name, c.email as customer_email,
-            p.policy_number, p.coverage_amount, p.total_price
+            p.policy_number, p.plan, p.coverage_amount, p.total_price
      FROM quotes q
      LEFT JOIN customers c  ON c.id = q.customer_id
      LEFT JOIN policies  p  ON p.id = q.policy_id
@@ -127,3 +132,7 @@ json_success([
     'recent_quotes'      => $recent_quotes,
     'pending_claims_list'=> $pending_claims_list,
 ], 'Dashboard data retrieved.');
+} catch (Exception $e) {
+    error_log('Admin dashboard error: ' . $e->getMessage());
+    json_error('Dashboard data could not be loaded: ' . $e->getMessage(), 500);
+}

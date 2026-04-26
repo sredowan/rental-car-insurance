@@ -5,6 +5,7 @@
 
 function json_success($data = null, string $message = 'Success', int $code = 200) {
     http_response_code($code);
+    header('Content-Type: application/json; charset=utf-8');
     echo json_encode([
         'success' => true,
         'message' => $message,
@@ -15,6 +16,7 @@ function json_success($data = null, string $message = 'Success', int $code = 200
 
 function json_error(string $message = 'An error occurred', int $code = 400, $errors = null) {
     http_response_code($code);
+    header('Content-Type: application/json; charset=utf-8');
     $body = ['success' => false, 'message' => $message];
     if ($errors !== null) $body['errors'] = $errors;
     echo json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -23,6 +25,7 @@ function json_error(string $message = 'An error occurred', int $code = 400, $err
 
 function json_paginated(array $items, int $total, int $page, int $per_page, string $message = 'OK') {
     http_response_code(200);
+    header('Content-Type: application/json; charset=utf-8');
     echo json_encode([
         'success'    => true,
         'message'    => $message,
@@ -73,6 +76,44 @@ function generate_claim_number(): string {
 
 function generate_otp(): string {
     return str_pad((string) random_int(0, 999999), OTP_LENGTH, '0', STR_PAD_LEFT);
+}
+
+function get_setting(string $key, $default = null) {
+    try {
+        $db = Database::get();
+        $stmt = $db->prepare('SELECT setting_value FROM settings WHERE setting_key = ? LIMIT 1');
+        $stmt->execute([$key]);
+        $value = $stmt->fetchColumn();
+        return $value !== false && $value !== null && $value !== '' ? $value : $default;
+    } catch (Exception $e) {
+        return $default;
+    }
+}
+
+function get_stripe_mode(): string {
+    $mode = strtolower((string) get_setting('stripe_mode', 'test'));
+    return $mode === 'live' ? 'live' : 'test';
+}
+
+function get_stripe_config(?string $mode = null): array {
+    $mode = $mode ? strtolower($mode) : get_stripe_mode();
+    $mode = $mode === 'live' ? 'live' : 'test';
+    
+    $publishable = $mode === 'live' ? STRIPE_LIVE_PUBLISHABLE_KEY : STRIPE_TEST_PUBLISHABLE_KEY;
+    $secret      = $mode === 'live' ? STRIPE_LIVE_SECRET_KEY : STRIPE_TEST_SECRET_KEY;
+
+    return [
+        'mode' => $mode,
+        'publishable_key' => $publishable,
+        'secret_key' => $secret,
+    ];
+}
+
+function mask_secret(?string $value, int $visible = 6): string {
+    $value = (string) $value;
+    if ($value === '') return '';
+    if (strlen($value) <= ($visible * 2)) return str_repeat('*', strlen($value));
+    return substr($value, 0, $visible) . str_repeat('*', max(8, strlen($value) - ($visible * 2))) . substr($value, -$visible);
 }
 
 function get_coverage_plans(): array {

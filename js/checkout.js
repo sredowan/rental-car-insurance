@@ -3,7 +3,7 @@
 // Handles Stripe payment + editable trip dates
 // ============================================================
 
-(function () {
+(async function () {
   const payBtn        = document.getElementById('payBtn');
   const mobPayBtn     = document.getElementById('coMobPayBtn');
   const cardContainer = document.getElementById('stripe-card-element');
@@ -143,7 +143,16 @@
   }
 
   // ── Initialize Stripe ────────────────────────────────────
-  const stripeKey = document.querySelector('meta[name="stripe-key"]')?.content;
+  let stripeConfig = null;
+  try {
+    const configRes = await apiCall('payments/config');
+    stripeConfig = configRes.data || {};
+  } catch (err) {
+    showToast(err.message || 'Payment system not configured', 'error');
+    return;
+  }
+
+  const stripeKey = stripeConfig.publishable_key;
   if (!stripeKey) {
     showToast('Payment system not configured', 'error');
     return;
@@ -248,6 +257,7 @@
           quote_id: currentQuote.quote_id,
           plan: currentQuote.plan || 'essential',
           vehicle_type: currentQuote.vehicle_type || 'car',
+          stripe_mode: intentRes.data.stripe_mode || stripeConfig.mode || 'test',
           email: email,
           name: fullName,
           phone: phone,

@@ -11,17 +11,28 @@ require_once __DIR__ . '/middleware/security.php';
 // Security headers on every API response
 set_security_headers();
 
-// Parse the URI — works with both .htaccess and PHP built-in server
-$request_uri = strtok($_SERVER['REQUEST_URI'], '?');
-$request_uri = trim($request_uri, '/');
-
-// Strip 'api/' prefix if present (Apache .htaccess already strips it, dev server doesn't)
-if (str_starts_with($request_uri, 'api/')) {
-    $uri = substr($request_uri, 4);
+// Parse the URI. Supports rewrite mode (/api/admin/login) and no-rewrite
+// mode (/api/index.php?route=admin/login) for local servers.
+if (!empty($_GET['route'])) {
+    $uri = trim((string) $_GET['route'], '/');
 } else {
-    $uri = $request_uri;
+    $request_uri = strtok($_SERVER['REQUEST_URI'], '?');
+    $request_uri = trim($request_uri, '/');
+
+    // Strip 'api/' prefix if present (Apache .htaccess already strips it, dev server doesn't)
+    if (str_starts_with($request_uri, 'api/')) {
+        $uri = substr($request_uri, 4);
+    } else {
+        $uri = $request_uri;
+    }
+
+    if (str_starts_with($uri, 'index.php/')) {
+        $uri = substr($uri, 10);
+    } elseif ($uri === 'index.php') {
+        $uri = '';
+    }
+    $uri = trim($uri, '/');
 }
-$uri    = trim($uri, '/');
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Route map: 'path' => 'handler_file'
@@ -47,6 +58,7 @@ $routes = [
     'profile'              => __DIR__ . '/profile/index.php',
 
     // ── Payments (Stripe) ────────────────────────
+    'payments/config'        => __DIR__ . '/payments/config.php',
     'payments/create-intent' => __DIR__ . '/payments/create-intent.php',
     'payments/confirm'       => __DIR__ . '/payments/confirm.php',
 

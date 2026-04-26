@@ -45,6 +45,10 @@ if (file_exists($envFile)) {
 // ─── Stripe Payment Gateway ──────────────────────────────
 define('STRIPE_SECRET_KEY',      getenv('STRIPE_SECRET_KEY')      ?: '');
 define('STRIPE_PUBLISHABLE_KEY', getenv('STRIPE_PUBLISHABLE_KEY') ?: '');
+define('STRIPE_TEST_SECRET_KEY', getenv('STRIPE_TEST_SECRET_KEY') ?: STRIPE_SECRET_KEY);
+define('STRIPE_TEST_PUBLISHABLE_KEY', getenv('STRIPE_TEST_PUBLISHABLE_KEY') ?: STRIPE_PUBLISHABLE_KEY);
+define('STRIPE_LIVE_SECRET_KEY', getenv('STRIPE_LIVE_SECRET_KEY') ?: STRIPE_SECRET_KEY);
+define('STRIPE_LIVE_PUBLISHABLE_KEY', getenv('STRIPE_LIVE_PUBLISHABLE_KEY') ?: STRIPE_PUBLISHABLE_KEY);
 define('STRIPE_WEBHOOK_SECRET',  getenv('STRIPE_WEBHOOK_SECRET')  ?: '');
 define('STRIPE_CURRENCY',        'aud');
 
@@ -54,7 +58,7 @@ define('FB_CAPI_TOKEN', getenv('FB_CAPI_TOKEN') ?: '');
 
 define('APP_NAME',    'Rental Shield');
 define('APP_ENV',     getenv('APP_ENV') ?: 'development');
-define('APP_URL',     getenv('APP_URL') ?: 'https://www.rentalshield.com.au');
+define('APP_URL',     getenv('APP_URL') ?: 'https://rentalshield.com.au');
 
 // ─── JWT ───────────────────────────────────────────────────
 define('JWT_SECRET',  getenv('JWT_SECRET') ?: 'CHANGE_THIS_ON_PRODUCTION');
@@ -185,4 +189,3 @@ if (APP_ENV === 'production') {
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
 }
-

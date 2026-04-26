@@ -20,7 +20,8 @@
       // Populate fields
       const fields = ['app_name', 'app_url', 'support_email', 'mail_host', 'mail_port',
         'mail_encryption', 'mail_username', 'mail_from_name', 'mail_from_email',
-        'stripe_mode', 'stripe_pub_key', 'max_file_size_mb', 'otp_expiry_min'];
+        'stripe_mode', 'stripe_test_pub_key', 'stripe_live_pub_key',
+        'plan_price_essential', 'plan_price_premium', 'plan_price_ultimate'];
 
       fields.forEach(key => {
         const el = document.getElementById(`set-${key}`);
@@ -38,22 +39,43 @@
 
     const data = {};
     const fields = ['app_name', 'app_url', 'support_email', 'mail_host', 'mail_port',
-      'mail_encryption', 'mail_username', 'mail_from_name', 'mail_from_email', 'stripe_mode'];
+      'mail_encryption', 'mail_username', 'mail_from_name', 'mail_from_email', 'stripe_mode',
+      'stripe_test_pub_key', 'stripe_live_pub_key',
+      'plan_price_essential', 'plan_price_premium', 'plan_price_ultimate'];
 
     fields.forEach(key => {
       const el = document.getElementById(`set-${key}`);
       if (el && el.value) data[key] = el.value;
     });
 
-    // Only include password if user typed something
+    for (const key of ['plan_price_essential', 'plan_price_premium', 'plan_price_ultimate']) {
+      if (data[key] !== undefined && (Number.isNaN(Number(data[key])) || Number(data[key]) < 0)) {
+        showToast('Plan prices must be valid positive numbers.', 'error');
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save All Settings';
+        return;
+      }
+    }
+
+    // Only include password/secrets if user typed something
     const mailPass = document.getElementById('set-mail_password');
     if (mailPass && mailPass.value) data.mail_password = mailPass.value;
 
+    const testSec = document.getElementById('set-stripe_test_sec_key');
+    if (testSec && testSec.value) data.stripe_test_sec_key = testSec.value;
+
+    const liveSec = document.getElementById('set-stripe_live_sec_key');
+    if (liveSec && liveSec.value) data.stripe_live_sec_key = liveSec.value;
+
     try {
-      await apiCall('admin/settings', 'PUT', data);
+      await apiCall('admin/settings', 'POST', data);
       showToast('Settings saved successfully!', 'success');
     } catch (err) {
-      showToast(err.message || 'Failed to save settings', 'error');
+      if (err.status === 403) {
+        showToast('Only a super admin can save settings.', 'error');
+      } else {
+        showToast(err.message || 'Failed to save settings', 'error');
+      }
     } finally {
       saveBtn.disabled = false;
       saveBtn.textContent = 'Save All Settings';

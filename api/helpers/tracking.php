@@ -1,6 +1,6 @@
 <?php
 // ============================================================
-// Rental Sheild — Tracking & Analytics Helper
+// Rental Shield — Tracking & Analytics Helper
 // Handles Facebook Conversion API (CAPI) events
 // ============================================================
 

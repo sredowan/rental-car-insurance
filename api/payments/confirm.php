@@ -22,6 +22,7 @@ $payment_intent_id = trim($data['payment_intent_id'] ?? '');
 $quote_id          = intval($data['quote_id'] ?? 0);
 $plan              = trim($data['plan'] ?? '');
 $vehicle_type      = trim($data['vehicle_type'] ?? 'car');
+$stripe_mode       = trim($data['stripe_mode'] ?? '');
 $guest_email       = trim($data['email'] ?? '');
 $guest_name        = trim($data['name'] ?? '');
 $guest_phone       = trim($data['phone'] ?? '');
@@ -38,8 +39,12 @@ $surcharges = VEHICLE_SURCHARGES;
 $surcharge  = $surcharges[$vehicle_type] ?? 0;
 
 try {
-    // Verify the PaymentIntent with Stripe
-    \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+    // Verify the PaymentIntent with Stripe using the same mode used at intent creation.
+    $stripe = get_stripe_config($stripe_mode ?: null);
+    if (empty($stripe['secret_key'])) {
+        json_error('Stripe secret key is not configured for ' . $stripe['mode'] . ' mode.', 500);
+    }
+    \Stripe\Stripe::setApiKey($stripe['secret_key']);
     $intent = \Stripe\PaymentIntent::retrieve($payment_intent_id);
 
     if ($intent->status !== 'succeeded') {
@@ -125,8 +130,8 @@ try {
     $stmt = $db->prepare("
         INSERT INTO policies (customer_id, quote_id, policy_number, state, plan, vehicle_type, coverage_amount, 
                               start_date, end_date, days, price_per_day, total_price,
-                              payment_reference, payment_amount, status, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', NOW())
+                              payment_reference, payment_amount, payment_status, payment_method, status, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'completed', 'card', 'active', NOW())
     ");
     $stmt->execute([
         $customer_id,
@@ -148,8 +153,8 @@ try {
     $policy_id = $db->lastInsertId();
 
     // Update quote status
-    $stmt = $db->prepare("UPDATE quotes SET status = 'converted' WHERE id = ?");
-    $stmt->execute([$quote_id]);
+    $stmt = $db->prepare("UPDATE quotes SET status = 'converted', policy_id = ? WHERE id = ?");
+    $stmt->execute([$policy_id, $quote_id]);
 
     $db->commit();
 
@@ -195,44 +200,10 @@ try {
         error_log("Tracking execution error: " . $tEx->getMessage());
     }
 
-    // Send New Account password email
+    // Send new account password email
     if (isset($is_new_customer) && $is_new_customer && isset($new_account_password)) {
         try {
-            $welcomeSub = "Welcome to Rental Shield — Your Account";
-            $welcomeHtml = "
-                <div style='text-align:center;margin-bottom:24px'>
-                    <div style='width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#1D4ED8,#3B82F6);margin:0 auto 16px;display:flex;align-items:center;justify-content:center'>
-                        <span style='font-size:28px;color:#fff;line-height:64px'>&#9733;</span>
-                    </div>
-                    <h2 style='color:#0B1E3D;margin:0 0 4px;font-size:22px'>Welcome to Rental Shield</h2>
-                    <p style='color:#6B7280;margin:0;font-size:14px'>Your account has been created</p>
-                </div>
-
-                <p style='color:#374151;font-size:15px;line-height:1.6'>Hi {$guest_name},</p>
-                <p style='color:#374151;font-size:15px;line-height:1.6'>An account was automatically created during your purchase so you can manage your policies, download certificates, and file claims anytime.</p>
-
-                <div style='background:#F8FAFC;border:1px solid #E5E7EB;border-radius:12px;padding:20px;margin:24px 0'>
-                    <table style='width:100%;border-collapse:collapse'>
-                        <tr>
-                            <td style='padding:10px 0;border-bottom:1px solid #E5E7EB;color:#6B7280;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em'>Login Email</td>
-                            <td style='padding:10px 0;border-bottom:1px solid #E5E7EB;font-weight:700;color:#0B1E3D;text-align:right;font-size:15px'>{$guest_email}</td>
-                        </tr>
-                        <tr>
-                            <td style='padding:10px 0;color:#6B7280;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em'>Temporary Password</td>
-                            <td style='padding:10px 0;font-weight:700;color:#E8003A;text-align:right;font-family:monospace;font-size:16px;letter-spacing:2px'>{$new_account_password}</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div style='background:#EFF6FF;border:1px solid #BFDBFE;border-left:4px solid #3B82F6;border-radius:8px;padding:16px;margin:20px 0'>
-                    <p style='margin:0;color:#1E40AF;font-size:13px;line-height:1.5'>You can also sign in without a password using a one-time email code. Just click \"Login with Email Code\" on the sign-in page.</p>
-                </div>
-
-                <div style='text-align:center;margin:28px 0 16px'>
-                    <a href='" . APP_URL . "/login.html' style='display:inline-block;background:linear-gradient(135deg,#E8003A,#C7002F);color:#fff;padding:14px 32px;border-radius:8px;font-weight:700;font-size:15px;text-decoration:none'>Sign In to Dashboard</a>
-                </div>
-            ";
-            Mailer::send($guest_email, $welcomeSub, $welcomeHtml);
+            Mailer::sendWelcomeAccount($guest_email, $guest_name, $new_account_password);
         } catch(Exception $ex) {
             error_log("Welcome email error: " . $ex->getMessage());
         }

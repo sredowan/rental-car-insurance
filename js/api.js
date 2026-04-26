@@ -15,13 +15,80 @@ async function apiCall(endpoint, method = 'GET', body = null, isFormData = false
   const config = { method, headers };
   if (body) config.body = isFormData ? body : JSON.stringify(body);
 
-  // Ensure endpoint has trailing slash to prevent LiteSpeed 301 redirect (POST→GET)
+  // Prefer trailing slash to prevent LiteSpeed 301 redirect (POST -> GET),
+  // but retry without it if a host routes extensionless API paths differently.
   const normalizedEndpoint = endpoint.endsWith('/') || endpoint.includes('?') ? endpoint : endpoint + '/';
+  const alternateEndpoint = !endpoint.includes('?')
+    ? (normalizedEndpoint.endsWith('/') ? normalizedEndpoint.slice(0, -1) : normalizedEndpoint + '/')
+    : null;
+  const routeOnly = endpoint.split('?')[0].replace(/^\/+|\/+$/g, '');
+  const queryOnly = endpoint.includes('?') ? endpoint.slice(endpoint.indexOf('?') + 1) : '';
+  const indexFallback = `index.php?route=${encodeURIComponent(routeOnly)}${queryOnly ? `&${queryOnly}` : ''}`;
+
+  async function requestApi(path) {
+    const res = await fetch(`${API_BASE}/${path}`, config);
+    const text = await res.text();
+    let data = null;
+
+    if (text) {
+      try {
+        data = JSON.parse(text);
+      } catch (parseErr) {
+        const clean = text.replace(/<style[\s\S]*?<\/style>/gi, ' ')
+          .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+          .replace(/<[^>]*>/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        return {
+          res,
+          data: null,
+          invalidJsonMessage: res.status === 404
+            ? `API endpoint not found: /api/${path}`
+            : (clean ? clean.slice(0, 180) : `Server returned an invalid response (${res.status})`),
+        };
+      }
+    }
+
+    return { res, data, invalidJsonMessage: null };
+  }
 
   try {
-    const res = await fetch(`${API_BASE}/${normalizedEndpoint}`, config);
-    const data = await res.json();
-    if (!res.ok) throw { status: res.status, message: data.message || 'Request failed', errors: data.errors };
+    let { res, data, invalidJsonMessage } = await requestApi(normalizedEndpoint);
+
+    if (res.status === 404 && alternateEndpoint) {
+      const retry = await requestApi(alternateEndpoint);
+      if (retry.res.status !== 404 || retry.data) {
+        res = retry.res;
+        data = retry.data;
+        invalidJsonMessage = retry.invalidJsonMessage;
+      }
+    }
+
+    if (res.status === 404 && routeOnly) {
+      const retry = await requestApi(indexFallback);
+      if (retry.res.status !== 404 || retry.data) {
+        res = retry.res;
+        data = retry.data;
+        invalidJsonMessage = retry.invalidJsonMessage;
+      }
+    }
+
+    if (invalidJsonMessage) {
+      throw { status: res.status || 0, message: invalidJsonMessage };
+    }
+
+    if (!res.ok) {
+      throw {
+        status: res.status,
+        message: data?.message || `Request failed (${res.status})`,
+        errors: data?.errors,
+      };
+    }
+
+    if (!data) {
+      throw { status: res.status, message: 'Server returned an empty response.' };
+    }
+
     return data;
   } catch (err) {
     if (err.status) throw err;
@@ -830,7 +897,7 @@ document.querySelectorAll('[data-signout]').forEach(btn => {
 
 // ─── Auth Guard ───────────────────────────────────────────────
 const protectedPages  = ['dashboard.html','dashboard-quote.html','my-policies.html','my-claims.html','claims.html','my-profile.html'];
-const adminPages      = ['admin-dashboard.html'];
+const adminPages      = ['admin-dashboard.html','admin-quotes.html','admin-policies.html','admin-claims.html','admin-customers.html','admin-revenue.html','admin-mailbox.html','admin-settings.html','admin-audit.html'];
 const currentPage     = window.location.pathname.split('/').pop();
 if (protectedPages.includes(currentPage)  && !Auth.isLoggedIn()) window.location.href = '/login.html?next=' + currentPage.replace('.html','');
 if (adminPages.includes(currentPage) && !Auth.isAdmin())         window.location.href = '/admin-login.html';

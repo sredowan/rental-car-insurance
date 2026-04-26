@@ -62,8 +62,6 @@
     const maxCount = Math.max(...tiers.map(t => t.count)) || 1;
     let mostChosen = { tier: '', count: -1 };
     let bestRev = { tier: '', rev: -1 };
-    let baseCount = tiers.find(t => t.coverage_amount === 4000)?.count || 0;
-    let upgradeCount = tiers.filter(t => t.coverage_amount > 4000).reduce((a, t) => a + t.count, 0);
 
     const colors = [
       'var(--primary)',
@@ -74,8 +72,9 @@
     ];
 
     const html = tiers.map((t, idx) => {
-      if (t.count > mostChosen.count) { mostChosen = { tier: fmtCurrency(t.coverage_amount).replace('.00',''), count: t.count }; }
-      if (t.revenue > bestRev.rev) { bestRev = { tier: fmtCurrency(t.coverage_amount).replace('.00',''), rev: t.revenue }; }
+      const label = t.plan_label || (t.plan ? t.plan.charAt(0).toUpperCase() + t.plan.slice(1) : fmtCurrency(t.coverage_amount).replace('.00',''));
+      if (t.count > mostChosen.count) { mostChosen = { tier: label, count: t.count }; }
+      if (t.revenue > bestRev.rev) { bestRev = { tier: label, rev: t.revenue }; }
 
       const w = Math.round((t.count / maxCount) * 100);
       const isBest = t.revenue === Math.max(...tiers.map(x => x.revenue));
@@ -84,7 +83,7 @@
 
       return `
         <div class="chart-bar-item">
-          <span class="chart-bar-label" style="${lblColor}">${fmtCurrency(t.coverage_amount).replace('.00','')}</span>
+          <span class="chart-bar-label" style="${lblColor}">${label}</span>
           <div class="chart-bar-track">
             <div class="chart-bar-fill" style="width:${Math.max(w, 2)}%;background:${bg}"></div>
           </div>
@@ -95,11 +94,10 @@
 
     document.getElementById('dash-tier-bars').innerHTML = html;
 
-    const upgPct = (baseCount + upgradeCount) > 0 ? Math.round(upgradeCount / (baseCount + upgradeCount) * 100) : 0;
     document.getElementById('dash-tier-badges').innerHTML = `
       <span class="badge badge-primary" style="font-size:11px">Most chosen: ${mostChosen.tier || 'None'}</span>
       <span class="badge badge-amber" style="font-size:11px">Best revenue: ${bestRev.tier || 'None'}</span>
-      <span class="badge badge-navy" style="font-size:11px">${upgPct}% upgrade from base</span>
+      <span class="badge badge-navy" style="font-size:11px">${tiers.length} active plan${tiers.length === 1 ? '' : 's'}</span>
     `;
   }
 
@@ -157,7 +155,7 @@
           <td class="mono" style="color:var(--blue)">#${q.id}</td>
           <td>${q.customer_name || q.customer_email || 'Guest'}</td>
           <td>${q.state || '—'}</td>
-          <td>${fmtCurrency(q.coverage_amount).replace('.00','')}</td>
+          <td>${q.plan ? q.plan.charAt(0).toUpperCase() + q.plan.slice(1) : (q.coverage_amount ? fmtCurrency(q.coverage_amount).replace('.00','') : '—')}</td>
           <td><span class="badge ${badgeClass}" style="font-size:10px">${badgeText}</span></td>
           <td><a href="admin-quotes.html" style="color:var(--primary);font-size:12px;font-weight:600;text-decoration:none">${goStr}</a></td>
         </tr>

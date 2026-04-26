@@ -33,6 +33,7 @@ function rate_limit(string $key, int $maxAttempts = 60, int $windowSeconds = 60)
     // Check if blocked
     if ($data['blocked_until'] > $now) {
         http_response_code(429);
+        header('Content-Type: application/json; charset=utf-8');
         echo json_encode([
             'success' => false,
             'message' => 'Too many requests. Please wait ' . ($data['blocked_until'] - $now) . ' seconds.',
@@ -49,6 +50,7 @@ function rate_limit(string $key, int $maxAttempts = 60, int $windowSeconds = 60)
         $data['blocked_until'] = $now + $windowSeconds;
         file_put_contents($file, json_encode($data));
         http_response_code(429);
+        header('Content-Type: application/json; charset=utf-8');
         echo json_encode([
             'success' => false,
             'message' => 'Too many requests. Please try again later.',

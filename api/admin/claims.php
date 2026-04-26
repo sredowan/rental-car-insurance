@@ -132,13 +132,14 @@ if ($method === 'PATCH') {
 
     // Audit log
     $db->prepare(
-        'INSERT INTO audit_logs (admin_id, action, entity_type, entity_id, details, ip_address, created_at)
-         VALUES (?, "claim_status_update", "claim", ?, ?, ?, NOW())'
+        'INSERT INTO audit_log (admin_id, action, details, entity_type, entity_id, ip_address, user_agent, created_at)
+         VALUES (?, "claim_status_update", ?, "claim", ?, ?, ?, NOW())'
     )->execute([
         (int) $admin['sub'],
-        $claim_id,
         json_encode(['old_status' => $claim['status'], 'new_status' => $new_status]),
+        $claim_id,
         $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+        substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 500),
     ]);
 
     // Send email notification to customer

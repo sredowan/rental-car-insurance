@@ -5,7 +5,7 @@
 require_once __DIR__ . '/config.php';
 
 class Database {
-    private static ?PDO $instance = null;
+    private static $instance = null;
 
     public static function connect(): PDO {
         if (self::$instance === null) {
@@ -24,8 +24,10 @@ class Database {
             } catch (PDOException $e) {
                 if (APP_ENV === 'production') {
                     http_response_code(503);
+                    header('Content-Type: application/json; charset=utf-8');
                     echo json_encode(['success' => false, 'message' => 'Database unavailable. Please try again later.']);
                 } else {
+                    header('Content-Type: application/json; charset=utf-8');
                     echo json_encode(['success' => false, 'message' => 'DB Error: ' . $e->getMessage()]);
                 }
                 exit;

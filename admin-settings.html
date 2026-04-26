@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Settings | Admin — Rental Sheild</title>
+<title>Settings | Admin — Rental Shield</title>
 <link rel="stylesheet" href="css/main.css">
 <style>
 .settings-section{background:#fff;border:1px solid var(--border);border-radius:var(--r-xl);padding:28px;margin-bottom:20px}
@@ -55,7 +55,7 @@
 <body>
 <div class="dashboard-layout">
   <aside class="sidebar">
-    <div class="sidebar-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Admin Portal</div>
+    <div class="sidebar-logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Rental Shield</div>
     <nav class="sidebar-nav">
       <a href="admin-dashboard.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Dashboard</a>
       <a href="admin-quotes.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 10 20 15 15 20"/><path d="M4 4v7a4 4 0 0 0 4 4h12"/></svg> Quotes</a>
@@ -117,12 +117,41 @@
 
       <!-- Payment Settings -->
       <div class="settings-section">
-        <div class="settings-section-title">Stripe Payment</div>
-        <div class="settings-section-desc">Payment gateway mode</div>
-        <div class="setting-row"><div class="setting-col-label"><div class="setting-label">Mode</div></div><div class="setting-col-input">
-          <select id="set-stripe_mode"><option value="test">Test</option><option value="live">Live</option></select>
-        </div></div>
-        <div class="setting-row"><div class="setting-col-label"><div class="setting-label">Publishable Key</div><div class="setting-help">Read-only (change in config.php)</div></div><div class="setting-col-input"><input id="set-stripe_pub_key" readonly disabled style="background:var(--bg-soft);cursor:not-allowed"></div></div>
+        <div class="settings-section-title">Stripe Payment Gateway</div>
+        <div class="settings-section-desc">Configure your Stripe integration for both Test and Live modes.</div>
+        <div class="setting-row">
+          <div class="setting-col-label"><div class="setting-label">Gateway Mode</div><div class="setting-help">Switch between sandbox and production</div></div>
+          <div class="setting-col-input">
+            <select id="set-stripe_mode">
+              <option value="test">Test / Sandbox</option>
+              <option value="live">Live / Production</option>
+            </select>
+          </div>
+        </div>
+        
+        <div style="margin-top:20px; padding:15px; background:var(--bg-soft); border-radius:var(--r-md); border:1px solid var(--border)">
+          <div style="font-size:12px; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-bottom:12px">Test Keys</div>
+          <div class="setting-row">
+            <div class="setting-col-label"><div class="setting-label">Publishable Key</div></div>
+            <div class="setting-col-input"><input id="set-stripe_test_pub_key" placeholder="pk_test_..."></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-col-label"><div class="setting-label">Secret Key</div></div>
+            <div class="setting-col-input"><input id="set-stripe_test_sec_key" type="password" placeholder="sk_test_... (leave blank to keep current)"></div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; padding:15px; background:rgba(30,127,216,0.03); border-radius:var(--r-md); border:1px solid rgba(30,127,216,0.1)">
+          <div style="font-size:12px; font-weight:800; text-transform:uppercase; color:var(--primary); margin-bottom:12px">Live Keys</div>
+          <div class="setting-row">
+            <div class="setting-col-label"><div class="setting-label">Publishable Key</div></div>
+            <div class="setting-col-input"><input id="set-stripe_live_pub_key" placeholder="pk_live_..."></div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-col-label"><div class="setting-label">Secret Key</div></div>
+            <div class="setting-col-input"><input id="set-stripe_live_sec_key" type="password" placeholder="sk_live_... (leave blank to keep current)"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Admin Users -->

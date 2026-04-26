@@ -77,24 +77,9 @@ if ($method === 'POST') {
     
     $msgId = $db->lastInsertId();
 
-    // Send Real Email
-    $htmlBody = "
-        <div style='text-align:center;margin-bottom:24px'>
-            <div style='width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#2563EB);margin:0 auto 16px;display:flex;align-items:center;justify-content:center'>
-                <span style='font-size:32px;color:#fff;line-height:64px'>&#9993;</span>
-            </div>
-            <h2 style='color:#0B1E3D;margin:0 0 4px;font-size:22px'>Support Reply</h2>
-            <p style='color:#6B7280;margin:0;font-size:14px'>New message from Rental Shield Support</p>
-        </div>
-        <p style='color:#374151;font-size:15px;line-height:1.6'>Hi {$customer['full_name']},</p>
-        <div style='background:#F8FAFC;border:1px solid #E5E7EB;border-left:4px solid #3B82F6;border-radius:8px;padding:20px;margin:24px 0'>
-            <p style='margin:0;color:#1E293B;font-size:15px;line-height:1.6;white-space:pre-wrap'>{$message}</p>
-        </div>
-        <p style='color:#6B7280;font-size:14px;'>You can reply to this email, or log in to your dashboard to send a secure message directly.</p>
-    ";
-    
+    // Send real email
     try {
-        Mailer::send($customer['email'], 'Rental Shield Support', $htmlBody);
+        Mailer::sendSupportReply($customer['email'], $customer['full_name'], $message);
     } catch(Exception $e) {
         error_log("Failed sending support email: " . $e->getMessage());
     }

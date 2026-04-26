@@ -8,6 +8,7 @@ require_once __DIR__ . '/../middleware/cors.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../helpers/response.php';
 require_once __DIR__ . '/../middleware/auth.php';
+require_once __DIR__ . '/../helpers/mailer.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -21,13 +22,13 @@ if ($method === 'POST') {
 
     $quote_id          = (int) $body['quote_id'];
     $coverage_amount   = (int) $body['coverage_amount'];
+    $plan              = $body['plan'] ?? 'essential';
+    $vehicle_type      = $body['vehicle_type'] ?? 'car';
     $payment_reference = sanitize($body['payment_reference']);
     $customer_id       = (int) $auth['sub'];
 
-    // Validate coverage tier
-    if (!array_key_exists($coverage_amount, COVERAGE_TIERS)) {
-        json_error('Invalid coverage amount selected.', 422);
-    }
+    $plans = get_coverage_plans();
+    if (!isset($plans[$plan])) json_error('Invalid plan selected.', 422);
 
     $db = Database::get();
 
@@ -41,8 +42,9 @@ if ($method === 'POST') {
     if ($quote['status'] === 'converted') json_error('This quote has already been converted to a policy.', 409);
 
     // Calculate final pricing
-    $calc = calculate_quote($coverage_amount, $quote['start_date'], $quote['end_date']);
+    $calc = calculate_quote($plan, $vehicle_type, $quote['start_date'], $quote['end_date']);
     if (isset($calc['error'])) json_error($calc['error'], 422);
+    $coverage_amount = (int) $calc['coverage_amount'];
 
     // Generate unique policy number
     do {
@@ -104,7 +106,16 @@ if ($method === 'POST') {
     $stmt->execute([$policy_id]);
     $policy = $stmt->fetch();
 
-    // TODO: Send confirmation email here
+    try {
+        $custStmt = $db->prepare('SELECT email, full_name FROM customers WHERE id = ? LIMIT 1');
+        $custStmt->execute([$customer_id]);
+        $customer = $custStmt->fetch();
+        if ($customer && !empty($customer['email'])) {
+            Mailer::sendPolicyConfirmation($policy, $customer['email'], $customer['full_name']);
+        }
+    } catch (Exception $e) {
+        error_log('Policy email error: ' . $e->getMessage());
+    }
 
     json_success([
         'policy_id'     => $policy_id,

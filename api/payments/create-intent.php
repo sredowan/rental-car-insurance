@@ -67,32 +67,46 @@ try {
     $total_price   = round($price_per_day * $days, 2);
     $total_cents   = intval($total_price * 100); // Stripe uses cents
 
-    // Create Stripe PaymentIntent
-    \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+    // Create Stripe PaymentIntent using active admin-selected mode.
+    $stripe = get_stripe_config();
+    if (empty($stripe['secret_key'])) {
+        json_error('Stripe secret key is not configured for ' . $stripe['mode'] . ' mode.', 500);
+    }
+    \Stripe\Stripe::setApiKey($stripe['secret_key']);
 
     $metadata = [
         'quote_id'         => $quote_id,
+        'brand'            => 'Rental Shield',
+        'product'          => 'Rental vehicle excess insurance',
         'plan'             => $plan,
         'plan_label'       => $plans[$plan]['label'],
         'coverage_amount'  => $coverage_amount,
         'vehicle_type'     => $vehicle_type,
+        'stripe_mode'      => $stripe['mode'],
         'days'             => $days,
         'price_per_day'    => $price_per_day,
     ];
     if ($customer_id) $metadata['customer_id'] = $customer_id;
     if ($guest_email)  $metadata['guest_email'] = $guest_email;
 
-    $intent = \Stripe\PaymentIntent::create([
-        'amount'               => $total_cents,
-        'currency'             => STRIPE_CURRENCY,
-        'payment_method_types' => ['card'],
-        'metadata'             => $metadata,
-        'description'          => "Rental Shield — {$plans[$plan]['label']} plan, {$vehicle_type}, {$days} days",
-    ]);
+    $paymentIntentData = [
+        'amount'                      => $total_cents,
+        'currency'                    => STRIPE_CURRENCY,
+        'payment_method_types'        => ['card'],
+        'metadata'                    => $metadata,
+        'description'                 => "Rental Shield policy - {$plans[$plan]['label']} plan, {$vehicle_type}, {$days} days",
+        'statement_descriptor_suffix' => 'POLICY COVER',
+    ];
+    if ($guest_email) {
+        $paymentIntentData['receipt_email'] = $guest_email;
+    }
+
+    $intent = \Stripe\PaymentIntent::create($paymentIntentData);
 
     json_success([
         'client_secret' => $intent->client_secret,
         'intent_id'     => $intent->id,
+        'stripe_mode'   => $stripe['mode'],
         'amount'        => $total_price,
         'currency'      => STRIPE_CURRENCY,
     ], 'Payment intent created');
