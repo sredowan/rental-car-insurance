@@ -74,7 +74,94 @@
       <a href="my-profile.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> My Profile</a>
     </nav>
     <div class="sidebar-bottom">
-      <a href="#" class="sidebar-item" data-signout style="color:rgba(239,68,68,0.8);text-decoration:none;padding:8px 0"><span class="sidebar-item-icon">â†’</span> Sign Out</a>
+      <a href="#" class="sidebar-item" data-signout style="color:rgba(239,68,68,0.8);text-decoration:none;padding:8px 0"><span class="sidebar-item-icon">&rarr;</span> Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="dashboard-main">
+    <div class="dashboard-topbar">
+      <div class="topbar-title">Dashboard</div>
+      <div class="topbar-right">
+        <a href="index.html#quote" class="btn btn-primary btn-sm">+ New Quote</a>
+        <div class="topbar-avatar" title="User"></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard | Rental Sheild</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+.policy-hero-card{background:linear-gradient(135deg,var(--bg-navy),#1E3A5F);border-radius:var(--r-xl);padding:28px;color:#fff;margin-bottom:24px}
+.policy-hero-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.policy-number-mono{font-family:'JetBrains Mono',monospace;font-size:16px;color:rgba(255,255,255,0.7)}
+.policy-detail-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}
+.policy-det{display:flex;flex-direction:column;gap:3px}
+.policy-det-label{font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:rgba(255,255,255,0.5);font-weight:600}
+.policy-det-value{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:15px;color:#fff}
+.quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.quick-action-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;text-align:center;cursor:pointer;transition:var(--transition);text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:10px}
+.quick-action-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--primary)}
+.qa-icon{font-size:28px}
+.qa-label{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:var(--text-dark)}
+.empty-policy-state{text-align:center;padding:48px 24px;background:var(--bg-soft);border:2px dashed var(--border);border-radius:var(--r-xl);margin-bottom:24px}
+.empty-policy-state h3{font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;color:var(--text-dark);margin-bottom:8px}
+.empty-policy-state p{color:var(--text-muted);margin-bottom:20px}
+.skeleton{background:linear-gradient(90deg,rgba(255,255,255,0.1) 25%,rgba(255,255,255,0.2) 50%,rgba(255,255,255,0.1) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px;height:20px;width:80px;display:inline-block}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@media(max-width:800px){.policy-detail-row{grid-template-columns:repeat(2,1fr)}.quick-actions{grid-template-columns:repeat(2,1fr)}}
+</style>
+
+  <!-- Facebook Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', 'FB_PIXEL_ID_PLACEHOLDER');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=FB_PIXEL_ID_PLACEHOLDER&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Facebook Pixel Code -->
+
+  <!-- AOS Animations -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+<style>
+.inclusions-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.inclusion-item{display:flex;align-items:center;gap:8px;font-size:14px;color:rgba(255,255,255,0.8)}
+.inclusion-item span{color:var(--emerald);font-size:12px}
+.edit-link{font-size:13px;color:var(--text-muted);cursor:pointer;font-weight:500}
+.edit-link:hover{color:var(--primary)}
+.tier-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+.tier-card.selected .tier-sub{color:rgba(232,0,58,0.6)}
+</style>
+</head>
+
+<body>
+<div class="dashboard-layout" id="dashboardPage">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Rental Sheild
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-item active"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Dashboard</div>
+      <a href="index.html#quote" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 10 20 15 15 20"/><path d="M4 4v7a4 4 0 0 0 4 4h12"/></svg> Get a Quote</a>
+      <a href="my-policies.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> My Policies</a>
+      <a href="my-claims.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> My Claims</a>
+      <div class="sidebar-divider"></div>
+      <a href="my-profile.html" class="sidebar-item" style="color:#ffffff;text-decoration:none"><svg class="sidebar-item-icon" style="width:16px;height:16px;margin-right:12px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> My Profile</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="#" class="sidebar-item" data-signout style="color:rgba(239,68,68,0.8);text-decoration:none;padding:8px 0"><span class="sidebar-item-icon">&rarr;</span> Sign Out</a>
     </div>
   </aside>
 
@@ -92,7 +179,7 @@
 
     <!-- Breadcrumb -->
     <div style="margin-bottom:24px;font-size:13px;color:var(--text-muted)">
-      <a href="index.html" style="color:var(--primary)">â† Back to home</a> &nbsp;/ Your Quote
+      <a href="index.html" style="color:var(--primary)">&larr; Back to home</a> &nbsp;/ Your Quote
     </div>
 
     <div class="result-grid">
@@ -141,7 +228,7 @@
         <!-- Vehicle Type -->
         <div class="card mt-24" style="background:var(--bg-soft);border:1px solid var(--border)">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-            <span style="font-size:28px" id="result-vehicle-type">ðŸš— Car</span>
+            <span style="font-size:28px" id="result-vehicle-type">🚗 Car</span>
           </div>
           <div id="vehicleCoverageNotes" style="font-size:13px;color:var(--text-muted);line-height:1.7"></div>
         </div>
@@ -152,7 +239,7 @@
           <ul id="includedFeaturesList" style="display:flex;flex-direction:column;gap:12px">
             <!-- Rendered dynamically by JS based on selected plan -->
           </ul>
-          <a href="coverage.html" style="display:inline-block;margin-top:16px;font-size:13px;color:var(--primary);font-weight:600">See full policy document â†’</a>
+          <a href="coverage.html" style="display:inline-block;margin-top:16px;font-size:13px;color:var(--primary);font-weight:600">See full policy document &rarr;</a>
         </div>
         </div>
 
@@ -182,7 +269,7 @@
             <div class="inclusion-item"><span class="css-check" style="width:12px;height:12px;margin-right:4px"></span> $0 excess on every claim</div>
             <div class="inclusion-item"><span class="css-check" style="width:12px;height:12px;margin-right:4px"></span> Collision & theft</div>
             <div class="inclusion-item"><span class="css-check" style="width:12px;height:12px;margin-right:4px"></span> All authorized drivers</div>
-            <div class="inclusion-item"><span class="css-check" style="width:12px;height:12px;margin-right:4px"></span> Cancel before pickup â€” full refund</div>
+            <div class="inclusion-item"><span class="css-check" style="width:12px;height:12px;margin-right:4px"></span> Cancel before pickup &mdash; full refund</div>
           </div>
 
           <button id="checkoutBtn" class="btn-quote" style="margin-top:24px">
