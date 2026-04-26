@@ -138,7 +138,7 @@ class PolicyPDF {
 <head>
 <meta charset="UTF-8">
 <style>
-    @page { margin: 0; }
+    @page { margin: 0 0 110px 0; }
     body {
         font-family: Helvetica, Arial, sans-serif;
         color: #1F2937;
@@ -390,11 +390,16 @@ class PolicyPDF {
     }
     .terms p { margin: 0 0 6px; }
 
-    /* Footer */
+    /* Footer (Fixed to bottom) */
     .footer {
+        position: fixed;
+        bottom: -110px;
+        left: 0;
+        right: 0;
+        height: 80px;
         background: #F8FAFC;
         border-top: 2px solid #0B1E3D;
-        padding: 16px 40px;
+        padding: 15px 40px;
         text-align: center;
     }
     .footer p {
@@ -407,6 +412,14 @@ class PolicyPDF {
 </style>
 </head>
 <body>
+
+    <!-- FOOTER (Declared first for Dompdf fixed positioning) -->
+    <div class="footer">
+        <p><strong>{$appName}</strong> · ABN: 19 686 732 043 · Level 25/6 Parramatta Sq, Parramatta NSW 2150</p>
+        <p>info@rentalshield.com.au · {$appUrl}</p>
+        <p>This is a computer-generated document. No signature is required.</p>
+        <p>© {$year} {$appName}. All rights reserved.</p>
+    </div>
 
     <!-- HEADER BANNER -->
     <div class="header">
@@ -537,12 +550,6 @@ class PolicyPDF {
 
     </div>
 
-    <!-- FOOTER -->
-    <div class="footer">
-        <p><strong>{$appName}</strong> · ABN: 19 686 732 043 · Level 25/6 Parramatta Sq, Parramatta NSW 2150</p>
-        <p>info@rentalshield.com.au · {$appUrl}</p>
-        <p>This is a computer-generated document. No signature is required.</p>
-        <p>© {$year} {$appName}. All rights reserved.</p>
     </div>
 
 </body>
