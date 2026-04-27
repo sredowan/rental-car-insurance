@@ -5,6 +5,7 @@
 require_once __DIR__ . '/../middleware/cors.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../helpers/response.php';
+require_once __DIR__ . '/../helpers/mailer.php';
 
 require_method('POST');
 
@@ -37,7 +38,8 @@ $db->prepare(
 
 $reset_link = APP_URL . '/reset-password.html?token=' . $token;
 
-// TODO: Send email with $reset_link
-// mail($email, 'Reset your DriveSafe Cover password', "Click here: $reset_link");
+if (!Mailer::sendPasswordReset($email, $customer['full_name'], $reset_link)) {
+    error_log('Password reset email send failed for customer_id=' . $customer['id']);
+}
 
 json_success(null, 'If that email is registered, you will receive a reset link shortly.');

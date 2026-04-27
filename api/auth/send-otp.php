@@ -37,7 +37,9 @@ try {
     $stmt = $db->prepare('UPDATE customers SET otp_code = ?, otp_expires_at = ? WHERE id = ?');
     $stmt->execute([$otp, $expires, $customer['id']]);
 
-    Mailer::sendLoginCode($email, $otp);
+    if (!Mailer::sendLoginCode($email, $otp)) {
+        error_log('Customer OTP email send failed for customer_id=' . $customer['id']);
+    }
 
     json_success(null, 'If the email exists, an OTP has been sent.');
 } catch (Exception $e) {

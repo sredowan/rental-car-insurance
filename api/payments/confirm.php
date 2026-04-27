@@ -178,7 +178,9 @@ try {
             }
         }
         if ($email_to) {
-            Mailer::sendPolicyConfirmation($policy, $email_to, $name_to);
+            if (!Mailer::sendPolicyConfirmation($policy, $email_to, $name_to)) {
+                error_log('Policy confirmation email send failed for policy_id=' . $policy_id);
+            }
         }
     } catch (Exception $e) {
         error_log("Policy email error: " . $e->getMessage());
@@ -203,7 +205,9 @@ try {
     // Send new account password email
     if (isset($is_new_customer) && $is_new_customer && isset($new_account_password)) {
         try {
-            Mailer::sendWelcomeAccount($guest_email, $guest_name, $new_account_password);
+            if (!Mailer::sendWelcomeAccount($guest_email, $guest_name, $new_account_password)) {
+                error_log('Welcome email send failed for customer_id=' . $customer_id);
+            }
         } catch(Exception $ex) {
             error_log("Welcome email error: " . $ex->getMessage());
         }

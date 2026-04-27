@@ -111,7 +111,9 @@ if ($method === 'POST') {
         $custStmt->execute([$customer_id]);
         $customer = $custStmt->fetch();
         if ($customer && !empty($customer['email'])) {
-            Mailer::sendPolicyConfirmation($policy, $customer['email'], $customer['full_name']);
+            if (!Mailer::sendPolicyConfirmation($policy, $customer['email'], $customer['full_name'])) {
+                error_log('Policy confirmation email send failed for policy_id=' . $policy_id);
+            }
         }
     } catch (Exception $e) {
         error_log('Policy email error: ' . $e->getMessage());

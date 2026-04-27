@@ -255,6 +255,19 @@ class Mailer {
         return self::send($email, $subject, $body);
     }
 
+    public static function sendPasswordReset(string $email, string $name, string $resetLink): bool {
+        $nameLabel = self::e($name ?: 'there');
+        $subject = 'Reset your Rental Shield password';
+        $body = self::sectionTitle('Password Reset', 'Use this secure link to choose a new password.', 'secure') . "
+            <p style='color:#334155;font-size:15px;line-height:1.7;margin:0 0 12px'>Hi {$nameLabel},</p>
+            <p style='color:#334155;font-size:15px;line-height:1.7;margin:0'>We received a request to reset your Rental Shield account password.</p>
+            " . self::cta('Reset Password', $resetLink) . "
+            " . self::infoPanel('Security note', 'This link expires in 1 hour. If you did not request it, you can safely ignore this email.', '#E8003A') . "
+        ";
+
+        return self::send($email, $subject, $body);
+    }
+
     public static function sendSupportReply(string $email, string $name, string $message): bool {
         $nameLabel = self::e($name ?: 'there');
         $safeMessage = nl2br(self::e($message));
