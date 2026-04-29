@@ -1,0 +1,29 @@
+User-agent: *
+Allow: /
+Disallow: /admin-
+Disallow: /dashboard.html
+Disallow: /dashboard-quote.html
+Disallow: /checkout.html
+Disallow: /payment-success.html
+Disallow: /login.html
+Disallow: /register.html
+Disallow: /my-profile.html
+Disallow: /my-policies.html
+Disallow: /my-claims.html
+Disallow: /claims.html
+Disallow: /support.html
+Disallow: /quote-result.html
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://www.rentalshield.com.au/sitemap.xml
